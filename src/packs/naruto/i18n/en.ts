@@ -6,6 +6,13 @@
 import type { Dictionnaire } from "../../../moteur/ui/i18n";
 
 export const EN: Dictionnaire = {
+  "encyclo.jamaisReussi": "Not done yet: your photo will show up here.",
+  "encyclo.reussi": "Done {fois} times.",
+  "encyclo.photo": "Photo taken at {score}%.",
+  "encyclo.unSeulSigne": "A single sign, held for 2.5 seconds:",
+  "encyclo.decouvert": "discovered",
+  "encyclo.variante": "Variant:",
+  "encyclo.inventee": "No signs in the anime: this sequence was invented for the app.",
   "appli.nom": "Kagami",
   "pack.nom": "Kata",
   "pack.sousTitre": "Naruto hand signs, recognised by your camera",

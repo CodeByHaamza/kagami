@@ -7,6 +7,10 @@
   "author": "CodeByHaamza",
   "license": "MIT",
   "scripts": {
+    "preparer": "node scripts/preparer.mjs",
+    "predev": "npm run preparer",
+    "prebuild": "npm run preparer",
+    "pretest:e2e": "npm run preparer",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",

@@ -22,6 +22,11 @@ export default tseslint.config(
     ]
   },
   js.configs.recommended,
+  {
+    // Les scripts d'outillage tournent dans Node, pas dans le navigateur.
+    files: ["scripts/**/*.mjs", "*.config.{ts,js}"],
+    languageOptions: { globals: { console: "readonly", process: "readonly" } }
+  },
   ...tseslint.configs.recommended,
   {
     // Les quatre moments d'un effet recoivent toujours (ctx, e, etat, particules) :

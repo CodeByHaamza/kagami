@@ -131,7 +131,7 @@ export interface ContexteEffet {
   dessinerCadre: (ctx: Contexte2D, image: Image, decalage?: number, zoom?: number) => void;
   /** Secoue toute l'image ; la force la plus forte de l'image gagne. */
   secouer: (force: number) => void;
-  jouer: (nom: string, ...options: readonly unknown[]) => void;
+  jouer: (nom: string, ...options: readonly number[]) => void;
 }
 
 /**

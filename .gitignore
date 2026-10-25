@@ -8,3 +8,6 @@ playwright-report/
 Thumbs.db
 .vscode/
 .idea/
+
+# MediaPipe : recopié depuis node_modules par scripts/preparer.mjs
+public/mediapipe/

@@ -118,7 +118,12 @@ les plans dans [`docs/superpowers/plans/`](docs/superpowers/plans/).
 
 Le code est sous [licence MIT](LICENSE). Les œuvres dont s'inspirent les packs ne le sont
 pas : **NARUTO © Masashi Kishimoto / Shueisha**. Projet de fan, non officiel, non
-commercial, sans aucun asset tiré de l'anime.
+commercial.
+
+> ⚠️ Les illustrations des douze signes sont découpées d'une planche de captures de
+> l'anime, à titre de **référence provisoire**. Elles doivent être remplacées par nos
+> propres visuels avant que le dépôt devienne public. Tout le reste — sons, effets,
+> bannières — est fabriqué pour le projet.
 
 - Modèle de détection : [NARUTO-HandSignDetection](https://github.com/Kazuhito00/NARUTO-HandSignDetection) de Kazuhito Takahashi, licence MIT
 - Détourage : [MediaPipe](https://ai.google.dev/edge/mediapipe), licence Apache 2.0

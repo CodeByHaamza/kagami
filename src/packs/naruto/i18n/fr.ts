@@ -6,6 +6,14 @@
 import type { Dictionnaire } from "../../../moteur/ui/i18n";
 
 export const FR: Dictionnaire = {
+  "portail.accroche": "Les gestes de ton anime, reconnus à la webcam.",
+  "portail.pied": "Choisis ton univers. Il t'en faut une webcam et un peu de place.",
+  "portail.pret": "jouable",
+  "portail.bientot": "bientôt",
+  "guide.apercu": "Montre-moi",
+  "guide.bravo": "Bravo !",
+  "guide.maitrises": "{faits} jutsus maîtrisés sur {total}",
+  "encyclo.maitrise": "maîtrisé",
   "camera.occupee": "La caméra est déjà utilisée par une autre application. Ferme-la, puis réessaie.",
   "camera.inconnue": "La caméra n'a pas pu s'ouvrir. Recharge la page, ou essaie un autre navigateur.",
   "camera.aucuneAutre": "Pas d'autre caméra sur cet appareil.",
@@ -38,10 +46,8 @@ export const FR: Dictionnaire = {
   "encyclo.tous": "Tous",
   "encyclo.fermer": "Fermer",
   "encyclo.entrainer": "S'entraîner",
-  "guide.titre": "Entraînement",
   "guide.prochain": "Prochain signe : {signe}",
   "guide.arreter": "Arrêter l'entraînement",
-  "guide.reussi": "Bravo, tu maîtrises « {nom} » !",
   "journal.titre": "Journal de bord",
   "journal.explication": "Il garde ce qui s'est passé, même si la page s'est rechargée.",
   "journal.copier": "Copier le journal",

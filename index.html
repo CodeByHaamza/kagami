@@ -31,11 +31,29 @@
 
     <div id="enCours" class="en-cours"></div>
 
+    <!-- La fiche du jutsu qu'on s'entraîne à faire : elle apparaît en fondu, montre
+         l'enchaînement, et se replie en bandeau une fois qu'on a commencé. -->
     <div id="guide" class="guide" hidden>
-      <p class="titre"><span data-i18n="guide.titre">Entraînement</span> : <b id="guideNom"></b></p>
+      <div class="guide-fiche">
+        <p class="type" id="guideType"></p>
+        <p class="kanji" id="guideKanji"></p>
+        <p class="nom" id="guideNom"></p>
+        <p class="texte" id="guideTexte"></p>
+      </div>
       <div id="guideSuite" class="suite"></div>
       <p id="guideProchain" class="prochain"></p>
-      <button id="btnFinGuide" type="button" data-i18n="guide.arreter">Arrêter l'entraînement</button>
+      <div class="guide-boutons">
+        <button id="btnApercu" type="button" data-i18n="guide.apercu">Montre-moi</button>
+        <button id="btnFinGuide" type="button" data-i18n="guide.arreter">Arrêter</button>
+      </div>
+    </div>
+
+    <!-- « Bravo » : le retour quand un jutsu s'exécute pendant l'entraînement. -->
+    <div id="bravo" class="bravo" hidden>
+      <p class="sceau">成</p>
+      <p class="titre" data-i18n="guide.bravo">Bravo !</p>
+      <p class="quoi" id="bravoQuoi"></p>
+      <p class="compte" id="bravoCompte"></p>
     </div>
 
     <div class="bas">
@@ -53,7 +71,24 @@
       <p class="nom"></p>
     </div>
 
-    <div id="accueil" class="ecran">
+    <!-- Le portail : le premier écran du projet. On y choisit son anime, puis le pack
+         prend la main. Il est générique — il ne connaît aucun pack, il les affiche. -->
+    <div id="portail" class="ecran portail">
+      <div class="portail-fond" aria-hidden="true">
+        <span class="orbe"></span><span class="orbe"></span><span class="orbe"></span>
+      </div>
+      <div class="portail-contenu">
+        <p class="portail-kanji">鏡</p>
+        <h1 class="portail-titre">Kagami</h1>
+        <p class="portail-accroche" data-i18n="portail.accroche">
+          Les gestes de ton anime, reconnus à la webcam.
+        </p>
+        <div id="listePacks" class="packs"></div>
+        <p class="portail-pied" data-i18n="portail.pied"></p>
+      </div>
+    </div>
+
+    <div id="accueil" class="ecran" hidden>
       <div class="fiche">
         <div class="langues">
           <button id="btnFr" type="button" aria-pressed="true">FR</button>

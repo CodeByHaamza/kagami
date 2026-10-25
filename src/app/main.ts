@@ -33,7 +33,9 @@ import {
 } from "../moteur/debug/journal";
 import type { Cadre } from "../moteur/rendu/cadre";
 import type { ContexteEffet, Image, Langue, Technique } from "../moteur/types";
+import { choisirPack, type EntreePack } from "./portail";
 import { PACK_KATA, SIGNES, FAMILLES, enregistrerTextes } from "../packs/naruto/manifeste";
+import { IMAGES_SIGNES } from "../packs/naruto/assets/signes";
 import type { SigneNaruto } from "../packs/naruto/manifeste";
 import { Rasengan3D } from "../packs/naruto/effets/rasengan";
 
@@ -48,6 +50,14 @@ declare global {
 window.kagami = { pret: false };
 
 const el = <T extends HTMLElement>(id: string): T => document.getElementById(id) as T;
+
+/** Ce que le portail propose. Un seul pack est écrit ; les autres montrent la suite. */
+const PACKS: readonly EntreePack[] = [
+  { id: "kata", kanji: "型", nom: "Kata", anime: "Naruto", disponible: true },
+  { id: "ki", kanji: "気", nom: "Ki", anime: "Dragon Ball", disponible: false },
+  { id: "ju", kanji: "呪", nom: "Jujutsu", anime: "Jujutsu Kaisen", disponible: false },
+  { id: "ha", kanji: "波", nom: "Hamon", anime: "JoJo", disponible: false }
+];
 
 const video = el<HTMLVideoElement>("video");
 const toile = el<HTMLCanvasElement>("scene");
@@ -274,13 +284,7 @@ function declencher(technique: Technique<SigneNaruto>, maintenant: number): void
   if (!def) return;
   noter("jutsu", `${technique.id} (effet ${technique.effet}) · JS ${memoire()}`);
 
-  if (def.rasengan3d) {
-    if (!rasengan) {
-      rasengan = new Rasengan3D(el("calque3d"), PIXELS);
-      surveillerWebGL(rasengan.renderer.domElement, "Rasengan 3D");
-    }
-    rasengan.lancer(e.main.x, e.main.y, Math.max(e.main.r * 0.9, 40));
-  }
+  if (def.rasengan3d) lancerRasengan(e);
 
   // le détourage ne se charge qu'au premier effet qui en a besoin
   if (def.silhouette && DETOURAGE && !silhouette.pret && !silhouette.enChargement) {
@@ -304,8 +308,21 @@ function declencher(technique: Technique<SigneNaruto>, maintenant: number): void
     majBilan();
   }
   if (guide?.id === technique.id) {
-    message(t("guide.reussi", { nom: t(`jutsu.${technique.id}.nom`) }));
+    if (!sauvegarde.entraines.includes(technique.id)) {
+      sauvegarde.entraines.push(technique.id);
+      enregistrer(sauvegarde);
+    }
+    bravo(technique);
   }
+}
+
+/** La scène 3D n'est créée qu'au premier jutsu qui en a besoin. */
+function lancerRasengan(e: ContexteEffet): void {
+  if (!rasengan) {
+    rasengan = new Rasengan3D(el("calque3d"), PIXELS);
+    surveillerWebGL(rasengan.renderer.domElement, "Rasengan 3D");
+  }
+  rasengan.lancer(e.main.x, e.main.y, Math.max(e.main.r * 0.9, 40));
 }
 
 /** Garde la photo la plus sûre de chaque jeton, pour l'encyclopédie. */
@@ -396,7 +413,7 @@ function majGuide(): void {
   const p = sequence.progression(guide);
   el("guideSuite").innerHTML = guide.signes
     .map((s, i) => {
-      const etat = i < p.fait ? " fait" : i === p.fait ? " prochain" : "";
+      const etat = i < p.fait ? " fait" : i === p.fait ? " suivant" : "";
       return `<span class="pastille${etat}"><b>${SIGNES[s].kanji}</b>${t(`signe.${s}.nom`)}</span>`;
     })
     .join("");
@@ -429,9 +446,11 @@ function donneesEncyclopedie() {
     jetons: SIGNES,
     techniques: PACK_KATA.techniques,
     familles: FAMILLES,
+    illustrations: IMAGES_SIGNES,
     photos: sauvegarde.photos,
     compteurs: sauvegarde.compteurs,
-    decouvertes: sauvegarde.decouvertes
+    decouvertes: sauvegarde.decouvertes,
+    entraines: sauvegarde.entraines
   };
 }
 
@@ -464,17 +483,7 @@ function afficherFamilles(): void {
 
 function afficherJutsus(): void {
   afficherTechniques(el("listeJutsus"), donneesEncyclopedie(), familleChoisie, technique => {
-    guide = technique;
-    sequence.reglages.oubli = OUBLI_GUIDE;
-    sequence.vider();
-    dernierRendu = "";
-    el("guide").hidden = false;
-    el("guideNom").textContent = t(`jutsu.${technique.id}.nom`);
-    el("encyclo").hidden = true;
-    majGuide();
-    // Depuis l'accueil la camera n'est pas encore ouverte : sans ca, le panneau
-    // d'entrainement s'affiche derriere un ecran d'accueil toujours la.
-    if (!window.kagami?.pret) void demarrer();
+    void ouvrirEntrainement(technique);
   });
 }
 
@@ -515,6 +524,74 @@ async function demarrer(): Promise<void> {
   }
 }
 
+// ---- l'entraînement ----
+
+async function ouvrirEntrainement(technique: Technique<SigneNaruto>): Promise<void> {
+  guide = technique;
+  sequence.reglages.oubli = OUBLI_GUIDE;
+  sequence.vider();
+  dernierRendu = "";
+
+  el("guideType").textContent = technique.type;
+  el("guideKanji").textContent = technique.kanji;
+  el("guideNom").textContent = t(`jutsu.${technique.id}.nom`);
+  el("guideTexte").textContent = t(`jutsu.${technique.id}.texte`);
+
+  const panneau = el("guide");
+  panneau.hidden = false;
+  panneau.classList.remove("entre");
+  void panneau.offsetWidth; // redémarre le fondu
+  panneau.classList.add("entre");
+
+  el("encyclo").hidden = true;
+  majGuide();
+
+  // Depuis l'accueil la caméra n'est pas encore ouverte : sans ça, le panneau
+  // d'entraînement s'affiche derrière un écran d'accueil toujours là.
+  if (!window.kagami?.pret) await demarrer();
+  // Puis on montre à quoi ressemble le jutsu visé : on apprend mieux une cible qu'on
+  // a vue une fois.
+  if (window.kagami?.pret) apercu(technique);
+}
+
+function fermerEntrainement(): void {
+  guide = null;
+  sequence.reglages.oubli = OUBLI_NORMAL;
+  el("guide").hidden = true;
+}
+
+/** Joue l'effet du jutsu visé, sans l'enregistrer comme réussi. */
+function apercu(technique: Technique<SigneNaruto>): void {
+  const e = contexte(performance.now(), 0);
+  const def = effets.lancer(technique.effet, e);
+  if (def?.rasengan3d) lancerRasengan(e);
+  jouer("jutsu");
+  banniere(technique);
+}
+
+let minuteurBravo = 0;
+
+/** Le retour quand un jutsu part pendant l'entraînement. */
+function bravo(technique: Technique<SigneNaruto>): void {
+  const panneau = el("bravo");
+  el("bravoQuoi").textContent = t(`jutsu.${technique.id}.nom`);
+  el("bravoCompte").textContent = t("guide.maitrises", {
+    faits: sauvegarde.entraines.length,
+    total: PACK_KATA.techniques.length
+  });
+
+  panneau.hidden = false;
+  panneau.classList.remove("visible");
+  void panneau.offsetWidth;
+  panneau.classList.add("visible");
+
+  clearTimeout(minuteurBravo);
+  minuteurBravo = window.setTimeout(() => {
+    panneau.classList.remove("visible");
+    panneau.hidden = true;
+  }, 2600);
+}
+
 // ---- les boutons ----
 
 el("btnDemarrer").addEventListener("click", () => void demarrer());
@@ -531,10 +608,9 @@ el("btnSon").addEventListener("click", () => {
   bouton.textContent = muet ? "🔇" : "🔊";
   couperSon(muet);
 });
-el("btnFinGuide").addEventListener("click", () => {
-  guide = null;
-  sequence.reglages.oubli = OUBLI_NORMAL;
-  el("guide").hidden = true;
+el("btnFinGuide").addEventListener("click", fermerEntrainement);
+el("btnApercu").addEventListener("click", () => {
+  if (guide) apercu(guide);
 });
 el("btnJournal").addEventListener("click", () => {
   el("journal").hidden = false;
@@ -596,3 +672,10 @@ battre(() =>
 );
 
 appliquerTextes();
+
+// Le portail d'abord : on choisit son anime, puis le pack prend la main.
+void choisirPack(el("listePacks"), PACKS).then(pack => {
+  noter("page", `pack choisi : ${pack.id}`);
+  el("portail").hidden = true;
+  el("accueil").hidden = false;
+});

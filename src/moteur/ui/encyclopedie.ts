@@ -24,8 +24,12 @@ export interface DonneesEncyclopedie<J extends string> {
   /** Le type d'une technique vers sa famille d'affichage. */
   familles: Readonly<Record<string, string>>;
   photos: Readonly<Partial<Record<J, Photo>>>;
+  /** Une illustration de reference par jeton, quand le pack en fournit une. */
+  illustrations?: Readonly<Record<string, string>>;
   compteurs: Readonly<Partial<Record<J, number>>>;
   decouvertes: readonly string[];
+  /** Celles réussies en entraînement : une maîtrise, pas un coup de chance. */
+  entraines?: readonly string[];
 }
 
 const echapper = (s: string): string =>
@@ -57,9 +61,14 @@ export function afficherJetons<J extends string>(
           ? t("encyclo.jamaisReussi")
           : t("encyclo.reussi", { fois: n }) +
             (photo ? " " + t("encyclo.photo", { score: Math.round(photo.score * 100) }) : "");
+      // Ta propre photo d'abord — c'est la plus parlante —, sinon l'illustration de
+      // reference, sinon le kanji.
+      const illustration = d.illustrations?.[id];
       const vignette = photo
         ? `<img src="${echapper(photo.image)}" alt="${nom}">`
-        : `<span>${j.kanji}</span>`;
+        : illustration
+          ? `<img src="${echapper(illustration)}" alt="${nom}" class="reference">`
+          : `<span>${j.kanji}</span>`;
 
       return (
         `<article class="fiche-signe">` +
@@ -92,14 +101,21 @@ export function afficherTechniques<J extends string>(
   conteneur.innerHTML = liste
     .map(tech => {
       const decouverte = d.decouvertes.includes(tech.id);
+      const maitrisee = d.entraines?.includes(tech.id) ?? false;
       const suite = tech.tenir
         ? `<p class="discret">${echapper(t("encyclo.unSeulSigne"))}</p>` +
           `<div class="suite">${pastille(d.jetons, tech.signes[0]!)}</div>`
         : `<div class="suite">${tech.signes.map(s => pastille(d.jetons, s)).join("")}</div>`;
 
       return (
-        `<article class="fiche-jutsu${decouverte ? " decouvert" : ""}">` +
-        `<p class="type">${echapper(tech.type)}${decouverte ? ` · <b>${echapper(t("encyclo.decouvert"))}</b>` : ""}</p>` +
+        `<article class="fiche-jutsu${decouverte ? " decouvert" : ""}${maitrisee ? " maitrise" : ""}">` +
+        `<p class="type">${echapper(tech.type)}` +
+        (maitrisee
+          ? ` · <b>${echapper(t("encyclo.maitrise"))}</b>`
+          : decouverte
+            ? ` · <b>${echapper(t("encyclo.decouvert"))}</b>`
+            : "") +
+        `</p>` +
         `<h3 class="kanji">${tech.kanji}</h3>` +
         `<p class="nom">${echapper(tech.romaji)} · ${echapper(t(`jutsu.${tech.id}.nom`))}</p>` +
         `<p>${echapper(t(`jutsu.${tech.id}.texte`))}</p>` +

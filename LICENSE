@@ -28,9 +28,14 @@ La licence MIT ci-dessus porte sur le code de ce depot, et sur lui seul.
 
 NARUTO (c) Masashi Kishimoto / Shueisha. Les noms, les techniques, les
 personnages et l'univers de Naruto appartiennent a leurs ayants droit. Ce
-projet est un travail de fan, non officiel et non commercial. Il ne contient
-aucun asset tire de l'anime ou du manga : images, musiques et bruitages sont
-soit redessines ou fabriques pour le projet, soit libres de droits.
+projet est un travail de fan, non officiel et non commercial.
+
+Les sons sont tous fabriques pour le projet (Web Audio). En revanche, les
+illustrations des douze signes du zodiaque, dans
+src/packs/naruto/assets/signes/, sont decoupees d'une planche de captures de
+l'anime trouvee en ligne. Elles servent de REFERENCE PROVISOIRE, le temps de
+produire nos propres visuels, et doivent etre remplacees avant toute
+publication du depot. C'est la seule entorse, et elle est temporaire.
 
 COMPOSANTS TIERS
 

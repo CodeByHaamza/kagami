@@ -36,6 +36,8 @@ export interface Sauvegarde {
   premiereVisite: boolean;
   /** Les identifiants des techniques déjà réussies. */
   decouvertes: string[];
+  /** Celles réussies en entraînement, c'est-à-dire volontairement et à la demande. */
+  entraines: string[];
   /** Combien de fois chaque jeton a été validé. */
   compteurs: Record<string, number>;
   /** La meilleure photo prise de chaque jeton. */
@@ -47,6 +49,7 @@ export const PAR_DEFAUT: Sauvegarde = {
   version: VERSION,
   premiereVisite: true,
   decouvertes: [],
+  entraines: [],
   compteurs: {},
   photos: {},
   langue: "fr"

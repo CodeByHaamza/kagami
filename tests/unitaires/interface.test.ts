@@ -47,7 +47,7 @@ test("chaque code d'erreur caméra a une traduction dans les deux langues", () =
 test("aucune clé de traduction n'est définie sans être utilisée nulle part", () => {
   // Une clé orpheline est le signe d'un renommage à moitié fait — c'était le cas de
   // « camera.erreur », qui existait pendant que « camera.occupee » manquait.
-  const sources = ["src/app/main.ts", "src/moteur/ui/encyclopedie.ts"]
+  const sources = ["src/app/main.ts", "src/app/portail.ts", "src/moteur/ui/encyclopedie.ts"]
     .map(f => readFileSync(f, "utf8"))
     .join("\n") + html;
 

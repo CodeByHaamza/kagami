@@ -48,6 +48,39 @@ monEffet: {
 `e.t` est le temps écoulé depuis le début de l'effet, `e.main` la position des mains.
 Le dessin se fait en pixels CSS : la densité d'écran est déjà appliquée.
 
+## Ajouter un geste du corps
+
+Un geste est un **jeton**, exactement comme un signe de mains : une fois qu'il existe,
+la grammaire l'assemble sans rien savoir de plus. L'ajouter se fait en quatre endroits,
+tous dans `src/moteur/corps/`.
+
+1. Son nom dans le type `JetonCorps` (`gestes.ts`). Le compilateur se charge du reste :
+   une technique qui le réclame sans qu'il existe ne compile pas.
+2. Sa **mesure**, dans `reperes.ts`, si elle n'y est pas. Ce sont des fonctions pures
+   sur une posture, et elles se normalisent **en largeurs d'épaules** — un seuil doit
+   valoir pareil à un mètre de la caméra et à trois, pour une grande personne et pour
+   une petite. Jamais de pixels, jamais de coordonnées brutes.
+3. Sa **reconnaissance**, dans `LecteurDeGestes.chercher()`. L'ordre des tests compte :
+   le premier qui répond gagne. La garde passe avant les frappes parce qu'un bras qui
+   se détend depuis une garde n'est pas un direct.
+4. Son **verrou**, dans `relacherLesVerrous()`. Sans lui le geste se redéclenche à
+   chaque image tant que la pose dure. Un geste n'est de nouveau disponible qu'après un
+   retour à l'état de départ.
+
+Le test va avec, dans `tests/unitaires/gestes.test.ts`, et il pèse **des deux côtés** :
+un cas qui déclenche, et au moins un qui ne doit pas. Un jeu de gestes qui part quand
+on se gratte est plus insupportable qu'un jeu qui demande de s'y reprendre à deux fois
+— la moitié des tests du fichier vérifient que *rien* ne se passe.
+
+> **Les seuils ne se devinent pas.** Ceux qui existent sont des points de départ. On les
+> règle au banc de rejeu (`?banc` dans l'adresse) : il enregistre une session, la
+> rejoue à la place de la caméra, et affiche la posture, le dernier geste, l'immobilité
+> et la fiabilité des points. On compare des nombres, pas des impressions.
+
+Pour qu'un geste déclenche quelque chose, il faut ensuite une technique qui le
+consomme : une entrée dans `donnees/taijutsu.ts` du pack, avec son effet et ses textes,
+selon les mêmes règles qu'un jutsu.
+
 ## Ajouter un pack d'anime
 
 Un pack est un dossier sous `src/packs/` avec un `manifeste.ts` qui déclare son
@@ -61,7 +94,13 @@ son propre `Reconnaisseur`, avec la même interface.
 
 ```bash
 npm test           # tests unitaires et vérification des types
-npm run test:e2e   # test de fumée dans un navigateur (démarrer npm run dev à côté)
+npm run test:e2e   # tests dans un vrai navigateur (démarrer npm run dev à côté)
 npm run lint
 npm run build
+npm run dev:reseau # HTTPS sur le réseau local, pour essayer depuis un téléphone
 ```
+
+Pas de webcam sur la machine ? `npm run dev:reseau` sert l'appli en HTTPS : on l'ouvre
+depuis un téléphone et on accepte l'avertissement du certificat auto-signé une fois. En
+clair sur une adresse `192.168.x.x`, `getUserMedia` n'existe pas — c'est la règle du
+contexte sûr, pas un bug de l'appli.

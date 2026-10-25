@@ -169,3 +169,11 @@ test("aucun secret n'est versionné", () => {
   }
   expect(fautifs).toEqual([]);
 });
+
+test("la feuille de route du README coche les plans terminés", () => {
+  // Une case à cocher qui ment est la première chose qu'un lecteur remarque, et c'est
+  // la seule partie du README qu'on oublie en finissant un plan.
+  const readme = readFileSync("README.md", "utf8");
+  expect(readme).toMatch(/- \[x\] \*\*1\*\* — extraction/);
+  expect(readme).toMatch(/- \[x\] \*\*2\*\* — lecture du corps/);
+});

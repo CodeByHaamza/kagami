@@ -52,17 +52,71 @@ démarrer Vite lui-même sur Windows.
 
 | | |
 | --- | --- |
-| `src/moteur/` | générique : entrée, grammaire, rendu, son, i18n, stockage |
+| `src/moteur/` | générique : entrée, corps, grammaire, rendu, rejeu, son, i18n, stockage |
 | `src/packs/naruto/` | Kata : données, reconnaisseur, effets, textes |
 | `src/app/` | le câblage, et rien d'autre |
 | `public/modeles/` | les modèles, suivis par Git LFS |
 | `public/mediapipe/` | recopié depuis `node_modules` par `scripts/preparer.mjs`, pas versionné |
 | `docs/superpowers/` | la conception et les plans |
 
+## Le corps
+
+Deux entrées lisent la même caméra : le reconnaisseur de signes, et le lecteur de
+posture (MediaPipe Pose Landmarker, 33 points). Elles ne tournent **jamais en même
+temps** — c'est `src/moteur/entree/ordonnanceur.ts` qui arbitre, selon la posture :
+
+| Posture | Ce qui écoute | Comment on y entre |
+| --- | --- | --- |
+| **concentration** | les signes de mains | poignets joints devant le corps |
+| **combat** | les gestes du corps | poignets au-dessus des épaules, ou garde |
+| **neutre** | rien | tout le reste |
+
+La règle fait deux choses à la fois. Techniquement, elle libère le temps machine que
+trois modèles ne peuvent pas se partager, et elle lève l'ambiguïté entre un signe et un
+coup — les deux se font avec les mains. Mais c'est aussi la règle de l'œuvre : former
+des sceaux prend du temps et laisse ouvert. **Toute bascule de posture vide
+l'enchaînement en cours**, dans les deux sens ; sinon un jutsu partirait tout seul au
+retour.
+
+Les gestes sont un **second alphabet pour la même grammaire** : la classe `Sequence`
+assemble `JetonCorps` exactement comme elle assemble des signes. Le taijutsu et les
+armes en sortent sans une ligne de grammaire en plus.
+
+Toutes les mesures du corps sont normalisées **en largeurs d'épaules**
+(`src/moteur/corps/reperes.ts`) : un seuil vaut pareil à un mètre de la caméra et à
+trois, pour une grande personne et pour une petite.
+
+### Les seuils, et le banc
+
+Les seuils de gestes vivent à deux endroits : `SEUILS` dans `corps/reperes.ts` (ce qui
+définit une posture) et `REGLAGES_PAR_DEFAUT` dans `corps/gestes.ts` (ce qui définit un
+mouvement). **Ce sont des points de départ, pas des mesures.**
+
+On ne les règle pas en bougeant devant une webcam jusqu'à ce que ça marche : ça n'est
+ni reproductible ni mesurable. On les règle au **banc de rejeu**, qui s'ouvre avec
+`?banc` dans l'adresse :
+
+```text
+http://localhost:5173/?banc
+```
+
+Il enregistre ce que la caméra montre, le rend en fichier `.json`, et rejoue ce fichier
+**à la place de la caméra** — le moteur ne voit pas la différence. Le panneau affiche en
+direct la posture, le dernier geste, le dernier jeton validé, l'immobilité et la
+fiabilité des points. C'est en lisant ces nombres qu'on décide d'un seuil.
+
+### Essayer sans caméra sur la machine
+
+`npm run dev:reseau` sert l'appli en HTTPS sur le réseau local, pour l'ouvrir depuis un
+téléphone. Le certificat est auto-signé : le téléphone prévient une fois. En clair sur
+une adresse `192.168.x.x`, `getUserMedia` n'existe pas — ce n'est pas l'appli qui
+refuse, c'est la règle du contexte sûr.
+
 ## Ajouter quelque chose
 
-Un jutsu, un effet, un pack : voir [CONTRIBUTING.md](CONTRIBUTING.md).
+Un jutsu, un effet, un geste, un pack : voir [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Les réglages de détection (seuil `0.6`, deux confirmations, oubli à 4 s, tenue à 2,5 s,
-attente à 1,5 s) sont calés finement contre le bruit du modèle. **Ne pas y toucher sans
-mesurer** : ils sont la différence entre une appli jouable et une appli frustrante.
+attente à 1,5 s, palier de charge à 4 s) sont calés finement contre le bruit du modèle.
+**Ne pas y toucher sans mesurer** : ils sont la différence entre une appli jouable et
+une appli frustrante.

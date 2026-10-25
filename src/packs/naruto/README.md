@@ -8,7 +8,8 @@
 
 <img src="https://img.shields.io/badge/signes-14-e8963c?style=flat-square" alt="14 signes">
 <img src="https://img.shields.io/badge/jutsus-52-ff8c1a?style=flat-square" alt="52 jutsus">
-<img src="https://img.shields.io/badge/effets-52-e8440f?style=flat-square" alt="52 effets">
+<img src="https://img.shields.io/badge/taijutsu-7-e8440f?style=flat-square" alt="7 taijutsu">
+<img src="https://img.shields.io/badge/armes-3-c0392b?style=flat-square" alt="3 armes">
 <img src="https://img.shields.io/badge/langues-FR%20%C2%B7%20EN-9a7aff?style=flat-square" alt="français et anglais">
 
 </div>
@@ -87,12 +88,51 @@ affinité et où taper avec le bon élément fera toute la différence.
 Le défi du pack reste le **Suiryūdan de Zabuza** : quarante-quatre signes d'affilée,
 sans en rater un.
 
+## 体術 · Les sept taijutsu
+
+Au corps, sans un seul signe. Le lecteur de posture lit les gestes, et la **même
+grammaire** les assemble : un enchaînement de coups vaut un enchaînement de sceaux.
+
+Pour y accéder, il faut être en **posture de combat** — poignets au-dessus des épaules,
+ou garde de boxe. Tant qu'on y est, les signes ne sont plus écoutés, et réciproquement.
+
+| | Technique | Ce qu'on fait |
+| --- | --- | --- |
+| 木ノ葉旋風 | **Konoha Senpū** | deux coups de pied |
+| 獅子連弾 | **Shishi Rendan** | gauche, droite, deux coups de pied |
+| 牙通牙 | **Gatsūga** | une rotation, tenue |
+| 八卦掌回天 | **Hakkeshō Kaiten** | une rotation, puis la garde |
+| 表蓮華 | **Omote Renge** | sauter, puis frapper du pied |
+| 八卦六十四掌 | **Hakke Rokujūyon Shō** | huit frappes en trois secondes |
+| 八門遁甲 | **Hachimon Tonkō** | bras croisés, tenus — une porte par palier |
+
+Les **Huit Portes** ne s'ouvrent pas encore jusqu'à la huitième : celle-là tue, et elle
+attend qu'il y ait une progression à laquelle accrocher le pari (plan 4).
+
+## 忍具 · Les armes
+
+Elles règlent un vrai problème de jeu : jauge de chakra vide, sans elles le joueur reste
+planté à regarder les ennemis arriver. Elles sont donc **gratuites** — et c'est canon,
+le lancer est la base enseignée à l'Académie.
+
+| | Arme | Dégâts | Stock |
+| --- | --- | :---: | --- |
+| 手裏剣 | **Shuriken** | 6 | illimité |
+| 苦無 | **Kunai** | 11 | illimité |
+| 起爆札 | **Kibaku Fuda** · parchemin explosif | 34 | 5 par mission |
+
+Les trois partent du **même geste** : le bras droit qui se détend depuis le haut. Un
+seul mouvement de lancer existe dans la nature, et prétendre distinguer un shuriken d'un
+kunai à la trajectoire du poignet serait inventer. C'est l'arme **sélectionnée** qui
+part — touche `A` pour en changer, en attendant que le mode arcade lui donne sa place.
+
 ## Comment on joue
 
 1. Mains bien visibles, à hauteur de poitrine, dans un endroit éclairé.
 2. Tiens chaque signe une demi-seconde : un « toc » le valide.
 3. Quelques jutsus n'ont qu'un signe : tiens-le 2,5 secondes.
 4. Pris dans un genjutsu ? Fais le Bélier.
+5. Pour frapper au corps, lève les poings : les signes se taisent, les gestes comptent.
 
 L'**encyclopédie** 📜 donne tous les enchaînements et garde une photo de chaque signe que
 tu réussis. Le mode **entraînement** t'en fait répéter un en te montrant le suivant.
@@ -101,9 +141,9 @@ tu réussis. Le mode **entraînement** t'en fait répéter un en te montrant le 
 
 | | |
 | --- | --- |
-| `donnees/` | les 14 signes, les 52 jutsus, les familles. Kanji et romaji seulement : les noms traduisibles sont dans `i18n/`. |
+| `donnees/` | les 14 signes, les 52 jutsus, les 7 taijutsu, les 3 armes, les familles. Kanji et romaji seulement : les noms traduisibles sont dans `i18n/`. |
 | `entree/` | le reconnaisseur YOLOX, et le prétraitement sorti en fonctions pures |
-| `effets/` | les 52 effets, et la scène Three.js du Rasengan |
+| `effets/` | les effets des jutsus, du taijutsu et des armes, et la scène Three.js du Rasengan |
 | `i18n/` | français et anglais, mêmes clés des deux côtés (un test le vérifie) |
 | `manifeste.ts` | ce que le pack déclare au moteur |
 
@@ -114,8 +154,8 @@ inventés pour l'appli, et marqués `source: "appli"` dans les données.
 
 ## Ce qui vient
 
-Taijutsu au corps, armes et parchemins explosifs, mode arcade avec vagues et boss,
-grades de l'Académie au Kage, modes ermite, Rinnegan. Voir la
+Mode arcade avec vagues et boss, grades de l'Académie au Kage, mode ermite, Rinnegan.
+Voir la
 [feuille de route](../../../README.md#feuille-de-route).
 
 ---

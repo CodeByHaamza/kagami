@@ -107,3 +107,20 @@ test("la licence dit que Naruto n'est pas sous licence MIT", () => {
   expect(licence).toMatch(/MIT/);
   expect(licence).toMatch(/Kishimoto/i);
 });
+
+test("aucune feuille de style n'a de commentaire de bloc non fermé", () => {
+  // Un commentaire ouvert et jamais fermé avale la règle qui suit. Sur l'hôte Windows,
+  // Vite retombe sur un minifieur permissif qui laisse passer ; lightningcss, dans
+  // l'image Docker, refuse — et c'est lui qui a raison. Le cas s'est produit : tout le
+  // bloc :root a été avalé pendant un nettoyage d'en-têtes, sans que rien ne le dise.
+  //
+  // Les fichiers TypeScript n'ont pas besoin de ce test : tsc refuse déjà de compiler
+  // un commentaire non fermé.
+  const desequilibres = versionnes()
+    .filter(f => f.endsWith(".css"))
+    .filter(f => {
+      const c = readFileSync(f, "utf8");
+      return c.split("/*").length !== c.split("*/").length;
+    });
+  expect(desequilibres).toEqual([]);
+});

@@ -1,4 +1,4 @@
-/* Ninjutsu
+/* Kata — la feuille de style du pack Naruto. */
 
 :root {
   --fond: #0b0b10;
@@ -51,6 +51,7 @@ button.principal { color: #1a0d02; background: var(--orange); border-color: var(
 
 /* ---- bandeau du haut ---- */
 
+/* la place réservée à droite est celle du sélecteur de langue, en position fixe */
 .barre {
   position: fixed;
   top: 0;
@@ -352,31 +353,26 @@ button.lien { min-height: 0; padding: 0; font: inherit; color: #9a3412; text-dec
   .barre h1 { font-size: 16px; }
 }
 
-/* Le choix de la langue flotte au-dessus de tout le reste : les écrans (.ecran) sont en
-   z-index 20 et recouvriraient le bandeau, qui est en 10. */
+/* Le choix de la langue vit dans la fiche d'accueil : c'est le seul endroit où on en a
+   besoin, et ça évite une couche flottante par-dessus tout le reste. */
 .langues {
-  position: fixed;
-  top: 8px;
-  right: 10px;
-  z-index: 40;
   display: flex;
-  gap: 4px;
+  gap: 6px;
+  justify-content: flex-end;
+  margin-bottom: 4px;
 }
 
 .langues button {
-  width: 38px;
-  padding: 4px 0;
+  min-height: 32px;
+  width: 44px;
+  padding: 0;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.06em;
-  background: rgba(20, 20, 28, 0.75);
-  border: 1px solid #3a3a52;
-  border-radius: 8px;
-  color: #b9b9cc;
-  cursor: pointer;
+  color: var(--doux);
 }
 
 .langues button[aria-pressed="true"] {
-  color: #fff;
+  color: var(--texte);
   border-color: var(--orange);
 }

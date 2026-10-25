@@ -8,6 +8,9 @@
 //  - la détection, aussi vite que le modèle le permet (12 fois par seconde au plus) ;
 //  - l'affichage, à chaque image de l'écran.
 
+// La police est empaquetee avec le reste : servie depuis un CDN, elle est bloquee par
+// l'en-tete COEP de l'image de production, et les kanji retombent sur une police systeme.
+import "@fontsource/yuji-syuku/400.css";
 import "../packs/naruto/assets/style.css";
 
 import { BoucleDeDetection, Camera, ErreurCamera } from "../moteur/entree/camera";
@@ -76,7 +79,9 @@ let guide: Technique<SigneNaruto> | null = null;
 let enAttente: { technique: Technique<SigneNaruto>; depuis: number } | null = null;
 let familleChoisie = "";
 
-changerLangue(sauvegarde.langue ?? langue(navigator.language));
+// `charger()` renvoie toujours un objet complet : sans ce drapeau, la langue du
+// navigateur ne serait jamais consultee et un anglophone recevrait du francais.
+changerLangue(sauvegarde.premiereVisite ? langue(navigator.language) : sauvegarde.langue);
 
 // ---- l'interface, traduite ----
 
@@ -102,11 +107,15 @@ function basculerLangue(l: Langue): void {
   if (!el("encyclo").hidden) ouvrirEncyclopedie();
 }
 
+let minuteurMessage = 0;
+
 function message(texte: string, duree = 3500): void {
   const m = el("message");
   m.textContent = texte;
   m.hidden = false;
-  setTimeout(() => (m.hidden = true), duree);
+  // Sans annuler le precedent, deux messages rapproches se coupent l'un l'autre.
+  clearTimeout(minuteurMessage);
+  minuteurMessage = window.setTimeout(() => (m.hidden = true), duree);
 }
 
 function etat(texte: string): void {
@@ -325,24 +334,47 @@ function photographier(jeton: SigneNaruto): void {
 
 // ---- ce qu'on montre pendant le jeu ----
 
+/** En dessous, c'est du bruit : l'afficher ferait clignoter la jauge a 12 Hz. */
+const SEUIL_AFFICHAGE = 0.5;
+/** On laisse le panneau a l'ecran un instant apres la derniere detection. */
+const REMANENCE = 600;
+
+let derniereVue = 0;
+
 function montrerJetonVu(vue: { jeton: SigneNaruto; score: number } | null): void {
   const bloc = el("signeVu");
-  if (!vue) {
-    bloc.classList.remove("visible");
+
+  if (vue && vue.score >= SEUIL_AFFICHAGE) {
+    derniereVue = performance.now();
+    bloc.classList.add("visible");
+    el("vuKanji").textContent = SIGNES[vue.jeton].kanji;
+    el("vuNom").textContent = t(`signe.${vue.jeton}.nom`);
+    el("vuScore").style.width = Math.round(vue.score * 100) + "%";
     return;
   }
-  bloc.classList.add("visible");
-  el("vuKanji").textContent = SIGNES[vue.jeton].kanji;
-  el("vuNom").textContent = t(`signe.${vue.jeton}.nom`);
-  el("vuScore").style.width = Math.round(vue.score * 100) + "%";
+  if (performance.now() - derniereVue > REMANENCE) bloc.classList.remove("visible");
 }
 
 function montrerTenu(tenu: { part: number } | null): void {
-  el("vuTenu").style.width = tenu ? Math.round(tenu.part * 100) + "%" : "0%";
+  // `.tenu:empty` est masque par la feuille de style : c'est le texte qui le fait
+  // apparaitre, pas une largeur.
+  el("vuTenu").textContent = tenu ? t("signe.tenir", { part: Math.round(tenu.part * 100) }) : "";
 }
 
+/** Les plus recentes seulement : au-dela, les pastilles grimpent sur l'ecran. */
+const PASTILLES_VISIBLES = 10;
+
+let dernierRendu = "";
+
 function afficherEnchainement(): void {
+  // La boucle de detection appelle ceci 12 fois par seconde. Sans ce memo, on
+  // reecrirait trois innerHTML a chaque fois, qu'il y ait du nouveau ou non.
+  const cle = sequence.historique.join(">") + "|" + (guide?.id ?? "");
+  if (cle === dernierRendu) return;
+  dernierRendu = cle;
+
   el("historique").innerHTML = sequence.historique
+    .slice(-PASTILLES_VISIBLES)
     .map(j => `<span class="pastille"><b>${SIGNES[j].kanji}</b></span>`)
     .join("");
 
@@ -355,22 +387,39 @@ function afficherEnchainement(): void {
     )
     .join("");
 
-  if (guide) {
-    const p = sequence.progression(guide);
-    el("guideProchain").textContent = p.prochain
-      ? t("guide.prochain", { signe: t(`signe.${p.prochain}.nom`) })
-      : "";
-  }
+  if (guide) majGuide();
 }
+
+/** Les signes du jutsu en cours d'entrainement : faits, a faire, et le prochain. */
+function majGuide(): void {
+  if (!guide) return;
+  const p = sequence.progression(guide);
+  el("guideSuite").innerHTML = guide.signes
+    .map((s, i) => {
+      const etat = i < p.fait ? " fait" : i === p.fait ? " prochain" : "";
+      return `<span class="pastille${etat}"><b>${SIGNES[s].kanji}</b>${t(`signe.${s}.nom`)}</span>`;
+    })
+    .join("");
+  el("guideProchain").textContent = p.prochain
+    ? t("guide.prochain", { signe: t(`signe.${p.prochain}.nom`) })
+    : "";
+}
+
+/** Doit correspondre a la duree de l'animation `banniere` de la feuille de style. */
+const DUREE_BANNIERE = 3200;
+let minuteurBanniere = 0;
 
 function banniere(technique: Technique<SigneNaruto>): void {
   const b = el("banniere");
   b.querySelector(".type")!.textContent = technique.type;
   b.querySelector(".kanji")!.textContent = technique.kanji;
   b.querySelector(".nom")!.textContent = t(`jutsu.${technique.id}.nom`);
-  b.classList.remove("montre");
-  void b.offsetWidth; // redémarre l'animation
-  b.classList.add("montre");
+
+  b.classList.remove("visible");
+  void b.offsetWidth; // redemarre l'animation
+  b.classList.add("visible");
+  clearTimeout(minuteurBanniere);
+  minuteurBanniere = window.setTimeout(() => b.classList.remove("visible"), DUREE_BANNIERE);
 }
 
 // ---- l'encyclopédie ----
@@ -417,12 +466,15 @@ function afficherJutsus(): void {
   afficherTechniques(el("listeJutsus"), donneesEncyclopedie(), familleChoisie, technique => {
     guide = technique;
     sequence.reglages.oubli = OUBLI_GUIDE;
+    sequence.vider();
+    dernierRendu = "";
     el("guide").hidden = false;
     el("guideNom").textContent = t(`jutsu.${technique.id}.nom`);
-    el("guideSuite").innerHTML = technique.signes
-      .map(s => `<span class="pastille"><b>${SIGNES[s].kanji}</b>${t(`signe.${s}.nom`)}</span>`)
-      .join("");
     el("encyclo").hidden = true;
+    majGuide();
+    // Depuis l'accueil la camera n'est pas encore ouverte : sans ca, le panneau
+    // d'entrainement s'affiche derriere un ecran d'accueil toujours la.
+    if (!window.kagami?.pret) void demarrer();
   });
 }
 
@@ -440,13 +492,14 @@ async function demarrer(): Promise<void> {
   const bouton = el<HTMLButtonElement>("btnDemarrer");
   bouton.disabled = true;
   try {
-    etat(t("modele.chargement"));
+    etat(t("accueil.ouverture"));
     void activerSon();
 
     const flux = await camera.ouvrir(true);
     video.srcObject = flux;
     await video.play();
 
+    etat(t("modele.chargement"));
     await detecteur.charger(PACK_KATA.modele);
 
     el("accueil").hidden = true;
@@ -470,12 +523,7 @@ el("btnEn").addEventListener("click", () => basculerLangue("en"));
 el("btnEncyclo").addEventListener("click", ouvrirEncyclopedie);
 el("btnEncycloAccueil").addEventListener("click", ouvrirEncyclopedie);
 el("btnFermerEncyclo").addEventListener("click", () => (el("encyclo").hidden = true));
-el("btnCamera").addEventListener("click", () => {
-  void camera.basculer().then(flux => {
-    video.srcObject = flux;
-    return video.play();
-  });
-});
+el("btnCamera").addEventListener("click", () => void basculerCamera());
 el("btnSon").addEventListener("click", () => {
   const bouton = el("btnSon");
   const muet = bouton.getAttribute("aria-pressed") !== "true";
@@ -503,6 +551,42 @@ el("btnCopierJournal").addEventListener("click", () => {
 for (const onglet of document.querySelectorAll<HTMLElement>("[data-onglet]")) {
   onglet.addEventListener("click", () => choisirOnglet(onglet.dataset.onglet!));
 }
+
+async function basculerCamera(): Promise<void> {
+  const avant = camera.deFace;
+  try {
+    video.srcObject = await camera.basculer();
+    await video.play();
+  } catch {
+    // Pas de seconde camera : l'ancien flux est deja coupe, il faut le rouvrir,
+    // sinon l'ecran reste noir pour de bon.
+    message(t("camera.aucuneAutre"));
+    try {
+      video.srcObject = await camera.ouvrir(avant);
+      await video.play();
+    } catch (erreur) {
+      etat(t(`camera.${erreur instanceof ErreurCamera ? erreur.code : "inconnue"}`));
+    }
+  }
+}
+
+// Un onglet en arriere-plan qui garde la camera est le premier que le telephone ferme.
+document.addEventListener("visibilitychange", () => {
+  if (!window.kagami?.pret) return;
+  if (document.hidden) {
+    camera.fermer();
+    rendu.arreter();
+  } else {
+    void camera
+      .ouvrir()
+      .then(flux => {
+        video.srcObject = flux;
+        rendu.demarrer();
+        return video.play();
+      })
+      .catch(() => message(t("camera.inconnue")));
+  }
+});
 
 battre(() =>
   (window.kagami?.pret ? "en jeu" : "accueil") +

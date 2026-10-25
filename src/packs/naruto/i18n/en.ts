@@ -6,6 +6,11 @@
 import type { Dictionnaire } from "../../../moteur/ui/i18n";
 
 export const EN: Dictionnaire = {
+  "camera.occupee": "The camera is already in use by another app. Close it, then try again.",
+  "camera.inconnue": "The camera could not be opened. Reload the page, or try another browser.",
+  "camera.aucuneAutre": "No other camera on this device.",
+  "accueil.ouverture": "Opening the camera…",
+  "signe.tenir": "Hold the sign… {part}%",
   "encyclo.jamaisReussi": "Not done yet: your photo will show up here.",
   "encyclo.reussi": "Done {fois} times.",
   "encyclo.photo": "Photo taken at {score}%.",
@@ -13,7 +18,6 @@ export const EN: Dictionnaire = {
   "encyclo.decouvert": "discovered",
   "encyclo.variante": "Variant:",
   "encyclo.inventee": "No signs in the anime: this sequence was invented for the app.",
-  "appli.nom": "Kagami",
   "pack.nom": "Kata",
   "pack.sousTitre": "Naruto hand signs, recognised by your camera",
   "accueil.intro": "Make the signs in front of the camera: an AI model recognises them, and the right sequence fires one of {total} jutsu.",
@@ -28,7 +32,6 @@ export const EN: Dictionnaire = {
   "barre.encyclopedie": "Encyclopedia of signs and jutsu",
   "barre.camera": "Switch camera",
   "barre.son": "Mute",
-  "barre.retour": "Back",
   "encyclo.titre": "Ninja encyclopedia",
   "encyclo.signes": "The 14 signs",
   "encyclo.jutsus": "The jutsu",
@@ -51,7 +54,6 @@ export const EN: Dictionnaire = {
   "camera.permission": "Camera access was denied. Allow it in your browser, then reload the page.",
   "camera.absente": "No camera found on this device.",
   "camera.nonSecurise": "The camera needs a secure connection (https or localhost).",
-  "camera.erreur": "The camera could not be opened.",
   "modele.chargement": "Loading the recognition model…",
   "modele.erreur": "The model could not be loaded. Check that \"git lfs pull\" has been run.",
   "silhouette.chargement": "Loading the cut-out model (once only): simplified effect this time.",

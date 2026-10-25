@@ -28,6 +28,12 @@ export interface Photo {
 
 export interface Sauvegarde {
   version: number;
+  /**
+   * Vrai tant que rien n'a jamais ete enregistre. C'est ce qui permet de consulter la
+   * langue du navigateur une seule fois, au tout premier lancement : sans ce drapeau,
+   * `charger()` renvoyant toujours un objet complet, le defaut `fr` gagnerait toujours.
+   */
+  premiereVisite: boolean;
   /** Les identifiants des techniques déjà réussies. */
   decouvertes: string[];
   /** Combien de fois chaque jeton a été validé. */
@@ -39,6 +45,7 @@ export interface Sauvegarde {
 
 export const PAR_DEFAUT: Sauvegarde = {
   version: VERSION,
+  premiereVisite: true,
   decouvertes: [],
   compteurs: {},
   photos: {},
@@ -85,6 +92,7 @@ function migrerDepuisAncien(): Sauvegarde | null {
 
   const reprise: Sauvegarde = {
     ...copieParDefaut(),
+    premiereVisite: false,
     decouvertes: Array.isArray(decouvertes) ? (decouvertes as string[]) : [],
     compteurs: estObjet(compteurs) ? (compteurs as Record<string, number>) : {},
     photos: estObjet(photos) ? (photos as Record<string, Photo>) : {}
@@ -112,5 +120,5 @@ export function charger(): Sauvegarde {
 }
 
 export function enregistrer(sauvegarde: Sauvegarde): void {
-  ecrireBrut(CLE, { ...sauvegarde, version: VERSION });
+  ecrireBrut(CLE, { ...sauvegarde, version: VERSION, premiereVisite: false });
 }

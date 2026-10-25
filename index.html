@@ -6,12 +6,6 @@
     <meta name="theme-color" content="#0b0b10" />
     <title>Kagami</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&display=swap"
-    />
   </head>
   <body>
     <!-- la vidéo n'est pas affichée : elle est redessinée dans le canvas avec les effets -->
@@ -19,12 +13,6 @@
     <canvas id="scene"></canvas>
     <div id="calque3d"></div>
 
-    <!-- Le choix de la langue reste au-dessus de tout : il doit être atteignable depuis
-         l'accueil comme depuis l'encyclopédie, pas seulement en jeu. -->
-    <div class="langues">
-      <button id="btnFr" type="button" aria-pressed="true">FR</button>
-      <button id="btnEn" type="button" aria-pressed="false">EN</button>
-    </div>
 
     <header class="barre">
       <h1><span class="kanji">鏡</span> <span data-i18n="pack.nom">Kata</span></h1>
@@ -67,6 +55,10 @@
 
     <div id="accueil" class="ecran">
       <div class="fiche">
+        <div class="langues">
+          <button id="btnFr" type="button" aria-pressed="true">FR</button>
+          <button id="btnEn" type="button" aria-pressed="false">EN</button>
+        </div>
         <p class="grand-kanji">鏡</p>
         <h2 data-i18n="pack.nom">Kata</h2>
         <p class="sous-titre" data-i18n="pack.sousTitre">

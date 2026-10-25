@@ -6,6 +6,11 @@
 import type { Dictionnaire } from "../../../moteur/ui/i18n";
 
 export const FR: Dictionnaire = {
+  "camera.occupee": "La caméra est déjà utilisée par une autre application. Ferme-la, puis réessaie.",
+  "camera.inconnue": "La caméra n'a pas pu s'ouvrir. Recharge la page, ou essaie un autre navigateur.",
+  "camera.aucuneAutre": "Pas d'autre caméra sur cet appareil.",
+  "accueil.ouverture": "Ouverture de la caméra…",
+  "signe.tenir": "Tiens le signe… {part} %",
   "encyclo.jamaisReussi": "Pas encore réussi : ta photo apparaîtra ici.",
   "encyclo.reussi": "Réussi {fois} fois.",
   "encyclo.photo": "Photo prise à {score} %.",
@@ -13,7 +18,6 @@ export const FR: Dictionnaire = {
   "encyclo.decouvert": "découvert",
   "encyclo.variante": "Variante :",
   "encyclo.inventee": "Pas de signes dans l'anime : enchaînement inventé pour l'appli.",
-  "appli.nom": "Kagami",
   "pack.nom": "Kata",
   "pack.sousTitre": "Les signes de Naruto, reconnus à la caméra",
   "accueil.intro": "Fais les signes devant la caméra : un modèle d'intelligence artificielle les reconnaît, et le bon enchaînement lance l'un des {total} jutsus.",
@@ -28,7 +32,6 @@ export const FR: Dictionnaire = {
   "barre.encyclopedie": "Encyclopédie des signes et des jutsus",
   "barre.camera": "Changer de caméra",
   "barre.son": "Couper le son",
-  "barre.retour": "Retour",
   "encyclo.titre": "Encyclopédie ninja",
   "encyclo.signes": "Les 14 signes",
   "encyclo.jutsus": "Les jutsus",
@@ -51,7 +54,6 @@ export const FR: Dictionnaire = {
   "camera.permission": "La caméra a été refusée. Autorise-la dans ton navigateur, puis recharge la page.",
   "camera.absente": "Aucune caméra trouvée sur cet appareil.",
   "camera.nonSecurise": "La caméra demande une connexion sécurisée (https ou localhost).",
-  "camera.erreur": "La caméra n'a pas pu s'ouvrir.",
   "modele.chargement": "Chargement du modèle de reconnaissance…",
   "modele.erreur": "Le modèle n'a pas pu être chargé. Vérifie que « git lfs pull » a bien été lancé.",
   "silhouette.chargement": "Chargement du détourage (une seule fois) : effet simplifié pour cette fois.",

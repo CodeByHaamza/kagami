@@ -1,0 +1,42 @@
+# Kagami — deux services : le developpement et la version construite.
+#
+#   docker compose up dev            → http://localhost:5173, rechargement a chaud
+#   docker compose up --build web    → http://localhost:8080, l'image de production
+
+services:
+  dev:
+    image: node:24.19.0-alpine
+    working_dir: /app
+    command: sh -c "npm ci && npm run dev -- --host 0.0.0.0"
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      # node_modules reste dans le conteneur : les binaires natifs ne sont pas
+      # les memes que sur l'hote.
+      - modules:/app/node_modules
+    environment:
+      - NODE_ENV=development
+    # Le conteneur de dev n'a besoin d'aucun privilege.
+    security_opt:
+      - no-new-privileges:true
+
+  web:
+    build:
+      context: .
+      target: web
+    ports:
+      - "8080:8080"
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/cache/nginx
+      - /var/run
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: unless-stopped
+
+volumes:
+  modules:

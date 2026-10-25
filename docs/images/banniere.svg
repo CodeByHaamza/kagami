@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 190" width="760" height="190" role="img" aria-label="Kagami">
+  <defs>
+    <linearGradient id="fond" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#14141f"/><stop offset="1" stop-color="#0b0b10"/>
+    </linearGradient>
+    <linearGradient id="trait" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#3fa9ff"/><stop offset="0.5" stop-color="#b06bff"/>
+      <stop offset="1" stop-color="#e8963c"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="760" height="190" rx="16" fill="url(#fond)"/>
+
+  <!-- le miroir : un cercle qui respire -->
+  <g transform="translate(96 95)">
+    <circle r="46" fill="none" stroke="url(#trait)" stroke-width="1.6" opacity="0.85">
+      <animate attributeName="r" values="44;48;44" dur="4s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="33" fill="none" stroke="#3fa9ff" stroke-width="1" opacity="0.5">
+      <animate attributeName="r" values="34;30;34" dur="4s" repeatCount="indefinite"/>
+    </circle>
+    <text x="0" y="13" font-family="'Yuji Syuku',serif" font-size="40" fill="#e9e9f2"
+          text-anchor="middle">鏡</text>
+  </g>
+
+  <text x="178" y="86" font-family="system-ui,sans-serif" font-size="46" font-weight="700" fill="#e9e9f2">Kagami</text>
+  <text x="180" y="116" font-family="system-ui,sans-serif" font-size="15" fill="#9a9ab2">
+    Les gestes de ton anime, reconnus à la webcam
+  </text>
+
+  <!-- la ligne de signes qui défile : ce que le moteur lit -->
+  <g font-family="'Yuji Syuku',serif" font-size="21" fill="#6a6a86">
+    <text x="182" y="152">子</text><text x="214" y="152">丑</text>
+    <text x="246" y="152">寅</text><text x="278" y="152">卯</text>
+    <text x="310" y="152">辰</text><text x="342" y="152">巳</text>
+    <text x="374" y="152">午</text><text x="406" y="152">未</text>
+  </g>
+  <!-- le signe en cours de validation glisse le long de la ligne -->
+  <rect x="178" y="132" width="26" height="26" rx="5" fill="none" stroke="#e8963c" stroke-width="1.6">
+    <animate attributeName="x" values="178;210;242;274;306;338;370;402;178"
+             dur="7.2s" repeatCount="indefinite" calcMode="discrete"/>
+  </rect>
+
+  <line x1="178" y1="172" x2="716" y2="172" stroke="url(#trait)" stroke-width="2" opacity="0.5"
+        stroke-dasharray="538" stroke-dashoffset="538">
+    <animate attributeName="stroke-dashoffset" values="538;0" dur="2.4s" fill="freeze"/>
+  </line>
+</svg>

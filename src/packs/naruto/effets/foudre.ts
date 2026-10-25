@@ -1,5 +1,4 @@
 // Raiton : les effets de foudre
-// Hamza Karrouchi - BUT INFO 3
 
 import { hasard, TOUR, lisse, FOUDRE, sprite, emettre, eclair, tracer, emoji, teinte, voile } from "./outils";
 import type { Point } from "./outils";

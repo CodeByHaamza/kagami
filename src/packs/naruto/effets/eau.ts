@@ -1,5 +1,4 @@
 // Suiton : les effets d'eau
-// Hamza Karrouchi - BUT INFO 3
 
 import { hasard, enveloppe, EAU, FUMEE, emettre, emoji, teinte, voile } from "./outils";
 import type { Contexte2D, ContexteEffet, Effet, NouvelleParticule } from "../../../moteur/types";

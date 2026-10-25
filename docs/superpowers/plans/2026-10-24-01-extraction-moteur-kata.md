@@ -1,8 +1,8 @@
-# Kata — Plan 1 : extraction, outillage et séparation moteur / pack
+# Kagami — Plan 1 : extraction, outillage et séparation moteur / pack
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Le dépôt `kata` existe, typé, testé, buildé, et le pack ShinobiCam y fait
+**Goal:** Le dépôt `kata` existe, typé, testé, buildé, et le pack Kata y fait
 **exactement** ce que fait l'appli actuelle — pas une fonctionnalité de plus.
 
 **Architecture:** Portage à comportement constant de `CartoTD4/Ninjutsu` vers
@@ -16,16 +16,18 @@ Prettier · onnxruntime-web 1.29 · @mediapipe/tasks-vision · three 0.186 · Gi
 
 **Spec:** [`docs/superpowers/specs/2026-10-24-moteur-anime-webcam-design.md`](../specs/2026-10-24-moteur-anime-webcam-design.md)
 
-**Source à porter:** `…/scratchpad/recon-r506/CartoTD4/Ninjutsu` (dépôt `R506`, commit
+**Source à porter:** le dossier `Ninjutsu` du dépôt scolaire d'origine (commit
 `e3d86b4`). Le dossier est en lecture seule : on lit, on ne modifie jamais la source.
 
 ## Global Constraints
 
 - **TypeScript strict** (`"strict": true`, `noUncheckedIndexedAccess`). Les noms de
   variables, fonctions et commentaires restent **en français**, comme le code source.
-- **Aucune mention du nom civil.** Les chaînes `Karrouchi`, `Hamza`, `BUT INFO`,
-  `BUT 3`, `TD4`, `R506` ne doivent apparaître nulle part dans le dépôt. Les en-têtes
-  de la source les portent tous : à nettoyer au portage. Signature : `CodeByHaamza`.
+- **Aucune mention du nom civil.** Ni le nom civil du propriétaire, ni sa mention de
+  formation, ni les identifiants du dépôt scolaire d'origine ne doivent apparaître dans
+  le dépôt. Les en-têtes de la source les portent tous : à nettoyer au portage. La liste
+  exacte des chaînes interdites vit dans `tests/unitaires/depot.test.ts`, qui en est le
+  seul endroit légitime. Signature : `CodeByHaamza`.
 - **Aucune attribution Claude** dans les messages de commit : pas de `Co-Authored-By`,
   pas de 🤖, pas de lien.
 - **`src/moteur/` n'importe jamais rien de `src/packs/`.** Vérifié par ESLint et par un
@@ -61,7 +63,7 @@ l'appli chez un utilisateur. Chacun reçoit son test dans la tâche propriétair
 
 ## Structure des fichiers
 
-Le dépôt est initialisé **sur place** dans `C:\Users\tasda\Documents\Projets\Perso\ShinobiCam`
+Le dépôt est initialisé **sur place** dans `C:\Users\tasda\Documents\Projets\Perso\Kata`
 (qui contient déjà `docs/`). Le dépôt GitHub distant s'appellera `kata` ; le nom du
 dossier local n'a pas d'importance.
 
@@ -808,8 +810,8 @@ L'application fait de nouveau exactement ce que faisait la version d'origine."
 
 - `aucun fichier versionné ne contient le nom civil ni la mention universitaire` —
   parcourt la sortie de `git ls-files` et cherche, sans tenir compte de la casse :
-  `Karrouchi`, `Hamza`, `BUT INFO`, `BUT 3`, `TD4`, `R506`. Échoue en nommant les
-  fichiers fautifs. Ce test s'exclut lui-même.
+  la liste des chaînes interdites. Échoue en nommant les fichiers fautifs. Le test
+  s'exclut lui-même, puisqu'il est le seul fichier qui a le droit de les épeler.
 - `aucun message de commit de la branche ne contient Co-Authored-By ni claude.com`.
 - `chaque dépendance de package.json est épinglée à une version exacte`.
 - `.gitattributes déclare les modèles en LFS`.

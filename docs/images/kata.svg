@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 170" width="700" height="170" role="img" aria-label="Kata, pack Naruto">
+  <defs>
+    <linearGradient id="parchemin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1d1710"/><stop offset="1" stop-color="#120e09"/>
+    </linearGradient>
+    <radialGradient id="braise">
+      <stop offset="0" stop-color="#ffd36b" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#e8440f" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="700" height="170" rx="14" fill="url(#parchemin)"/>
+  <rect x="8" y="8" width="684" height="154" rx="10" fill="none" stroke="#b8763a" stroke-width="1" opacity="0.55"/>
+
+  <!-- une braise qui monte, comme au-dessus d'un Katon -->
+  <circle cx="620" cy="130" r="26" fill="url(#braise)">
+    <animate attributeName="cy" values="140;40;140" dur="5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;0.8;0" dur="5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="655" cy="130" r="18" fill="url(#braise)">
+    <animate attributeName="cy" values="145;55;145" dur="6.5s" begin="1.2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;0.6;0" dur="6.5s" begin="1.2s" repeatCount="indefinite"/>
+  </circle>
+
+  <text x="52" y="100" font-family="'Yuji Syuku',serif" font-size="62" fill="#e8963c">型</text>
+  <text x="130" y="78" font-family="system-ui,sans-serif" font-size="40" font-weight="700" fill="#f2e6d6">Kata</text>
+  <text x="132" y="106" font-family="system-ui,sans-serif" font-size="14" fill="#a08a6e">
+    Les signes de Naruto, reconnus à la caméra
+  </text>
+
+  <!-- l'enchaînement de la boule de feu, qui se valide signe par signe -->
+  <g font-family="'Yuji Syuku',serif" font-size="19" fill="#7a6650">
+    <text x="134" y="140">巳</text><text x="166" y="140">未</text>
+    <text x="198" y="140">申</text><text x="230" y="140">亥</text>
+    <text x="262" y="140">午</text><text x="294" y="140">寅</text>
+  </g>
+  <text x="326" y="140" font-family="system-ui,sans-serif" font-size="12" fill="#b8763a">
+    火遁・豪火球の術
+    <animate attributeName="opacity" values="0;0;1;1;0" dur="4.8s" repeatCount="indefinite"/>
+  </text>
+  <rect x="130" y="122" width="24" height="24" rx="4" fill="none" stroke="#ff8c1a" stroke-width="1.6">
+    <animate attributeName="x" values="130;162;194;226;258;290;130"
+             dur="4.8s" repeatCount="indefinite" calcMode="discrete"/>
+  </rect>
+</svg>

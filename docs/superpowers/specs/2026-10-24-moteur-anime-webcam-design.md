@@ -1,6 +1,6 @@
-# Kata — moteur de jeu « gestes d'anime à la webcam »
+# Kagami — moteur de jeu « gestes d'anime à la webcam »
 
-## Document de conception · pack n°1 : ShinobiCam (Naruto)
+## Document de conception · pack n°1 : Kata (Naruto)
 
 **Date :** 2026-10-24
 **Auteur :** CodeByHaamza
@@ -11,8 +11,8 @@
 ## 1. Intention
 
 Tu fais les signes de Naruto devant ta webcam, un modèle d'IA les reconnaît, et le bon
-enchaînement lance un jutsu dessiné par-dessus ton image. Ça existe déjà : c'est le TD4
-du dépôt scolaire `R506`, 52 jutsus, ça marche.
+enchaînement lance un jutsu dessiné par-dessus ton image. Ça existe déjà : c'est le l'exercice d'origine
+du dépôt scolaire `le dépôt scolaire d'origine`, 52 jutsus, ça marche.
 
 Ce projet en fait **autre chose** :
 
@@ -84,13 +84,14 @@ Ce qui ferait rater le projet même s'il marche techniquement :
 - **Un moteur générique théorique.** L'abstraction doit sortir du code existant, pas
   d'un schéma.
 - **Le nom et l'école du propriétaire dans le dépôt.** C'est un projet perso :
-  `CodeByHaamza` partout, jamais le nom civil, jamais « BUT INFO 3 », jamais « TD4 ».
+  `CodeByHaamza` partout. Ni le nom civil du propriétaire, ni sa mention de formation, ni le
+  numéro de l'exercice d'origine ne doivent apparaître dans le dépôt.
 
 ---
 
 ## 5. L'existant : ce qu'on reprend
 
-Source : `CodeByHaamza/R506`, dossier `CartoTD4/Ninjutsu`, dernier commit `e3d86b4`.
+Source : `CodeByHaamza/le dépôt scolaire d'origine`, dossier `CartoTD4/Ninjutsu`, dernier commit `e3d86b4`.
 Environ 2 200 lignes de JavaScript, modules ES natifs, aucun build, aucun test.
 
 | Fichier | Lignes | Ce que ça fait | Sort |
@@ -125,7 +126,7 @@ Environ 2 200 lignes de JavaScript, modules ES natifs, aucun build, aucun test.
 - `main.js` fait dix métiers. C'est la seule vraie dette.
 - Aucun typage : 52 jutsus × 14 signes × 52 effets reliés par des chaînes, sans filet.
 - Aucun test.
-- Les en-têtes de tous les fichiers portent le nom civil et « BUT INFO 3 ».
+- Les en-têtes de tous les fichiers portent le nom civil et la mention de formation.
 - Tout est en français en dur dans le code et le HTML.
 
 **Ce qui n'existe pas du tout** et qu'il faut construire : toute lecture du corps (§7.4),
@@ -839,11 +840,11 @@ concepteur — à contredire si d'autres outils que Claude Code sont utilisés.)
 ## 12. Les deux READMEs
 
 **README racine (Kata)** : le moteur, l'idée « les gestes de ton anime devant ta
-webcam », la liste des packs (ShinobiCam disponible ; DBZ, JJK, JoJo envisagés), le lien
+webcam », la liste des packs (Kata disponible ; DBZ, JJK, JoJo envisagés), le lien
 vers la démo en ligne, comment lancer en local, la pile technique, la feuille de route.
 Ton neutre, pas naruto-centré.
 
-**README du pack (ShinobiCam)** : habillage Naruto assumé — parchemin, kanji toujours
+**README du pack (Kata)** : habillage Naruto assumé — parchemin, kanji toujours
 doublés du nom lisible (même règle que le HUD), les 14 signes, le tableau des 52 jutsus
 par famille, le diagramme du cycle élémentaire, les boss, les grades, les contrats.
 
@@ -863,9 +864,9 @@ les cinq autres. Sinon, repli sur l'APNG.
 
 ## 13. Nommage — validé
 
-- **Projet / moteur : `Kata`** (型, la forme codifiée des arts martiaux). Court, japonais,
+- **Projet / moteur : `Kagami`** (型, la forme codifiée des arts martiaux). Court, japonais,
   ne dit pas « Naruto », marche pour n'importe quel anime.
-- **Pack Naruto : `ShinobiCam`**.
+- **Pack Naruto : `Kata`**.
 
 ---
 

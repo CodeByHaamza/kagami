@@ -1,5 +1,4 @@
 // Katon : les effets de feu
-// Hamza Karrouchi - BUT INFO 3
 
 import { hasard, TOUR, lisse, FEU, NOIR, CENDRE, sprite, emettre, emoji, teinte, vignette, sharingan } from "./outils";
 import type { ContexteEffet, Effet } from "../../../moteur/types";

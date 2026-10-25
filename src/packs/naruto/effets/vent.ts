@@ -1,5 +1,4 @@
 // Fūton : les effets de vent
-// Hamza Karrouchi - BUT INFO 3
 //
 // Le vent ne se voit pas : on montre ce qu'il fait bouger (traits de vitesse,
 // feuilles, poussière) et on décale des bandes de l'image comme si l'air la tordait.

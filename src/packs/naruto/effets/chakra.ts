@@ -1,5 +1,4 @@
 // Le chakra pur : Rasengan, Rasenshuriken, et les techniques médicales
-// Hamza Karrouchi - BUT INFO 3
 // La sphère du Rasengan est en 3D (rasengan.js) : ces effets ajoutent le halo autour.
 
 import { hasard, TOUR, lisse, CHAKRA, VERT, sprite, emettre, teinte } from "./outils";

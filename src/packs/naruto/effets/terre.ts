@@ -1,5 +1,4 @@
 // Doton et Mokuton : les effets de terre et de bois
-// Hamza Karrouchi - BUT INFO 3
 
 import { hasard, lisse, TERRE, emettre, eclair, tracer, emoji, bois } from "./outils";
 import type { Point } from "./outils";

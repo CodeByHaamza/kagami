@@ -1,5 +1,4 @@
 // Genjutsu et Sharingan : les illusions et les techniques des yeux
-// Hamza Karrouchi - BUT INFO 3
 //
 // Les effets marqués "genjutsu" durent jusqu'à ce qu'on fasse le signe du Bélier
 // (« Kai ! »), ou au plus 12 secondes.

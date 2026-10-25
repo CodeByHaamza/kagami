@@ -1,5 +1,4 @@
 // Les outils communs aux effets : particules, fumée, éclairs, dessins
-// Hamza Karrouchi - BUT INFO 3
 // doc : https://developer.mozilla.org/fr/docs/Web/API/Canvas_API/Tutorial/Compositing
 
 import type { Contexte2D, ContexteEffet, Particules } from "../../../moteur/types";

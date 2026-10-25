@@ -1,5 +1,4 @@
 // Ninjutsu, invocations et sceaux
-// Hamza Karrouchi - BUT INFO 3
 //
 // Plusieurs effets utilisent la personne détourée (e.personne) : les clones, la bûche
 // de la permutation, la métamorphose... Sans détourage, ils font une version simplifiée.

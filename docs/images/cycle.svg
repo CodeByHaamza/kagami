@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 420" width="420" height="420" role="img"
+     aria-label="Le cycle élémentaire : le Feu bat le Vent, le Vent bat la Foudre, la Foudre bat la Terre, la Terre bat l'Eau, l'Eau bat le Feu">
+  <defs>
+    <marker id="pointe" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6a6a86"/>
+    </marker>
+    <filter id="lueur"><feGaussianBlur stdDeviation="5" result="f"/>
+      <feMerge><feMergeNode in="f"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+
+  <circle cx="210" cy="210" r="132" fill="none" stroke="#2a2a3c" stroke-width="1.5"/>
+
+  <!-- les cinq flèches : chacune va vers l'élément qu'elle bat -->
+  <g fill="none" stroke="#6a6a86" stroke-width="2" marker-end="url(#pointe)" opacity="0.65">
+    <path d="M 254 103 A 132 132 0 0 1 327 227"/>
+    <path d="M 331 254 A 132 132 0 0 1 227 331"/>
+    <path d="M 193 330 A 132 132 0 0 1 90 251"/>
+    <path d="M 89 227 A 132 132 0 0 1 130 109"/>
+    <path d="M 152 90 A 132 132 0 0 1 190 79"/>
+  </g>
+
+  <!-- Feu ▶ Vent ▶ Foudre ▶ Terre ▶ Eau ▶ Feu -->
+  <g font-family="'Yuji Syuku',serif" text-anchor="middle">
+    <g transform="translate(210 78)">
+      <circle r="34" fill="#1a1119" stroke="#e8440f" stroke-width="2"/>
+      <text y="4" font-size="26" fill="#ff8c1a">火</text>
+      <text y="22" font-size="10" font-family="system-ui,sans-serif" fill="#9a9ab2">Feu</text>
+      <animate attributeName="opacity" values="1;1;0.45;0.45;0.45;0.45;1" dur="7.5s" repeatCount="indefinite"/>
+    </g>
+    <g transform="translate(336 170)">
+      <circle r="34" fill="#111a16" stroke="#7dff9a" stroke-width="2"/>
+      <text y="4" font-size="26" fill="#7dff9a">風</text>
+      <text y="22" font-size="10" font-family="system-ui,sans-serif" fill="#9a9ab2">Vent</text>
+      <animate attributeName="opacity" values="0.45;1;1;0.45;0.45;0.45;0.45" dur="7.5s" repeatCount="indefinite"/>
+    </g>
+    <g transform="translate(288 318)">
+      <circle r="34" fill="#15161f" stroke="#6cbcff" stroke-width="2"/>
+      <text y="4" font-size="26" fill="#c8ebff">雷</text>
+      <text y="22" font-size="10" font-family="system-ui,sans-serif" fill="#9a9ab2">Foudre</text>
+      <animate attributeName="opacity" values="0.45;0.45;1;1;0.45;0.45;0.45" dur="7.5s" repeatCount="indefinite"/>
+    </g>
+    <g transform="translate(132 318)">
+      <circle r="34" fill="#19150f" stroke="#a07850" stroke-width="2"/>
+      <text y="4" font-size="26" fill="#d2a978">土</text>
+      <text y="22" font-size="10" font-family="system-ui,sans-serif" fill="#9a9ab2">Terre</text>
+      <animate attributeName="opacity" values="0.45;0.45;0.45;1;1;0.45;0.45" dur="7.5s" repeatCount="indefinite"/>
+    </g>
+    <g transform="translate(84 170)">
+      <circle r="34" fill="#101722" stroke="#3a9be8" stroke-width="2"/>
+      <text y="4" font-size="26" fill="#8fdcff">水</text>
+      <text y="22" font-size="10" font-family="system-ui,sans-serif" fill="#9a9ab2">Eau</text>
+      <animate attributeName="opacity" values="0.45;0.45;0.45;0.45;1;1;0.45" dur="7.5s" repeatCount="indefinite"/>
+    </g>
+  </g>
+
+  <!-- l'étincelle qui parcourt le cycle, dans le sens « bat » -->
+  <circle r="6" fill="#ffd36b" filter="url(#lueur)">
+    <animateMotion dur="7.5s" repeatCount="indefinite" rotate="auto"
+      path="M 210 78 A 132 132 0 0 1 336 170 A 132 132 0 0 1 288 318 A 132 132 0 0 1 132 318 A 132 132 0 0 1 84 170 A 132 132 0 0 1 210 78"/>
+  </circle>
+
+  <text x="210" y="200" font-family="system-ui,sans-serif" font-size="13" fill="#6a6a86" text-anchor="middle">chaque élément</text>
+  <text x="210" y="218" font-family="system-ui,sans-serif" font-size="13" fill="#9a9ab2" text-anchor="middle">bat le suivant</text>
+  <text x="210" y="240" font-family="'Yuji Syuku',serif" font-size="15" fill="#e8963c" text-anchor="middle">性質変化</text>
+</svg>

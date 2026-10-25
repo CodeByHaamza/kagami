@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 150" width="660" height="150" role="img"
+     aria-label="L'enchaînement de la boule de feu suprême : Serpent, Bélier, Singe, Sanglier, Cheval, Tigre">
+  <defs>
+    <linearGradient id="braise" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#e8440f"/><stop offset="1" stop-color="#ffd36b"/>
+    </linearGradient>
+  </defs>
+  <rect width="660" height="150" rx="14" fill="#120e09"/>
+
+  <g font-family="'Yuji Syuku',serif" text-anchor="middle">
+    <g transform="translate(60 56)"><text font-size="34" fill="#7a6650">巳</text>
+      <text y="26" font-size="11" font-family="system-ui,sans-serif" fill="#7a6650">Serpent</text></g>
+    <g transform="translate(160 56)"><text font-size="34" fill="#7a6650">未</text>
+      <text y="26" font-size="11" font-family="system-ui,sans-serif" fill="#7a6650">Bélier</text></g>
+    <g transform="translate(260 56)"><text font-size="34" fill="#7a6650">申</text>
+      <text y="26" font-size="11" font-family="system-ui,sans-serif" fill="#7a6650">Singe</text></g>
+    <g transform="translate(360 56)"><text font-size="34" fill="#7a6650">亥</text>
+      <text y="26" font-size="11" font-family="system-ui,sans-serif" fill="#7a6650">Sanglier</text></g>
+    <g transform="translate(460 56)"><text font-size="34" fill="#7a6650">午</text>
+      <text y="26" font-size="11" font-family="system-ui,sans-serif" fill="#7a6650">Cheval</text></g>
+    <g transform="translate(560 56)"><text font-size="34" fill="#7a6650">寅</text>
+      <text y="26" font-size="11" font-family="system-ui,sans-serif" fill="#7a6650">Tigre</text></g>
+  </g>
+
+  <!-- le curseur de validation avance d'un signe toutes les 0,75 s -->
+  <rect x="26" y="20" width="68" height="50" rx="10" fill="none" stroke="#ff8c1a" stroke-width="2.5">
+    <animate attributeName="x" values="26;126;226;326;426;526;26" dur="4.5s"
+             repeatCount="indefinite" calcMode="discrete"/>
+  </rect>
+
+  <!-- la jauge se remplit au fil de l'enchaînement, puis le jutsu part -->
+  <rect x="26" y="96" width="608" height="5" rx="3" fill="#241a10"/>
+  <rect x="26" y="96" height="5" rx="3" fill="url(#braise)">
+    <animate attributeName="width" values="0;101;202;304;405;506;608;608;0" dur="4.5s"
+             keyTimes="0;0.166;0.333;0.5;0.666;0.833;0.93;0.99;1" repeatCount="indefinite"/>
+  </rect>
+
+  <text x="330" y="128" font-family="system-ui,sans-serif" font-size="13" fill="#b8763a" text-anchor="middle">
+    火遁・豪火球の術 · Katon : Gōkakyū no jutsu
+    <animate attributeName="opacity" values="0.35;0.35;1;1;0.35" keyTimes="0;0.85;0.93;0.99;1"
+             dur="4.5s" repeatCount="indefinite"/>
+  </text>
+</svg>

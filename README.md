@@ -1,15 +1,15 @@
 <div align="center">
 
-<img src="docs/images/banniere.svg" alt="Kagami" width="760">
+<img src="docs/images/banniere.svg" alt="Kagami — les gestes de ton anime, reconnus à la webcam" width="760">
 
-**Les gestes de ton anime, reconnus à la webcam.**
+### Tu fais le geste devant ta caméra. Une IA le reconnaît. La technique part à l'écran.
 
-Tu fais le geste devant ta caméra, une IA le reconnaît, la technique part à l'écran.
+<br>
 
-[![CI](https://github.com/CodeByHaamza/kagami/actions/workflows/ci.yml/badge.svg)](https://github.com/CodeByHaamza/kagami/actions/workflows/ci.yml)
-![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6)
-![Tests](https://img.shields.io/badge/tests-192-6fcf7f)
-![Licence](https://img.shields.io/badge/licence-MIT-9a7aff)
+<a href="https://github.com/CodeByHaamza/kagami/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/CodeByHaamza/kagami/ci.yml?branch=main&style=for-the-badge&label=CI&labelColor=14141f&color=6fcf7f" alt="CI"></a>
+<img src="https://img.shields.io/badge/TypeScript-strict-3178c6?style=for-the-badge&labelColor=14141f" alt="TypeScript strict">
+<img src="https://img.shields.io/badge/tests-205-6fcf7f?style=for-the-badge&labelColor=14141f" alt="205 tests">
+<img src="https://img.shields.io/badge/licence-MIT-9a7aff?style=for-the-badge&labelColor=14141f" alt="MIT">
 
 </div>
 
@@ -24,12 +24,16 @@ reconnu), les assembler en **techniques**, et dessiner l'effet par-dessus ton im
 Chaque anime est un **pack** : son modèle de reconnaissance, son catalogue, ses effets,
 ses textes. Ajouter un anime, c'est ajouter un dossier, pas rouvrir le moteur.
 
-| Pack | Anime | Ce qu'on y fait | État |
-| --- | --- | --- | --- |
-| [**Kata**](src/packs/naruto/) 型 | Naruto | les 14 signes de mains, 52 jutsus | disponible |
-| — | Dragon Ball | poses du corps, montée de ki | envisagé |
-| — | Jujutsu Kaisen | gestes et extension du territoire | envisagé |
-| — | JoJo | poses | envisagé |
+<div align="center">
+
+| | Pack | Anime | Ce qu'on y fait | État |
+| :---: | --- | --- | --- | :---: |
+| 型 | [**Kata**](src/packs/naruto/) | Naruto | les 14 signes de mains, 52 jutsus | **disponible** |
+| 気 | — | Dragon Ball | poses du corps, montée de ki | envisagé |
+| 呪 | — | Jujutsu Kaisen | gestes, extension du territoire | envisagé |
+| 波 | — | JoJo | poses | envisagé |
+
+</div>
 
 ## Essayer
 
@@ -41,8 +45,16 @@ npm install
 npm run dev      # puis http://localhost:5173
 ```
 
-Il faut une webcam, et un navigateur récent. La caméra exige `https` ou `localhost` :
-c'est une règle des navigateurs, pas du projet.
+Il faut une webcam et un navigateur récent. La caméra exige `https` ou `localhost` :
+c'est une règle des navigateurs, pas du projet. Rien ne sort de ta machine — ton image
+ne quitte jamais l'onglet.
+
+Avec Docker :
+
+```bash
+docker compose up dev            # développement, http://localhost:5173
+docker compose up --build web    # version construite, http://localhost:8080
+```
 
 ## Comment ça marche
 
@@ -61,6 +73,11 @@ Seules deux pièces sont propres à un anime : le reconnaisseur et le catalogue.
 de lint interdit à `src/moteur/` d'importer quoi que ce soit de `src/packs/`, et un test
 la vérifie.
 
+<div align="center">
+<img src="docs/images/enchainement.svg" alt="Un enchaînement de six signes qui déclenche la boule de feu suprême" width="660">
+<br><sub>Six signes à la suite, chacun tenu une demi-seconde. Le curseur avance quand le modèle valide.</sub>
+</div>
+
 ## La pile
 
 | Quoi | Avec quoi |
@@ -70,24 +87,16 @@ la vérifie.
 | Effets | Canvas 2D, et Three.js pour le Rasengan |
 | Build et tests | Vite · TypeScript strict · Vitest · Playwright |
 
-Tout tourne dans le navigateur. Pas de serveur, pas de compte, rien qui sorte de ta
-machine : ton image ne quitte jamais l'onglet.
+Tout tourne dans le navigateur. Pas de serveur, pas de compte, aucune donnée qui sorte.
 
 ## Développer
 
 ```bash
 npm run dev        # serveur de développement
-npm test           # 192 tests unitaires + vérification des types
+npm test           # 205 tests unitaires + vérification des types
 npm run test:e2e   # test de fumée dans un vrai navigateur (démarrer npm run dev à côté)
 npm run lint       # ESLint, dont la règle moteur ↛ packs
 npm run build      # sortie statique dans dist/
-```
-
-Avec Docker :
-
-```bash
-docker compose up dev      # développement, http://localhost:5173
-docker compose up --build web   # version construite, servie sur http://localhost:8080
 ```
 
 Pour ajouter un jutsu, un effet ou un pack entier : [CONTRIBUTING.md](CONTRIBUTING.md).
@@ -100,11 +109,10 @@ Les conventions du dépôt sont dans [CLAUDE.md](CLAUDE.md).
 - [ ] **3** — arcade : vagues, boss, dégâts à l'impact, ralenti d'incantation
 - [ ] **4** — progression : grades, examens, fiche ninja, invocations
 - [ ] **5** — contenu et assets : signes dessinés, silhouettes à l'encre, nouveaux jutsus
-- [ ] **6** — finition : README animé, démo en ligne, enregistreur de clip
+- [ ] **6** — finition : démo en ligne, enregistreur de clip, README avec de vraies images de jeu
 
-La conception complète est dans
-[`docs/superpowers/specs/`](docs/superpowers/specs/), les plans dans
-[`docs/superpowers/plans/`](docs/superpowers/plans/).
+La conception complète est dans [`docs/superpowers/specs/`](docs/superpowers/specs/),
+les plans dans [`docs/superpowers/plans/`](docs/superpowers/plans/).
 
 ## Licence et crédits
 
@@ -115,4 +123,19 @@ commercial, sans aucun asset tiré de l'anime.
 - Modèle de détection : [NARUTO-HandSignDetection](https://github.com/Kazuhito00/NARUTO-HandSignDetection) de Kazuhito Takahashi, licence MIT
 - Détourage : [MediaPipe](https://ai.google.dev/edge/mediapipe), licence Apache 2.0
 
-<div align="center"><sub>par <a href="https://github.com/CodeByHaamza">CodeByHaamza</a></sub></div>
+---
+
+<div align="center">
+
+<a href="https://github.com/CodeByHaamza">
+  <img src="https://github.com/CodeByHaamza.png" width="84" alt="CodeByHaamza" style="border-radius:50%">
+</a>
+
+### [CodeByHaamza](https://github.com/CodeByHaamza)
+
+<a href="https://github.com/CodeByHaamza"><img src="https://img.shields.io/badge/GitHub-CodeByHaamza-14141f?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"></a>
+<a href="https://github.com/CodeByHaamza/kagami/stargazers"><img src="https://img.shields.io/github/stars/CodeByHaamza/kagami?style=for-the-badge&labelColor=14141f&color=e8963c" alt="Étoiles"></a>
+
+<sub>Si tu fais un Rasengan correct du premier coup, dis-le-moi.</sub>
+
+</div>

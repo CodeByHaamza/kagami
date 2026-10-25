@@ -1,9 +1,9 @@
 {
-  "name": "kata",
+  "name": "kagami",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Les gestes de ton anime, reconnus a la webcam. Pack n°1 : ShinobiCam (Naruto).",
+  "description": "Les gestes de ton anime, reconnus a la webcam. Pack n°1 : Kata (Naruto).",
   "author": "CodeByHaamza",
   "license": "MIT",
   "scripts": {

@@ -80,6 +80,14 @@ export interface Technique<J extends string = string> {
   signes: readonly J[];
   variante?: readonly J[];
   tenir?: boolean;
+  /**
+   * Un troisieme mode, a cote de « sequence » et « tenue » : N repetitions du meme
+   * jeton dans un laps de temps. C'est ce qui rend une rafale jouissive a faire —
+   * le 64 Poings du Hakke n'est pas un enchainement, c'est une cadence.
+   */
+  cadence?: { nombre: number; dans: number };
+  /** Le jeton que la cadence compte. Ignore pour les autres modes. */
+  jeton?: J;
   effet: string;
   source: "anime" | "appli";
 }

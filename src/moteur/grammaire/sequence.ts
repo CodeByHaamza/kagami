@@ -23,6 +23,16 @@ export interface Reglages {
   attente: number;
 }
 
+/**
+ * Au-dela de la tenue, continuer a tenir le meme jeton passe au palier « charge ».
+ *
+ * C'est la regle qui resout une collision reelle : `shunshin` est deja « Tigre tenu
+ * 2,5 s », et « mains jointes » ouvre le Rasengan. Affecter ces jetons a la charge de
+ * chakra ou au mode ermite aurait casse trois jutsus. En paliers, on ne retire rien :
+ * on continue simplement a tenir au lieu de relacher.
+ */
+export const PALIER_CHARGE = 4000;
+
 export const REGLAGES_PAR_DEFAUT: Reglages = {
   seuil: 0.6,
   confirmations: 2,
@@ -68,6 +78,8 @@ export class Sequence<J extends string = string> {
   private readonly techniques: readonly Technique<J>[];
   /** Les jetons valides. */
   private jetons: J[] = [];
+  /** Quand chaque jeton de l'historique a ete valide, pour juger des cadences. */
+  private instants: number[] = [];
   /** Le jeton vu sur les dernieres images. */
   private candidat: J | null = null;
   /** Depuis combien d'images. */
@@ -90,6 +102,7 @@ export class Sequence<J extends string = string> {
   ajouter(detection: Detection<J> | null, maintenant: number): J | null {
     if (this.jetons.length && maintenant - this.dernierJeton > this.reglages.oubli) {
       this.jetons = [];
+      this.instants = [];
     }
 
     if (!detection || detection.score < this.reglages.seuil) {
@@ -113,12 +126,27 @@ export class Sequence<J extends string = string> {
     if (detection.jeton === this.jetons[this.jetons.length - 1]) return null;
 
     this.jetons.push(detection.jeton);
-    if (this.jetons.length > HISTORIQUE_MAX) this.jetons.shift();
+    this.instants.push(maintenant);
+    if (this.jetons.length > HISTORIQUE_MAX) {
+      this.jetons.shift();
+      this.instants.shift();
+    }
     return detection.jeton;
   }
 
   vider(): void {
     this.jetons = [];
+    this.instants = [];
+  }
+
+  /** Combien de fois `jeton` a ete valide dans les `dans` dernieres millisecondes. */
+  private cadenceDe(jeton: J, dans: number, maintenant: number): number {
+    let compte = 0;
+    for (let i = this.jetons.length - 1; i >= 0; i--) {
+      if (maintenant - this.instants[i]! > dans) break;
+      if (this.jetons[i] === jeton) compte++;
+    }
+    return compte;
   }
 
   /**
@@ -127,7 +155,17 @@ export class Sequence<J extends string = string> {
    * plus longue : il faut laisser au joueur le temps de continuer (le Rasengan est le
    * debut du Rasenshuriken).
    */
-  techniqueTerminee(): { technique: Technique<J>; attendre: boolean } | null {
+  techniqueTerminee(maintenant = this.dernierJeton): { technique: Technique<J>; attendre: boolean } | null {
+    // Les cadences d'abord : elles ne reposent pas sur la fin de l'historique, donc
+    // elles ne peuvent pas entrer en concurrence avec un enchainement.
+    for (const technique of this.techniques) {
+      const c = technique.cadence;
+      if (!c || !technique.jeton) continue;
+      if (this.cadenceDe(technique.jeton, c.dans, maintenant) >= c.nombre) {
+        return { technique, attendre: false };
+      }
+    }
+
     let trouve: Technique<J> | null = null;
     let longueur = 0;
 
@@ -155,7 +193,12 @@ export class Sequence<J extends string = string> {
    * Une technique a tenir : son jeton est le seul de l'historique et il est toujours
    * tenu. `part` va de 0 a 1 ; la technique part a 1.
    */
-  jetonTenu(maintenant: number): { technique: Technique<J>; part: number } | null {
+  jetonTenu(maintenant: number): {
+    technique: Technique<J> | null;
+    jeton: J;
+    part: number;
+    palier: "tenue" | "charge";
+  } | null {
     if (
       this.jetons.length !== 1 ||
       this.candidat !== this.jetons[0] ||
@@ -163,9 +206,17 @@ export class Sequence<J extends string = string> {
     ) {
       return null;
     }
-    const technique = this.techniques.find(t => t.tenir && t.signes[0] === this.candidat);
-    if (!technique) return null;
-    return { technique, part: Math.min((maintenant - this.debutTenu) / this.reglages.tenir, 1) };
+
+    const tenu = maintenant - this.debutTenu;
+    const palier = tenu >= PALIER_CHARGE ? "charge" : "tenue";
+    const duree = palier === "charge" ? PALIER_CHARGE : this.reglages.tenir;
+
+    return {
+      technique: this.techniques.find(t => t.tenir && t.signes[0] === this.candidat) ?? null,
+      jeton: this.candidat,
+      part: Math.min(tenu / duree, 1),
+      palier
+    };
   }
 
   /** Ou en est-on d'une technique. */

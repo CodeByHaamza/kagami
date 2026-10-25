@@ -125,7 +125,7 @@ test("jetonTenu renvoie part = 0 puis 1 après 2500 ms", () => {
   const s = new Sequence(CATALOGUE);
   s.ajouter(vu("cheval"), 1000);
   s.ajouter(vu("cheval"), 1010);
-  expect(s.jetonTenu(1010)?.technique.id).toBe("shunshin");
+  expect(s.jetonTenu(1010)?.technique?.id).toBe("shunshin");
   expect(s.jetonTenu(1010)?.part).toBe(0);
   s.ajouter(vu("cheval"), 3510);
   expect(s.jetonTenu(3510)?.part).toBe(1);
@@ -170,4 +170,91 @@ test("les réglages par défaut sont ceux de la version d'origine", () => {
     tenir: 2500,
     attente: 1500
   });
+});
+
+// ---- les paliers de tenue, et la cadence (plan 2) ----
+
+/**
+ * Tient un jeton de `de` a `a`, a la cadence reelle de la boucle de detection (12 Hz).
+ * Sauter le temps d'un coup declencherait l'oubli, ce qui n'arrive jamais en vrai :
+ * tant qu'on tient le signe, le detecteur le revoit douze fois par seconde.
+ */
+function maintenir(s: Sequence<S>, jeton: S, de: number, a: number): void {
+  for (let t = de; t <= a; t += 80) s.ajouter(vu(jeton), t);
+}
+
+const CHARGE = technique("charge", ["cheval"], { tenir: true });
+const RAFALE = technique("rafale", [], { cadence: { nombre: 8, dans: 3000 }, jeton: "tigre" });
+
+test("un jeton tenu 2,5 s donne le palier « tenue »", () => {
+  // La tenue part de la DEUXIEME image confirmee, pas de la premiere : il faut donc
+  // tenir un peu plus que 2,5 s apres le premier contact.
+  const s = new Sequence([CHARGE]);
+  maintenir(s, "cheval", 1000, 3700);
+
+  const tenu = s.jetonTenu(3700);
+  expect(tenu?.technique?.id).toBe("charge");
+  expect(tenu?.palier).toBe("tenue");
+  expect(tenu?.part).toBe(1);
+});
+
+test("le même jeton tenu au-delà de 4 s passe au palier « charge »", () => {
+  // La règle qui préserve shunshin : on continue à tenir au lieu de relâcher.
+  const s = new Sequence([CHARGE]);
+  maintenir(s, "cheval", 1000, 5100);
+
+  expect(s.jetonTenu(5100)?.palier).toBe("charge");
+});
+
+test("un jeton sans technique à tenir atteint quand même le palier charge", () => {
+  // Charger le chakra ne demande pas qu'un jutsu existe pour ce signe.
+  const s = new Sequence([RASENGAN]);
+  maintenir(s, "tigre", 0, 4200);
+
+  const tenu = s.jetonTenu(4200);
+  expect(tenu?.palier).toBe("charge");
+  expect(tenu?.technique).toBeNull();
+});
+
+test("huit jetons en moins de 3 s déclenchent la technique à cadence", () => {
+  const s = new Sequence([RAFALE]);
+  for (let i = 0; i < 8; i++) {
+    s.ajouter(vu("tigre"), i * 200);
+    s.ajouter(vu("tigre"), i * 200 + 10);
+    s.ajouter(vu("serpent"), i * 200 + 20); // casse la répétition
+    s.ajouter(vu("serpent"), i * 200 + 30);
+  }
+
+  expect(s.techniqueTerminee()?.technique.id).toBe("rafale");
+});
+
+test("sept jetons ne déclenchent pas la technique à cadence", () => {
+  const s = new Sequence([RAFALE]);
+  for (let i = 0; i < 7; i++) {
+    s.ajouter(vu("tigre"), i * 200);
+    s.ajouter(vu("tigre"), i * 200 + 10);
+    s.ajouter(vu("serpent"), i * 200 + 20);
+    s.ajouter(vu("serpent"), i * 200 + 30);
+  }
+
+  expect(s.techniqueTerminee()).toBeNull();
+});
+
+test("huit jetons étalés sur plus de 3 s ne la déclenchent pas", () => {
+  const s = new Sequence([RAFALE], { oubli: 60_000 });
+  for (let i = 0; i < 8; i++) {
+    s.ajouter(vu("tigre"), i * 600);
+    s.ajouter(vu("tigre"), i * 600 + 10);
+    s.ajouter(vu("serpent"), i * 600 + 20);
+    s.ajouter(vu("serpent"), i * 600 + 30);
+  }
+
+  expect(s.techniqueTerminee()).toBeNull();
+});
+
+test("une technique à cadence n'interfère pas avec les enchaînements", () => {
+  const s = new Sequence([...CATALOGUE, RAFALE]);
+  enchainer(s, ["mains", "tigre"]);
+
+  expect(s.techniqueTerminee()?.technique.id).toBe("rasengan");
 });

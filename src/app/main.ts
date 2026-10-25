@@ -246,7 +246,12 @@ function traiter(vue: Awaited<ReturnType<typeof detecteur.reconnaitre>>): void {
 
   const tenu = sequence.jetonTenu(maintenant);
   montrerTenu(tenu);
-  if (tenu && tenu.part >= 1) declencher(tenu.technique, maintenant);
+  // Un jeton tenu peut ne correspondre a aucune technique : c'est le palier « charge »,
+  // dont le plan 4 fera la charge de chakra et le mode ermite. Pour l'instant il ne
+  // declenche rien, mais il ne doit surtout pas jeter.
+  if (tenu?.technique && tenu.palier === "tenue" && tenu.part >= 1) {
+    declencher(tenu.technique, maintenant);
+  }
 
   afficherEnchainement();
 }

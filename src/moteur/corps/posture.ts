@@ -57,11 +57,15 @@ export type FabriqueDePose = (variante: keyof typeof MODELES) => Promise<ModeleP
 
 const fabriqueParDefaut: FabriqueDePose = async variante => {
   const fichiers = await FilesetResolver.forVisionTasks(WASM);
-  return PoseLandmarker.createFromOptions(fichiers, {
+  const landmarker = await PoseLandmarker.createFromOptions(fichiers, {
     baseOptions: { modelAssetPath: MODELES[variante], delegate: "GPU" },
     runningMode: "VIDEO",
     numPoses: 1
   });
+  // `detectForVideo` est surchargé — une forme à rappel, une forme avec options — et
+  // aucune de ces surcharges n'est structurellement assignable à la forme réduite dont
+  // on a besoin. On ne se sert que de la surcharge à deux arguments.
+  return landmarker as unknown as ModelePose;
 };
 
 export interface OptionsPosture {

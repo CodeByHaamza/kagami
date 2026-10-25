@@ -84,11 +84,13 @@ test("REPERE couvre les points dont les gestes ont besoin", () => {
   const attendus = [
     "nez", "epauleG", "epauleD", "coudeG", "coudeD", "poignetG", "poignetD",
     "hancheG", "hancheD", "genouG", "genouD", "chevilleG", "chevilleD"
-  ];
+  ] as const satisfies readonly (keyof typeof REPERE)[];
 
   for (const nom of attendus) {
     expect(REPERE[nom], nom).toBeTypeOf("number");
     expect(REPERE[nom]).toBeGreaterThanOrEqual(0);
     expect(REPERE[nom]).toBeLessThanOrEqual(32);
   }
+  // MediaPipe numérote 33 points : aucun repère ne doit sortir de cet intervalle.
+  expect(new Set(Object.values(REPERE)).size).toBe(Object.keys(REPERE).length);
 });

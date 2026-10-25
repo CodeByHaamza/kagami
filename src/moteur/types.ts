@@ -38,6 +38,29 @@ export interface Reconnaisseur<J extends string = string> {
   reconnaitre(image: Image, largeur: number, hauteur: number): Promise<Detection<J> | null>;
 }
 
+// ---- le corps ----
+
+/**
+ * Un point du corps vu par le lecteur de posture, en **fraction de l'image** : x et y
+ * vont de 0 a 1. Garder des fractions rend toutes les mesures independantes de la
+ * resolution de la camera.
+ */
+export interface Point3 {
+  x: number;
+  y: number;
+  /** La profondeur relative, dans la meme unite que x. */
+  z: number;
+  /** La confiance du modele sur ce point, de 0 a 1. */
+  visibilite: number;
+}
+
+/** Le corps a un instant donne : les 33 points du modele, et quand ils ont ete lus. */
+export interface Posture {
+  points: readonly Point3[];
+  /** L'horloge du navigateur, en millisecondes. */
+  horodatage: number;
+}
+
 // ---- les techniques ----
 
 /**

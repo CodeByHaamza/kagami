@@ -189,6 +189,31 @@
       </div>
     </div>
 
+    <!-- Le banc de rejeu. Outil de développement : il n'apparaît qu'avec ?banc dans
+         l'adresse, et ses étiquettes ne passent pas par t() — douze clés dans deux
+         langues pour un panneau que seul le propriétaire du dépôt verra. C'est lui
+         qui permet de régler les seuils de gestes en lisant des nombres. -->
+    <div id="banc" class="banc" hidden>
+      <p class="banc-titre">銘 <span id="bancEtat">prêt</span></p>
+      <dl class="banc-valeurs">
+        <dt>posture</dt>
+        <dd id="bancPosture">—</dd>
+        <dt>geste</dt>
+        <dd id="bancGeste">—</dd>
+        <dt>jeton</dt>
+        <dd id="bancJeton">—</dd>
+        <dt>immobilité</dt>
+        <dd id="bancImmobilite">—</dd>
+        <dt>fiable</dt>
+        <dd id="bancFiabilite">—</dd>
+      </dl>
+      <div class="banc-boutons">
+        <button id="bancEnregistrer" type="button">⏺ enregistrer</button>
+        <button id="bancArreter" type="button" disabled>⏹ arrêter</button>
+      </div>
+      <input id="bancFichier" type="file" accept="application/json,.json" />
+    </div>
+
     <p id="message" class="message" role="status" hidden></p>
 
     <script type="module" src="/src/app/main.ts"></script>

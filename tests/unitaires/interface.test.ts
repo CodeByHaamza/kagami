@@ -10,18 +10,22 @@ import { EN } from "../../src/packs/naruto/i18n/en";
 import { FR } from "../../src/packs/naruto/i18n/fr";
 
 const main = readFileSync("src/app/main.ts", "utf8");
+const banc = readFileSync("src/app/banc.ts", "utf8");
+/** Tout ce qui touche au DOM du jeu : le cablage, et le panneau du banc. */
+const code = [main, banc].join("\n");
 const style = readFileSync("src/packs/naruto/assets/style.css", "utf8");
 const camera = readFileSync("src/moteur/entree/camera.ts", "utf8");
 const html = readFileSync("index.html", "utf8");
 
 test("chaque classe posée par le code existe dans la feuille de style", () => {
-  const posees = [...main.matchAll(/classList\.(?:add|toggle)\("([\w-]+)"\)/g)].map(m => m[1]!);
+  const posees = [...code.matchAll(/classList\.(?:add|toggle)\("([\w-]+)"\)/g)].map(m => m[1]!);
   const inconnues = [...new Set(posees)].filter(c => !style.includes(`.${c}`));
   expect(inconnues).toEqual([]);
 });
 
 test("chaque identifiant lu par le code existe dans la page", () => {
-  const lus = [...main.matchAll(/\bel(?:<[^>]+>)?\("([\w]+)"\)/g)].map(m => m[1]!);
+  // `el(...)` lit un nœud, `ecrire(...)` écrit dedans : les deux désignent un id.
+  const lus = [...code.matchAll(/\b(?:el(?:<[^>]+>)?|ecrire)\("([\w]+)"/g)].map(m => m[1]!);
   const absents = [...new Set(lus)].filter(id => !new RegExp(`id="${id}"`).test(html));
   expect(absents).toEqual([]);
 });

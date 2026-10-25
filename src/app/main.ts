@@ -18,6 +18,8 @@ import { Ordonnanceur } from "../moteur/entree/ordonnanceur";
 import { PostureMediaPipe } from "../moteur/corps/posture";
 import { LecteurDeGestes, type JetonCorps } from "../moteur/corps/gestes";
 import { MachineAPostures, type Attitude } from "../moteur/corps/postures";
+import { fiable, immobilite } from "../moteur/corps/reperes";
+import { Banc } from "./banc";
 import { Sequence } from "../moteur/grammaire/sequence";
 import { BoucleDeRendu, calculerCadre, dessinerCadre, versEcran } from "../moteur/rendu/cadre";
 import { Effets } from "../moteur/rendu/effets";
@@ -36,7 +38,7 @@ import {
   viderJournal
 } from "../moteur/debug/journal";
 import type { Cadre } from "../moteur/rendu/cadre";
-import type { ContexteEffet, Image, Langue, Technique } from "../moteur/types";
+import type { ContexteEffet, Image, Langue, Posture, Technique } from "../moteur/types";
 import { choisirPack, type EntreePack } from "./portail";
 import { PACK_KATA, SIGNES, FAMILLES, TAIJUTSU, ARMES, enregistrerTextes } from "../packs/naruto/manifeste";
 import { IMAGES_SIGNES } from "../packs/naruto/assets/signes";
@@ -239,33 +241,78 @@ function dessinerDetection(): void {
 
 // ---- la détection ----
 
+// Le banc s'intercale entre les capteurs et l'ordonnanceur : il peut enregistrer ce
+// qui passe, ou remplacer la camera par un fichier. Il est la meme chose dans les deux
+// cas, qu'il soit affiche ou non — un seul chemin de code, donc un seul a deboguer.
+const banc = new Banc<SigneNaruto>({
+  posture: t => (video.readyState < 2 ? null : posture.lire(video, t)),
+  signe: () =>
+    video.readyState < 2
+      ? Promise.resolve(null)
+      : detecteur.reconnaitre(video, video.videoWidth, video.videoHeight),
+  taille: () => ({ largeur: video.videoWidth, hauteur: video.videoHeight }),
+  jetonConnu: jeton => jeton in SIGNES,
+  surBascule: () => viderGrammaires()
+});
+
+/** Le corps vu a l'instant, et la fenetre courte dont l'immobilite se calcule. */
+let postureCourante: Posture | null = null;
+const histoirePosture: Posture[] = [];
+/** Un tiers de seconde a 60 images : assez pour juger, assez court pour reagir. */
+const IMAGES_IMMOBILITE = 20;
+
+let dernierGeste: JetonCorps | null = null;
+let dernierJetonValide: SigneNaruto | null = null;
+
 const ordonnanceur = new Ordonnanceur<SigneNaruto, JetonCorps>({
   ecartSignes: ECART_DETECTION,
-  lirePosture: t => (video.readyState < 2 ? null : posture.lire(video, t)),
-  reconnaitreSigne: async () =>
-    video.readyState < 2
-      ? null
-      : detecteur.reconnaitre(video, video.videoWidth, video.videoHeight),
+  lirePosture: t => {
+    postureCourante = banc.lirePosture(t);
+    if (postureCourante) {
+      histoirePosture.push(postureCourante);
+      if (histoirePosture.length > IMAGES_IMMOBILITE) histoirePosture.shift();
+    } else {
+      histoirePosture.length = 0;
+    }
+    return postureCourante;
+  },
+  reconnaitreSigne: () => banc.reconnaitreSigne(),
   lireGeste: (p, t) => gestes.observer(p, t),
   machine: new MachineAPostures({ surChangement: (_, apres) => montrerPosture(apres) }),
   surJeton: vue => traiter(vue),
   surGeste: geste => traiterGeste(geste)
 });
 
-// Lever les mains pour se defendre abandonne l'enchainement en cours : sans ca, il
-// reprendrait plus tard en plein milieu et un jutsu partirait tout seul.
-ordonnanceur.surViderSequence = () => {
+/**
+ * Lever les mains pour se defendre abandonne l'enchainement en cours : sans ca, il
+ * reprendrait plus tard en plein milieu et un jutsu partirait tout seul. Un rejeu qui
+ * commence ou se termine fait pareil, pour la meme raison.
+ */
+function viderGrammaires(): void {
   sequence.vider();
   corps.vider();
   enAttente = null;
   dernierRendu = "";
   afficherEnchainement();
-};
+}
+
+ordonnanceur.surViderSequence = viderGrammaires;
+
+// Le panneau du banc est un outil de developpement : il ne s'affiche que si on le
+// demande, pour qu'un joueur ne tombe jamais dessus.
+if (new URLSearchParams(location.search).has("banc")) banc.monter();
 
 /** La boucle du corps et des signes. L'ordonnanceur decide qui ecoute. */
 async function boucleEntree(): Promise<void> {
   while (window.kagami?.pret) {
     await ordonnanceur.image();
+    banc.rafraichir({
+      attitude: ordonnanceur.posture,
+      geste: dernierGeste,
+      jeton: dernierJetonValide,
+      immobilite: immobilite(histoirePosture),
+      fiabilite: postureCourante ? fiable(postureCourante) : false
+    });
     await new Promise(suite => requestAnimationFrame(() => suite(null)));
   }
 }
@@ -279,6 +326,7 @@ function montrerPosture(attitude: Attitude): void {
 /** Un geste du corps : il nourrit la grammaire corporelle, ou lance une arme. */
 function traiterGeste(geste: JetonCorps): void {
   const maintenant = performance.now();
+  dernierGeste = geste;
 
   if (geste === "lancer") {
     lancerArme(maintenant);
@@ -349,6 +397,7 @@ function traiter(vue: Awaited<ReturnType<typeof detecteur.reconnaitre>>): void {
 
 function jetonValide(jeton: SigneNaruto): void {
   const maintenant = performance.now();
+  dernierJetonValide = jeton;
 
   // « Kai ! » : le Bélier rompt un genjutsu, comme dans l'anime
   if (jeton === PACK_KATA.jetonKai && effets.genjutsuActif()) {

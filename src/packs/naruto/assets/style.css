@@ -647,3 +647,78 @@ button.lien { min-height: 0; padding: 0; font: inherit; color: #9a3412; text-dec
 
 .armes .kanji { font-size: 16px; color: var(--orange); }
 .armes .stock { color: var(--doux); font-size: 11px; }
+
+/* ---- le banc de rejeu ---- */
+
+/* Un outil de développement, pas une pièce du jeu : discret, en bas à droite, et
+   seulement là quand l'adresse porte ?banc. */
+.banc {
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  z-index: 30;
+  width: 190px;
+  padding: 9px 11px;
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--texte);
+  background: var(--panneau);
+  border: 1px solid var(--ligne);
+  border-radius: 10px;
+}
+
+.banc.survol {
+  border-color: var(--orange);
+}
+
+.banc-titre {
+  margin: 0 0 6px;
+  color: var(--orange);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.banc-valeurs {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1px 10px;
+  margin: 0 0 8px;
+}
+
+.banc-valeurs dt {
+  color: var(--doux);
+}
+
+.banc-valeurs dd {
+  margin: 0;
+  text-align: right;
+}
+
+.banc-boutons {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.banc button {
+  flex: 1;
+  padding: 4px 0;
+  font: inherit;
+  color: var(--texte);
+  background: #1b1b22;
+  border: 1px solid var(--ligne);
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.banc button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.banc input[type="file"] {
+  width: 100%;
+  font: inherit;
+  color: var(--doux);
+}

@@ -24,6 +24,15 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    // Les quatre moments d'un effet recoivent toujours (ctx, e, etat, particules) :
+    // c'est un contrat positionnel, et la plupart des effets n'en utilisent que deux.
+    // Renommer les autres en _ dans 52 effets couterait plus que la regle ne rapporte.
+    files: ["src/packs/*/effets/**/*.ts"],
+    rules: {
+      "@typescript-eslint/no-unused-vars": ["error", { args: "none" }]
+    }
+  },
+  {
     files: ["src/moteur/**/*.ts"],
     rules: {
       "no-restricted-imports": ["error", { patterns: [MOTEUR_VERS_PACK] }]

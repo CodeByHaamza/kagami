@@ -26,10 +26,14 @@ export const POLICE_EMOJI =
 
 const spritesEnCache = new Map<string, CanvasImageSource>();
 
-function nouvelleToile(cote: number): OffscreenCanvas | HTMLCanvasElement {
+/**
+ * Un canvas hors ecran. Passe par OffscreenCanvas quand il existe, ce qui evite de
+ * dependre du DOM : les effets restent executables hors d'un navigateur.
+ */
+export function toileHorsEcran(largeur: number, hauteur = largeur): OffscreenCanvas | HTMLCanvasElement {
   return typeof OffscreenCanvas === "function"
-    ? new OffscreenCanvas(cote, cote)
-    : Object.assign(document.createElement("canvas"), { width: cote, height: cote });
+    ? new OffscreenCanvas(largeur, hauteur)
+    : Object.assign(document.createElement("canvas"), { width: largeur, height: hauteur });
 }
 
 /** Le rond flou d'une couleur, dessine une seule fois puis garde en cache. */
@@ -37,7 +41,7 @@ export function sprite(couleur: string): CanvasImageSource {
   const deja = spritesEnCache.get(couleur);
   if (deja) return deja;
 
-  const toile = nouvelleToile(64);
+  const toile = toileHorsEcran(64);
   const ctx = toile.getContext("2d") as Contexte2D;
   const degrade = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
   degrade.addColorStop(0, couleur);

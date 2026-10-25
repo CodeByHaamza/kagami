@@ -53,7 +53,7 @@ test("aucune clé de traduction n'est définie sans être utilisée nulle part",
 
   const orphelines = Object.keys(FR).filter(cle => {
     // construites a l'execution depuis un identifiant de donnees
-    for (const prefixe of ["jutsu.", "signe.", "taijutsu.", "arme."]) {
+    for (const prefixe of ["jutsu.", "signe.", "taijutsu.", "arme.", "posture."]) {
       if (cle.startsWith(prefixe)) return false;
     }
     if (/^camera\./.test(cle)) return false; // construites depuis le code d'erreur

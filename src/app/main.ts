@@ -13,7 +13,11 @@
 import "@fontsource/yuji-syuku/400.css";
 import "../packs/naruto/assets/style.css";
 
-import { BoucleDeDetection, Camera, ErreurCamera } from "../moteur/entree/camera";
+import { Camera, ErreurCamera } from "../moteur/entree/camera";
+import { Ordonnanceur } from "../moteur/entree/ordonnanceur";
+import { PostureMediaPipe } from "../moteur/corps/posture";
+import { LecteurDeGestes, type JetonCorps } from "../moteur/corps/gestes";
+import { MachineAPostures, type Attitude } from "../moteur/corps/postures";
 import { Sequence } from "../moteur/grammaire/sequence";
 import { BoucleDeRendu, calculerCadre, dessinerCadre, versEcran } from "../moteur/rendu/cadre";
 import { Effets } from "../moteur/rendu/effets";
@@ -34,7 +38,7 @@ import {
 import type { Cadre } from "../moteur/rendu/cadre";
 import type { ContexteEffet, Image, Langue, Technique } from "../moteur/types";
 import { choisirPack, type EntreePack } from "./portail";
-import { PACK_KATA, SIGNES, FAMILLES, enregistrerTextes } from "../packs/naruto/manifeste";
+import { PACK_KATA, SIGNES, FAMILLES, TAIJUTSU, ARMES, enregistrerTextes } from "../packs/naruto/manifeste";
 import { IMAGES_SIGNES } from "../packs/naruto/assets/signes";
 import type { SigneNaruto } from "../packs/naruto/manifeste";
 import { Rasengan3D } from "../packs/naruto/effets/rasengan";
@@ -80,6 +84,18 @@ const detecteur = PACK_KATA.reconnaisseur();
 const sequence = new Sequence(PACK_KATA.techniques, { oubli: OUBLI_NORMAL });
 const silhouette = new Silhouette();
 const effets = new Effets(PACK_KATA.effets);
+
+// Le corps : un second flux d'entree, et un second alphabet pour la meme grammaire.
+const posture = new PostureMediaPipe();
+const gestes = new LecteurDeGestes();
+const corps = new Sequence<JetonCorps>(TAIJUTSU, {
+  // Le lecteur de gestes emet un evenement deja confirme, pas un flux bruite ; et deux
+  // coups de pied d'affilee sont bien deux coups.
+  confirmations: 1,
+  repetitions: true
+});
+let armeChoisie = 0;
+const stocks = new Map(ARMES.map(a => [a.id, a.stock]));
 let rasengan: Rasengan3D | null = null; // la scène 3D n'est créée qu'au premier Rasengan
 
 let sauvegarde: Sauvegarde = charger();
@@ -101,6 +117,11 @@ function appliquerTextes(): void {
   }
   for (const noeud of document.querySelectorAll<HTMLElement>("[data-i18n-titre]")) {
     noeud.title = t(noeud.dataset.i18nTitre!);
+  }
+  // Un bouton dont le contenu est un emoji s'annonce « 📜 » : le nom accessible vient
+  // du contenu avant le title. Il lui faut donc un aria-label explicite.
+  for (const noeud of document.querySelectorAll<HTMLElement>("[data-i18n-aria]")) {
+    noeud.setAttribute("aria-label", t(noeud.dataset.i18nAria!));
   }
   document.documentElement.lang = langue();
   el("btnFr").setAttribute("aria-pressed", String(langue() === "fr"));
@@ -218,15 +239,85 @@ function dessinerDetection(): void {
 
 // ---- la détection ----
 
-const detection = new BoucleDeDetection({
-  ecart: ECART_DETECTION,
-  surErreur: erreur => noter("ERREUR", "détection : " + (erreur as Error).message)
+const ordonnanceur = new Ordonnanceur<SigneNaruto, JetonCorps>({
+  ecartSignes: ECART_DETECTION,
+  lirePosture: t => (video.readyState < 2 ? null : posture.lire(video, t)),
+  reconnaitreSigne: async () =>
+    video.readyState < 2
+      ? null
+      : detecteur.reconnaitre(video, video.videoWidth, video.videoHeight),
+  lireGeste: (p, t) => gestes.observer(p, t),
+  machine: new MachineAPostures({ surChangement: (_, apres) => montrerPosture(apres) }),
+  surJeton: vue => traiter(vue),
+  surGeste: geste => traiterGeste(geste)
 });
 
-async function detecterUneFois(): Promise<void> {
-  if (video.readyState < 2) return;
-  const vue = await detecteur.reconnaitre(video, video.videoWidth, video.videoHeight);
-  traiter(vue);
+// Lever les mains pour se defendre abandonne l'enchainement en cours : sans ca, il
+// reprendrait plus tard en plein milieu et un jutsu partirait tout seul.
+ordonnanceur.surViderSequence = () => {
+  sequence.vider();
+  corps.vider();
+  enAttente = null;
+  dernierRendu = "";
+  afficherEnchainement();
+};
+
+/** La boucle du corps et des signes. L'ordonnanceur decide qui ecoute. */
+async function boucleEntree(): Promise<void> {
+  while (window.kagami?.pret) {
+    await ordonnanceur.image();
+    await new Promise(suite => requestAnimationFrame(() => suite(null)));
+  }
+}
+
+function montrerPosture(attitude: Attitude): void {
+  el("posture").dataset.attitude = attitude;
+  el("postureNom").textContent = t(`posture.${attitude}`);
+  el("armes").hidden = attitude !== "combat";
+}
+
+/** Un geste du corps : il nourrit la grammaire corporelle, ou lance une arme. */
+function traiterGeste(geste: JetonCorps): void {
+  const maintenant = performance.now();
+
+  if (geste === "lancer") {
+    lancerArme(maintenant);
+    return;
+  }
+
+  corps.ajouter({ jeton: geste, score: 1, boite: { x1: 0, y1: 0, x2: 0, y2: 0 } }, maintenant);
+  const fini = corps.techniqueTerminee(maintenant);
+  if (fini) {
+    corps.vider();
+    declencher(fini.technique as unknown as Technique<SigneNaruto>, maintenant);
+  }
+}
+
+/** L'arme selectionnee part. Gratuite : c'est tout l'interet quand le chakra manque. */
+function lancerArme(maintenant: number): void {
+  const arme = ARMES[armeChoisie];
+  if (!arme) return;
+
+  const reste = stocks.get(arme.id);
+  if (reste !== null && reste !== undefined && reste <= 0) {
+    message(t("arme.vide", { nom: t(`arme.${arme.id}.nom`) }));
+    return;
+  }
+  if (reste !== null && reste !== undefined) stocks.set(arme.id, reste - 1);
+
+  effets.lancer(arme.effet, contexte(maintenant, 0));
+  jouer("shuriken");
+  montrerArme();
+}
+
+function montrerArme(): void {
+  const arme = ARMES[armeChoisie];
+  if (!arme) return;
+  const reste = stocks.get(arme.id);
+  el("armeKanji").textContent = arme.kanji;
+  el("armeNom").textContent = t(`arme.${arme.id}.nom`);
+  el("armeStock").textContent =
+    reste === null || reste === undefined ? t("arme.gratuite") : t("arme.stock", { reste });
 }
 
 function traiter(vue: Awaited<ReturnType<typeof detecteur.reconnaitre>>): void {
@@ -518,8 +609,19 @@ async function demarrer(): Promise<void> {
 
     el("accueil").hidden = true;
     rendu.demarrer();
-    void detection.demarrer(detecterUneFois);
     window.kagami = { pret: true };
+    montrerPosture("neutre");
+    montrerArme();
+    void boucleEntree();
+    // Le modele de posture est lourd : on le charge apres le demarrage, et son echec
+    // ne doit rien empecher — l'appli reste jouable aux signes seuls.
+    posture
+      .charger()
+      .then(() => noter("posture", "lecteur de posture prêt"))
+      .catch((erreur: Error) => {
+        noter("ERREUR", erreur.message);
+        message(t("posture.indisponible"));
+      });
     noter("page", "jeu démarré");
   } catch (erreur) {
     bouton.disabled = false;
@@ -657,6 +759,7 @@ document.addEventListener("visibilitychange", () => {
   if (document.hidden) {
     camera.fermer();
     rendu.arreter();
+    ordonnanceur.arreter();
   } else {
     void camera
       .ouvrir()
@@ -667,6 +770,13 @@ document.addEventListener("visibilitychange", () => {
       })
       .catch(() => message(t("camera.inconnue")));
   }
+});
+
+// Changer d'arme : une touche, en attendant que le plan 3 decide d'un geste.
+addEventListener("keydown", e => {
+  if (e.key !== "a" && e.key !== "A") return;
+  armeChoisie = (armeChoisie + 1) % ARMES.length;
+  montrerArme();
 });
 
 battre(() =>

@@ -6,6 +6,11 @@
 import type { Dictionnaire } from "../../../moteur/ui/i18n";
 
 export const EN: Dictionnaire = {
+  "posture.neutre": "At rest",
+  "posture.concentration": "Focus",
+  "posture.combat": "Combat",
+  "posture.indisponible": "Body tracking unavailable: hand signs still work.",
+  "arme.vide": "Out of {nom}.",
   "taijutsu.konohaSenpuu.nom": "Leaf Hurricane",
   "taijutsu.konohaSenpuu.texte": "Lee's spinning kick, twice over.",
   "taijutsu.shishiRendan.nom": "Lion Combo",

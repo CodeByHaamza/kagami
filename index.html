@@ -16,9 +16,9 @@
 
     <header class="barre">
       <h1><span class="kanji">鏡</span> <span data-i18n="pack.nom">Kata</span></h1>
-      <button id="btnEncyclo" type="button" data-i18n-titre="barre.encyclopedie">📜</button>
-      <button id="btnCamera" type="button" data-i18n-titre="barre.camera">🔄</button>
-      <button id="btnSon" type="button" aria-pressed="false" data-i18n-titre="barre.son">🔊</button>
+      <button id="btnEncyclo" type="button" data-i18n-titre="barre.encyclopedie" data-i18n-aria="barre.encyclopedie">📜</button>
+      <button id="btnCamera" type="button" data-i18n-titre="barre.camera" data-i18n-aria="barre.camera">🔄</button>
+      <button id="btnSon" type="button" aria-pressed="false" data-i18n-titre="barre.son" data-i18n-aria="barre.son">🔊</button>
     </header>
 
     <!-- le signe que le modèle voit en ce moment -->
@@ -27,6 +27,20 @@
       <span id="vuNom"></span>
       <div class="jauge"><div id="vuScore"></div></div>
       <span id="vuTenu" class="tenu"></span>
+    </div>
+
+    <!-- Dans quelle posture tu es. Le joueur doit toujours le savoir : c'est elle qui
+         decide si ce sont tes signes ou tes coups qui comptent. -->
+    <div id="posture" class="posture" data-attitude="neutre">
+      <span class="pastille-posture"></span>
+      <span id="postureNom"></span>
+    </div>
+
+    <!-- L'arme selectionnee, et ce qu'il en reste. -->
+    <div id="armes" class="armes" hidden>
+      <span id="armeKanji" class="kanji"></span>
+      <span id="armeNom"></span>
+      <span id="armeStock" class="stock"></span>
     </div>
 
     <div id="enCours" class="en-cours"></div>
@@ -129,7 +143,7 @@
         <header>
           <h2 data-i18n="encyclo.titre">Encyclopédie ninja</h2>
           <p id="bilan" class="discret"></p>
-          <button id="btnFermerEncyclo" type="button" data-i18n-titre="encyclo.fermer">✕</button>
+          <button id="btnFermerEncyclo" type="button" data-i18n-titre="encyclo.fermer" data-i18n-aria="encyclo.fermer">✕</button>
         </header>
         <div class="onglets" role="tablist">
           <button

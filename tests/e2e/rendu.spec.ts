@@ -73,7 +73,7 @@ test("l'écran ouvert est bien celui qui reçoit les clics", async ({ page }) =>
   // c'est en recouvrant le bouton de démarrage que l'encyclopédie rendait l'appli
   // inutilisable.
   await page.getByRole("button", { name: /Kata/ }).click();
-  await page.getByRole("button", { name: /encyclopédie|encyclopedia/i }).first().click();
+  await page.locator("#btnEncycloAccueil").click();
 
   const dessus = await page.evaluate(() => {
     const au = document.elementFromPoint(innerWidth / 2, innerHeight / 2);
@@ -86,7 +86,7 @@ test("la bannière du jutsu s'affiche quand un jutsu part", async ({ page }) => 
   // Elle posait une classe que la feuille de style ne connaissait pas : le nom du
   // jutsu, qui est le retour principal de l'appli, ne s'affichait jamais.
   await page.getByRole("button", { name: /Kata/ }).click();
-  await page.getByRole("button", { name: /encyclopédie|encyclopedia/i }).first().click();
+  await page.locator("#btnEncycloAccueil").click();
   await page.getByRole("tab", { name: /jutsu/i }).click();
   await page.locator("#listeJutsus button[data-technique]").first().click();
 
@@ -101,7 +101,7 @@ test("la bannière du jutsu s'affiche quand un jutsu part", async ({ page }) => 
 
 test("la fiche d'entraînement montre le jutsu visé et le prochain signe", async ({ page }) => {
   await page.getByRole("button", { name: /Kata/ }).click();
-  await page.getByRole("button", { name: /encyclopédie|encyclopedia/i }).first().click();
+  await page.locator("#btnEncycloAccueil").click();
   await page.getByRole("tab", { name: /jutsu/i }).click();
   await page.locator("#listeJutsus button[data-technique]").first().click();
   await page.waitForFunction(() => window.kagami?.pret === true, null, { timeout: 45_000 });
@@ -123,7 +123,7 @@ test("aucune clé de traduction brute n'apparaît à l'écran", async ({ page })
 
 test("les illustrations des signes se chargent", async ({ page }) => {
   await page.getByRole("button", { name: /Kata/ }).click();
-  await page.getByRole("button", { name: /encyclopédie|encyclopedia/i }).first().click();
+  await page.locator("#btnEncycloAccueil").click();
 
   const cassees = await page.evaluate(() =>
     [...document.querySelectorAll<HTMLImageElement>("#listeSignes img")]

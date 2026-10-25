@@ -579,3 +579,71 @@ button.lien { min-height: 0; padding: 0; font: inherit; color: #9a3412; text-dec
   font-weight: 400;
   color: var(--doux);
 }
+
+/* ---- la posture, et les armes ---- */
+
+/* Le joueur doit toujours savoir dans quelle posture il est : c'est elle qui decide
+   si ce sont ses signes ou ses coups qui comptent. */
+.posture {
+  position: fixed;
+  top: 64px;
+  left: 10px;
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 11px 5px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--doux);
+  background: var(--panneau);
+  border: 1px solid var(--ligne);
+  border-radius: 999px;
+  transition: color 0.25s, border-color 0.25s;
+}
+
+.posture .pastille-posture {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: currentColor;
+  transition: box-shadow 0.25s;
+}
+
+.posture[data-attitude="concentration"] {
+  color: #6cbcff;
+  border-color: #2a5f8f;
+}
+
+.posture[data-attitude="concentration"] .pastille-posture {
+  box-shadow: 0 0 10px #6cbcff;
+}
+
+.posture[data-attitude="combat"] {
+  color: var(--orange);
+  border-color: #8a4a12;
+}
+
+.posture[data-attitude="combat"] .pastille-posture {
+  box-shadow: 0 0 10px var(--orange);
+}
+
+.armes {
+  position: fixed;
+  top: 102px;
+  left: 10px;
+  z-index: 8;
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  padding: 5px 11px;
+  font-size: 12px;
+  color: var(--texte);
+  background: var(--panneau);
+  border: 1px solid var(--ligne);
+  border-radius: 10px;
+}
+
+.armes .kanji { font-size: 16px; color: var(--orange); }
+.armes .stock { color: var(--doux); font-size: 11px; }

@@ -24,7 +24,7 @@ test("le dojo démarre, charge le modèle et dessine", async ({ page }) => {
   page.on("pageerror", e => erreurs.push(e.message));
 
   await entrerDansKata(page);
-  await page.getByRole("button", { name: /caméra|camera/i }).click();
+  await page.locator("#btnDemarrer").click();
 
   await expect(page.locator("#scene")).toBeVisible();
   await page.waitForFunction(() => window.kagami?.pret === true, null, { timeout: 45_000 });
@@ -34,7 +34,7 @@ test("le dojo démarre, charge le modèle et dessine", async ({ page }) => {
 
 test("l'encyclopédie liste les 14 signes et les 52 jutsus", async ({ page }) => {
   await entrerDansKata(page);
-  await page.getByRole("button", { name: /encyclopédie|encyclopedia/i }).first().click();
+  await page.locator("#btnEncycloAccueil").click();
 
   await expect(page.locator("#listeSignes .fiche-signe")).toHaveCount(14);
 

@@ -140,3 +140,32 @@ test("la garde attrape le nom civil même collé à d'autres caractères", () =>
     expect(interdits.test(innocent)).toBe(innocent === "TD40ctets");
   }
 });
+
+test("aucun secret n'est versionné", () => {
+  // On a manipulé une clé API fal pendant le développement. Une clé collée dans un
+  // fichier de config « juste pour essayer » est la façon la plus banale d'en publier
+  // une, et un dépôt privé ne protège de rien : il peut devenir public d'un clic.
+  const motifs: readonly [string, RegExp][] = [
+    ["clé fal", /\bfal_sk_[A-Za-z0-9_-]{8,}/],
+    ["jeton GitHub", /\b(ghp|gho|ghu|ghs|ghr)_[A-Za-z0-9]{20,}/],
+    ["jeton GitHub (fin)", /\bgithub_pat_[A-Za-z0-9_]{20,}/],
+    ["clé OpenAI", /\bsk-[A-Za-z0-9]{32,}/],
+    ["clé AWS", /\bAKIA[0-9A-Z]{16}\b/],
+    ["clé privée", /-----BEGIN [A-Z ]*PRIVATE KEY-----/],
+    ["paire id:secret", /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[0-9a-f]{24,}/]
+  ];
+
+  const fautifs: string[] = [];
+  for (const fichier of lisibles()) {
+    let contenu: string;
+    try {
+      contenu = readFileSync(fichier, "utf8");
+    } catch {
+      continue;
+    }
+    for (const [quoi, motif] of motifs) {
+      if (motif.test(contenu)) fautifs.push(`${fichier} : ${quoi}`);
+    }
+  }
+  expect(fautifs).toEqual([]);
+});

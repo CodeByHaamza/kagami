@@ -168,7 +168,9 @@ test("les réglages par défaut sont ceux de la version d'origine", () => {
     confirmations: 2,
     oubli: 4000,
     tenir: 2500,
-    attente: 1500
+    attente: 1500,
+    // ajoute au plan 2 : faux pour les signes, vrai pour les gestes du corps
+    repetitions: false
   });
 });
 
@@ -184,7 +186,7 @@ function maintenir(s: Sequence<S>, jeton: S, de: number, a: number): void {
 }
 
 const CHARGE = technique("charge", ["cheval"], { tenir: true });
-const RAFALE = technique("rafale", [], { cadence: { nombre: 8, dans: 3000 }, jeton: "tigre" });
+const RAFALE = technique("rafale", [], { cadence: { nombre: 8, dans: 3000, parmi: ["tigre"] } });
 
 test("un jeton tenu 2,5 s donne le palier « tenue »", () => {
   // La tenue part de la DEUXIEME image confirmee, pas de la premiere : il faut donc

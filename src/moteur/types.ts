@@ -85,9 +85,12 @@ export interface Technique<J extends string = string> {
    * jeton dans un laps de temps. C'est ce qui rend une rafale jouissive a faire —
    * le 64 Poings du Hakke n'est pas un enchainement, c'est une cadence.
    */
-  cadence?: { nombre: number; dans: number };
-  /** Le jeton que la cadence compte. Ignore pour les autres modes. */
-  jeton?: J;
+  cadence?: {
+    nombre: number;
+    dans: number;
+    /** Les jetons qui comptent. Absent : tous comptent. */
+    parmi?: readonly J[];
+  };
   effet: string;
   source: "anime" | "appli";
 }
@@ -213,4 +216,21 @@ export interface Pack<J extends string = string> {
   reconnaisseur: () => Reconnaisseur<J>;
   /** Le jeton qui rompt une illusion, s'il y en a un. */
   jetonKai?: J;
+  /** Les techniques qui se font au corps, sans aucun signe. */
+  taijutsu?: readonly Technique<string>[];
+  /** Ce qu'on peut lancer : gratuit, pour quand le chakra manque. */
+  armes?: readonly ArmeDuPack[];
+}
+
+/** Une arme de jet. Le cout est en chakra ; zero pour toutes, c'est le point. */
+export interface ArmeDuPack {
+  id: string;
+  kanji: string;
+  romaji: string;
+  jeton: string;
+  cout: number;
+  degats: number;
+  /** null : illimite. */
+  stock: number | null;
+  effet: string;
 }

@@ -9,17 +9,23 @@ import type { Pack } from "../../moteur/types";
 import { CLASSES, FAMILLES, SIGNE_KAI, SIGNES, type SigneNaruto } from "./donnees/signes";
 import { JUTSUS } from "./donnees/jutsus";
 import { EFFETS_NARUTO } from "./effets";
+import { EFFETS_CORPS } from "./effets/corps";
+import { TAIJUTSU } from "./donnees/taijutsu";
+import { ARMES } from "./donnees/armes";
 import { DetecteurDeSignes } from "./entree/detecteurSignes";
 import { enregistrerTextes } from "./i18n";
 
 export { CLASSES, FAMILLES, SIGNES, type SigneNaruto };
+export { TAIJUTSU, ARMES };
 
 export const PACK_KATA: Pack<SigneNaruto> = {
   id: "kata",
   nom: "Kata",
   jetons: Object.keys(SIGNES) as SigneNaruto[],
   techniques: JUTSUS,
-  effets: EFFETS_NARUTO,
+  effets: { ...EFFETS_NARUTO, ...EFFETS_CORPS },
+  taijutsu: TAIJUTSU,
+  armes: ARMES,
   modele: "/modeles/yolox_nano_with_post.onnx",
   reconnaisseur: () => new DetecteurDeSignes(),
   jetonKai: SIGNE_KAI

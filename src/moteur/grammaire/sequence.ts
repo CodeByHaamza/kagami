@@ -21,6 +21,15 @@ export interface Reglages {
   tenir: number;
   /** Millisecondes laissees pour continuer vers une technique plus longue. */
   attente: number;
+  /**
+   * Un meme jeton peut-il entrer deux fois d'affilee dans l'historique ?
+   *
+   * Faux pour les signes : le detecteur revoit le meme signe douze fois par seconde
+   * tant qu'on le tient, et chacune ne doit pas compter. Vrai pour les gestes du
+   * corps : deux coups de pied sont deux evenements, et c'est le verrou du lecteur de
+   * gestes qui empeche un geste unique de pulser.
+   */
+  repetitions: boolean;
 }
 
 /**
@@ -38,7 +47,8 @@ export const REGLAGES_PAR_DEFAUT: Reglages = {
   confirmations: 2,
   oubli: 4000,
   tenir: 2500,
-  attente: 1500
+  attente: 1500,
+  repetitions: false
 };
 
 /** Au-dela, l'historique ne sert plus a rien : la plus longue suite connue fait 44 jetons. */
@@ -123,7 +133,9 @@ export class Sequence<J extends string = string> {
     if (this.vu > this.reglages.confirmations) return null; // le meme jeton, toujours tenu
 
     this.debutTenu = maintenant;
-    if (detection.jeton === this.jetons[this.jetons.length - 1]) return null;
+    if (!this.reglages.repetitions && detection.jeton === this.jetons[this.jetons.length - 1]) {
+      return null;
+    }
 
     this.jetons.push(detection.jeton);
     this.instants.push(maintenant);
@@ -139,12 +151,16 @@ export class Sequence<J extends string = string> {
     this.instants = [];
   }
 
-  /** Combien de fois `jeton` a ete valide dans les `dans` dernieres millisecondes. */
-  private cadenceDe(jeton: J, dans: number, maintenant: number): number {
+  /**
+   * Combien de jetons retenus ont ete valides dans les `dans` dernieres millisecondes.
+   * `parmi` absent : tous comptent — une rafale de frappes alternees en est une, quel
+   * que soit le bras.
+   */
+  private cadenceDe(dans: number, maintenant: number, parmi?: readonly J[]): number {
     let compte = 0;
     for (let i = this.jetons.length - 1; i >= 0; i--) {
       if (maintenant - this.instants[i]! > dans) break;
-      if (this.jetons[i] === jeton) compte++;
+      if (!parmi || parmi.includes(this.jetons[i]!)) compte++;
     }
     return compte;
   }
@@ -160,8 +176,8 @@ export class Sequence<J extends string = string> {
     // elles ne peuvent pas entrer en concurrence avec un enchainement.
     for (const technique of this.techniques) {
       const c = technique.cadence;
-      if (!c || !technique.jeton) continue;
-      if (this.cadenceDe(technique.jeton, c.dans, maintenant) >= c.nombre) {
+      if (!c) continue;
+      if (this.cadenceDe(c.dans, maintenant, c.parmi) >= c.nombre) {
         return { technique, attendre: false };
       }
     }

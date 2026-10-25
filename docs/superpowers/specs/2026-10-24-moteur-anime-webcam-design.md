@@ -37,7 +37,7 @@ reste l'écran d'entrée, l'arcade est une porte à côté.
 
 ## 2. Objectifs
 
-- Extraire `CartoTD4/Ninjutsu` dans un dépôt indépendant, sans les traces du contexte
+- Extraire le dossier `Ninjutsu` du dépôt scolaire dans un dépôt indépendant, sans les traces du contexte
   scolaire, et le remettre au propre (TypeScript, build, tests, outillage).
 - **Faire du corps une manette** : aujourd'hui seules les mains comptent, et seulement
   pour former des signes. Demain tu frappes, tu gardes, tu esquives, tu lances.
@@ -91,7 +91,7 @@ Ce qui ferait rater le projet même s'il marche techniquement :
 
 ## 5. L'existant : ce qu'on reprend
 
-Source : `CodeByHaamza/le dépôt scolaire d'origine`, dossier `CartoTD4/Ninjutsu`, dernier commit `e3d86b4`.
+Source : le dossier `Ninjutsu` du dépôt scolaire d'origine, dernier commit `e3d86b4`.
 Environ 2 200 lignes de JavaScript, modules ES natifs, aucun build, aucun test.
 
 | Fichier | Lignes | Ce que ça fait | Sort |

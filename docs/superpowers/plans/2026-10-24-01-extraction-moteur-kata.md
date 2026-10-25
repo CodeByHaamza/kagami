@@ -5,7 +5,7 @@
 **Goal:** Le dépôt `kata` existe, typé, testé, buildé, et le pack Kata y fait
 **exactement** ce que fait l'appli actuelle — pas une fonctionnalité de plus.
 
-**Architecture:** Portage à comportement constant de `CartoTD4/Ninjutsu` vers
+**Architecture:** Portage à comportement constant du dossier `Ninjutsu` du dépôt scolaire vers
 TypeScript strict + Vite, découpé en `src/moteur/` (générique) et `src/packs/naruto/`
 (spécifique), avec une règle de lint qui interdit `moteur/ → packs/`. `main.js`
 (607 lignes, dix métiers) est cassé en modules à responsabilité unique. Aucun

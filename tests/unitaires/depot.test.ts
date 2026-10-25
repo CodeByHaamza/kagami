@@ -28,7 +28,10 @@ const lisibles = (): string[] =>
   );
 
 test("aucun fichier versionné ne porte le nom civil ni la mention universitaire", () => {
-  const interdits = /karrouchi|\bhamza\b|BUT\s*INFO|BUT\s*3|\bTD4\b|\bR506\b/i;
+  // Pas de \b autour de TD4 ni de R506 : « CartoTD4 » est précisément la forme sous
+  // laquelle le chemin du dépôt d'origine réapparaîtrait, et une frontière de mot la
+  // laisserait passer.
+  const interdits = /karrouchi|\bhamza\b|BUT\s*INFO|BUT\s*3|TD4|R506/i;
   const fautifs: string[] = [];
 
   for (const fichier of lisibles()) {
@@ -123,4 +126,17 @@ test("aucune feuille de style n'a de commentaire de bloc non fermé", () => {
       return c.split("/*").length !== c.split("*/").length;
     });
   expect(desequilibres).toEqual([]);
+});
+
+test("la garde attrape le nom civil même collé à d'autres caractères", () => {
+  // Le chemin du dépôt d'origine est « CartoTD4/Ninjutsu » : une frontière de mot
+  // avant TD4 laisserait passer précisément la forme la plus probable.
+  const interdits = /karrouchi|\bhamza\b|BUT\s*INFO|BUT\s*3|TD4|R506/i;
+
+  for (const echantillon of ["CartoTD4/Ninjutsu", "R506bis", "Hamza", "BUT INFO 3", "karrouchi"]) {
+    expect(interdits.test(echantillon)).toBe(true);
+  }
+  for (const innocent of ["standard", "butane", "TD40ctets"]) {
+    expect(interdits.test(innocent)).toBe(innocent === "TD40ctets");
+  }
 });

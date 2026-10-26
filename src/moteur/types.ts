@@ -95,6 +95,31 @@ export interface Technique<J extends string = string> {
   source: "anime" | "appli";
 }
 
+// ---- le combat ----
+
+/** Les rangs de technique de l'œuvre, du plus simple au plus redoutable. */
+export type Rang = "E" | "D" | "C" | "B" | "A" | "S";
+
+/**
+ * Ce qu'une technique fait en arcade. `dojo` marque les techniques tournées vers le
+ * joueur — elles déforment son écran ou l'enferment — qui n'ont pas de sens contre un
+ * ennemi : elles restent jouables au Dojo, et refusées en arcade.
+ */
+export type Role = "attaque" | "defense" | "utilitaire" | "dojo";
+
+/**
+ * Ce que le combat sait d'une technique. Ce ne sont pas des réglages : ce sont des faits
+ * de l'œuvre. Un rang que l'œuvre ne publie pas vaut `null`, et la puissance se déduit
+ * alors du nombre de jetons.
+ */
+export interface ProfilCombat {
+  rang: Rang | null;
+  /** Un élément du cycle du pack, ou null : hors cycle, neutre contre tout. */
+  element: string | null;
+  role: Role;
+}
+
+
 // ---- les particules ----
 
 export type ModeComposition = "lighter" | "source-over";
@@ -220,6 +245,10 @@ export interface Pack<J extends string = string> {
   taijutsu?: readonly Technique<string>[];
   /** Ce qu'on peut lancer : gratuit, pour quand le chakra manque. */
   armes?: readonly ArmeDuPack[];
+  /** Le cycle élémentaire du pack, dans l'ordre où chacun bat le suivant. */
+  cycle?: readonly string[];
+  /** Le profil de combat de chaque technique, indexé par son identifiant. */
+  profils?: Readonly<Record<string, ProfilCombat>>;
 }
 
 /** Une arme de jet. Le cout est en chakra ; zero pour toutes, c'est le point. */

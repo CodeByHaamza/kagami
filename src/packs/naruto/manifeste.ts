@@ -12,11 +12,13 @@ import { EFFETS_NARUTO } from "./effets";
 import { EFFETS_CORPS } from "./effets/corps";
 import { TAIJUTSU } from "./donnees/taijutsu";
 import { ARMES } from "./donnees/armes";
+import { CYCLE, ELEMENTS } from "./donnees/elements";
+import { PROFILS } from "./donnees/profils";
 import { DetecteurDeSignes } from "./entree/detecteurSignes";
 import { enregistrerTextes } from "./i18n";
 
 export { CLASSES, FAMILLES, SIGNES, type SigneNaruto };
-export { TAIJUTSU, ARMES };
+export { TAIJUTSU, ARMES, CYCLE, ELEMENTS, PROFILS };
 
 export const PACK_KATA: Pack<SigneNaruto> = {
   id: "kata",
@@ -26,6 +28,8 @@ export const PACK_KATA: Pack<SigneNaruto> = {
   effets: { ...EFFETS_NARUTO, ...EFFETS_CORPS },
   taijutsu: TAIJUTSU,
   armes: ARMES,
+  cycle: CYCLE,
+  profils: PROFILS,
   modele: "/modeles/yolox_nano_with_post.onnx",
   reconnaisseur: () => new DetecteurDeSignes(),
   jetonKai: SIGNE_KAI

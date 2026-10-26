@@ -10,6 +10,7 @@ import { CLASSES, FAMILLES, SIGNE_KAI, SIGNES, type SigneNaruto } from "./donnee
 import { JUTSUS } from "./donnees/jutsus";
 import { EFFETS_NARUTO } from "./effets";
 import { EFFETS_CORPS } from "./effets/corps";
+import { DESSINS_ENCRE } from "./effets/encre";
 import { TAIJUTSU } from "./donnees/taijutsu";
 import { ARMES } from "./donnees/armes";
 import { CYCLE, ELEMENTS } from "./donnees/elements";
@@ -21,7 +22,7 @@ import { DetecteurDeSignes } from "./entree/detecteurSignes";
 import { enregistrerTextes } from "./i18n";
 
 export { CLASSES, FAMILLES, SIGNES, type SigneNaruto };
-export { TAIJUTSU, ARMES, CYCLE, ELEMENTS, PROFILS, BESTIAIRE, BOSS, MISSIONS };
+export { TAIJUTSU, ARMES, CYCLE, ELEMENTS, PROFILS, BESTIAIRE, BOSS, MISSIONS, DESSINS_ENCRE };
 
 export const PACK_KATA: Pack<SigneNaruto> = {
   id: "kata",
@@ -36,6 +37,7 @@ export const PACK_KATA: Pack<SigneNaruto> = {
   bestiaire: BESTIAIRE,
   boss: BOSS,
   missions: MISSIONS,
+  dessins: DESSINS_ENCRE,
   modele: "/modeles/yolox_nano_with_post.onnx",
   reconnaisseur: () => new DetecteurDeSignes(),
   jetonKai: SIGNE_KAI

@@ -168,6 +168,20 @@ export interface Mission {
   vagues: readonly Vague[];
 }
 
+/**
+ * Une silhouette d'ennemi ou de boss, dessinée au pinceau sur le canvas. Elle reçoit la
+ * position et la taille déjà projetées à l'écran, plus l'état de l'entité.
+ */
+export type DessinEntite = (
+  ctx: Contexte2D,
+  entite: { modele: string; etat: string; pv: number; pvMax: number; boss: boolean },
+  x: number,
+  y: number,
+  taille: number,
+  temps: number
+) => void;
+
+
 
 
 
@@ -303,6 +317,7 @@ export interface Pack<J extends string = string> {
   bestiaire?: Readonly<Record<string, ModeleEnnemi>>;
   boss?: Readonly<Record<string, ModeleBoss>>;
   missions?: readonly Mission[];
+  dessins?: Readonly<Record<string, DessinEntite>>;
 }
 
 /** Une arme de jet. Le cout est en chakra ; zero pour toutes, c'est le point. */

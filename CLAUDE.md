@@ -52,8 +52,8 @@ démarrer Vite lui-même sur Windows.
 
 | | |
 | --- | --- |
-| `src/moteur/` | générique : entrée, corps, grammaire, rendu, rejeu, son, i18n, stockage |
-| `src/packs/naruto/` | Kata : données, reconnaisseur, effets, textes |
+| `src/moteur/` | générique : entrée, corps, grammaire, scène, jeu, rendu, rejeu, son, i18n, stockage |
+| `src/packs/naruto/` | Kata : données, reconnaisseur, effets, silhouettes à l'encre, textes |
 | `src/app/` | le câblage, et rien d'autre |
 | `public/modeles/` | les modèles, suivis par Git LFS |
 | `public/mediapipe/` | recopié depuis `node_modules` par `scripts/preparer.mjs`, pas versionné |
@@ -111,6 +111,24 @@ fiabilité des points. C'est en lisant ces nombres qu'on décide d'un seuil.
 téléphone. Le certificat est auto-signé : le téléphone prévient une fois. En clair sur
 une adresse `192.168.x.x`, `getUserMedia` n'existe pas — ce n'est pas l'appli qui
 refuse, c'est la règle du contexte sûr.
+
+## L'arcade
+
+Les règles du combat vivent dans `src/moteur/jeu/` et `src/moteur/scene/` : elles ne
+connaissent aucun anime. Tout ce qui est propre à Naruto — le cycle des cinq éléments,
+le rang et le rôle de chaque technique, le bestiaire, les cinq boss, les cinq missions
+de rang D à S — vient par `src/packs/naruto/donnees/`.
+
+- **Rang, élément et rôle** (`donnees/profils.ts`) sont des **faits de l'œuvre**, pas
+  des réglages. Un jutsu sans rang publié dans les databooks vaut `null`, et la
+  puissance se déduit alors du nombre de signes. Les douze techniques qui déforment
+  l'écran du joueur ou l'enferment sont marquées `dojo` : en arcade elles sont refusées
+  sans retirer de chakra.
+- **Le barème** (`BAREME` dans `jeu/degats.ts`), les réglages du joueur
+  (`REGLAGES_JOUEUR` dans `jeu/joueur.ts`) et le facteur du **ralenti d'incantation**
+  (`RALENTI_PAR_DEFAUT = 0.35` dans `jeu/horloge.ts`) sont des points de départ
+  regroupés. Le ralenti est un paramètre du **mode**, jamais de la grammaire : le Dojo
+  n'en a pas, et les constantes de détection tournent toujours en temps réel.
 
 ## Ajouter quelque chose
 

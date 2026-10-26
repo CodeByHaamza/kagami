@@ -61,12 +61,31 @@ de la série : deux doigts dressés devant le visage, le **sceau de l'affronteme
 
 ## 性質変化 · Le cycle élémentaire
 
-Il ne sert pas encore : il arrive avec le mode arcade, où chaque ennemi aura une
-affinité et où taper avec le bon élément fera toute la différence.
+Chaque élément bat le suivant dans le sens horaire : Feu ▶ Vent ▶ Foudre ▶ Terre ▶ Eau ▶
+Feu. En mode arcade, chaque déserteur et chaque boss a une affinité : taper avec
+l'élément fort double les dégâts, avec le faible les divise par deux.
 
 <div align="center">
 <img src="../../../docs/images/cycle.svg" alt="Le cycle élémentaire : Feu bat Vent, Vent bat Foudre, Foudre bat Terre, Terre bat Eau, Eau bat Feu" width="380">
 </div>
+
+## 任務 · Le mode arcade
+
+Cinq missions, rangs canon **D à S** (3, 5, 10, 15 et 20 vagues). Les ennemis arrivent
+derrière ta silhouette détourée ; chaque boss annonce ses attaques par un télégraphe où
+l'élément s'affiche en clair, et quatre réponses sont possibles : esquiver au corps,
+garder, contrer avec une défense (ou le Kawarimi), ou abattre la source avant l'impact.
+
+| Rang | Vagues | Boss | Ce qu'il force à apprendre |
+| :---: | :---: | --- | --- |
+| **D** | 3 | — | le cycle élémentaire sur les déserteurs |
+| **C** | 5 | **Zabuza Momochi** | lire un télégraphe Suiton et garder |
+| **B** | 10 | Zabuza, puis **Kisame Hoshigaki** | Samehada draine le chakra → taijutsu et armes gratuites |
+| **A** | 15 | Kisame, **Deidara**, **Itachi Uchiha** | esquiver l'argile explosive, rompre le genjutsu au Bélier (« Kai ! ») |
+| **S** | 20 | les quatre + **Madara Uchiha** | enchaîner les cinq éléments sous ralenti d'incantation |
+
+Entrer en **posture de concentration** ralentit les ennemis et les télégraphes (×0,35)
+le temps de former un enchaînement long — sans jamais les geler.
 
 ## 忍術 · Les cinquante-deux jutsus
 
@@ -154,7 +173,7 @@ inventés pour l'appli, et marqués `source: "appli"` dans les données.
 
 ## Ce qui vient
 
-Mode arcade avec vagues et boss, grades de l'Académie au Kage, mode ermite, Rinnegan.
+Grades de l'Académie au Kage, examens, fiche ninja, mode ermite, Rinnegan.
 Voir la
 [feuille de route](../../../README.md#feuille-de-route).
 

@@ -20,10 +20,14 @@ Les trois passent par les mêmes règles.
 1. Une entrée dans `src/packs/<pack>/donnees/jutsus.ts`. Le type impose son
    identifiant, son enchaînement de jetons et le nom de son effet — une faute de frappe
    ne compile pas.
-2. Son nom et sa description dans `i18n/fr.ts` **et** `i18n/en.ts`. Un test refuse
+2. Son profil de combat dans `donnees/profils.ts` : son rang canon (`"E"` à `"S"`, ou
+   `null` s'il n'en a pas), son élément dans le cycle (ou `null`), et son rôle en arcade
+   (`attaque`, `defense`, `utilitaire` ou `dojo`). Le compilateur refuse qu'une
+   technique du catalogue n'ait pas de profil.
+3. Son nom et sa description dans `i18n/fr.ts` **et** `i18n/en.ts`. Un test refuse
    qu'une clé existe d'un seul côté.
-3. Son effet dans `effets/`, s'il n'existe pas déjà.
-4. `npm test` : le test d'intégrité vérifie que son enchaînement n'est identique à
+4. Son effet dans `effets/`, s'il n'existe pas déjà.
+5. `npm test` : le test d'intégrité vérifie que son enchaînement n'est identique à
    aucun autre — deux techniques avec la même suite en rendraient une injouable.
 
 Les enchaînements doivent venir de l'œuvre. Quand il n'en existe pas (le Rasengan n'a
@@ -80,6 +84,18 @@ on se gratte est plus insupportable qu'un jeu qui demande de s'y reprendre à de
 Pour qu'un geste déclenche quelque chose, il faut ensuite une technique qui le
 consomme : une entrée dans `donnees/taijutsu.ts` du pack, avec son effet et ses textes,
 selon les mêmes règles qu'un jutsu.
+
+## Ajouter un ennemi, un boss ou une mission
+
+Tout vit dans `src/packs/<pack>/donnees/` et `effets/encre.ts` :
+
+1. **Ennemi ou boss** : une entrée dans `donnees/bestiaire.ts` ou `donnees/boss.ts`
+   (PV, vitesse, affinité élémentaire, cadence et attaques télégraphiées).
+2. **Sa silhouette à l'encre** dans `effets/encre.ts`. Un test vérifie que chaque modèle
+   du bestiaire et des boss a son dessin et qu'il tourne dans les quatre états
+   (`apparition`, `telegraphe`, `touche`, `mort`) sans jeter.
+3. **Mission** : une entrée dans `donnees/missions.ts`, et son nom traduit dans
+   `i18n/fr.ts` et `i18n/en.ts` (`mission.<id>.nom`).
 
 ## Ajouter un pack d'anime
 

@@ -75,7 +75,7 @@ test("chaque affinité et chaque élément d'attaque appartient au cycle ou vaut
 test("Edo Tensei se reforme, Kisame draine le chakra, Itachi a un genjutsu", () => {
   expect(BESTIAIRE.edoTensei.seReforme).toBe(true);
   expect(BOSS.kisame.attaques.some(a => (a.draineChakra ?? 0) > 0)).toBe(true);
-  expect(BOSS.itachi.attaques.some(a => a.genjutsu)).toBe(true);
+  expect(BOSS.itachi.attaques.some(a => "genjutsu" in a && a.genjutsu)).toBe(true);
 });
 
 test("le manifeste du pack expose bestiaire, boss et missions", () => {

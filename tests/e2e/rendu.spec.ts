@@ -94,8 +94,9 @@ test("la bannière du jutsu s'affiche quand un jutsu part", async ({ page }) => 
 
   const banniere = page.locator("#banniere");
   await expect(banniere).toHaveClass(/visible/);
-  const opacite = await banniere.evaluate(el => Number(getComputedStyle(el).opacity));
-  expect(opacite).toBeGreaterThan(0);
+  await expect
+    .poll(() => banniere.evaluate(el => Number(getComputedStyle(el).opacity)))
+    .toBeGreaterThan(0);
   await expect(banniere.locator(".nom")).not.toBeEmpty();
 });
 
@@ -125,10 +126,13 @@ test("les illustrations des signes se chargent", async ({ page }) => {
   await page.getByRole("button", { name: /Kata/ }).click();
   await page.locator("#btnEncycloAccueil").click();
 
-  const cassees = await page.evaluate(() =>
-    [...document.querySelectorAll<HTMLImageElement>("#listeSignes img")]
-      .filter(i => !i.complete || i.naturalWidth === 0)
-      .map(i => i.src)
-  );
-  expect(cassees).toEqual([]);
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        [...document.querySelectorAll<HTMLImageElement>("#listeSignes img")]
+          .filter(i => !i.complete || i.naturalWidth === 0)
+          .map(i => i.src)
+      )
+    )
+    .toEqual([]);
 });

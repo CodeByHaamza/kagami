@@ -43,6 +43,45 @@
       <span id="armeStock" class="stock"></span>
     </div>
 
+    <!-- Le HUD d'arcade « parchemin » (spec §10.1) : trois jauges et le sceau de vague.
+         Jamais de kanji seul : 命 est doublé de Vie, 気 de Chakra, 口 d'Invocation, et
+         la vague s'écrit en chiffres arabes (« 1/3 »). Masqué au Dojo. -->
+    <div id="hudArcade" class="hud-arcade" hidden>
+      <div class="hud-jauges">
+        <div class="hud-ligne">
+          <span class="kanji">命</span>
+          <span class="hud-nom" data-i18n="arcade.vie">Vie</span>
+          <div class="hud-barre vie"><div id="jaugeVie"></div></div>
+        </div>
+        <div class="hud-ligne">
+          <span class="kanji">気</span>
+          <span class="hud-nom" data-i18n="arcade.chakra">Chakra</span>
+          <div class="hud-barre chakra"><div id="jaugeChakra"></div></div>
+        </div>
+        <div class="hud-ligne">
+          <span class="kanji">口</span>
+          <span class="hud-nom" data-i18n="arcade.invocation">Invocation</span>
+          <div class="hud-barre invocation"><div id="jaugeInvocation"></div></div>
+        </div>
+      </div>
+      <div class="hud-sceau">
+        <b id="sceauVague">1/3</b>
+        <small data-i18n="arcade.vague">vague</small>
+      </div>
+      <button id="btnQuitterArcade" type="button" class="hud-quitter" data-i18n="arcade.quitter">
+        Dojo
+      </button>
+    </div>
+
+    <div id="finMission" class="bravo fin-mission" hidden>
+      <p id="finSceau" class="sceau">勝</p>
+      <p id="finTitre" class="titre"></p>
+      <button id="btnRetourDojo" type="button" class="principal" data-i18n="arcade.quitter">
+        Dojo
+      </button>
+    </div>
+
+
     <div id="enCours" class="en-cours"></div>
 
     <!-- La fiche du jutsu qu'on s'entraîne à faire : elle apparaît en fondu, montre
@@ -123,6 +162,9 @@
         <button id="btnDemarrer" class="principal" type="button" data-i18n="accueil.ouvrir">
           Ouvrir la caméra
         </button>
+        <button id="btnArcade" type="button" data-i18n="accueil.arcade">
+          Mode arcade
+        </button>
         <button id="btnEncycloAccueil" type="button" data-i18n="accueil.encyclopedie">
           Voir l'encyclopédie
         </button>
@@ -188,6 +230,19 @@
         <button id="btnFermerJournal" type="button" data-i18n="journal.fermer">Fermer</button>
       </div>
     </div>
+
+    <!-- Le choix de mission d'arcade (rangs D à S). -->
+    <div id="missions" class="ecran" hidden>
+      <div class="parchemin">
+        <header>
+          <h2 data-i18n="arcade.titre">Missions d'arcade</h2>
+          <p class="discret" data-i18n="arcade.sousTitre"></p>
+          <button id="btnFermerMissions" type="button" data-i18n-titre="encyclo.fermer" data-i18n-aria="encyclo.fermer">✕</button>
+        </header>
+        <div id="listeMissions" class="liste-missions"></div>
+      </div>
+    </div>
+
 
     <!-- Le banc de rejeu. Outil de développement : il n'apparaît qu'avec ?banc dans
          l'adresse, et ses étiquettes ne passent pas par t() — douze clés dans deux

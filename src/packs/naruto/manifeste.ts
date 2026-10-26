@@ -13,7 +13,7 @@ import { EFFETS_CORPS } from "./effets/corps";
 import { DESSINS_ENCRE } from "./effets/encre";
 import { TAIJUTSU } from "./donnees/taijutsu";
 import { ARMES } from "./donnees/armes";
-import { CYCLE, ELEMENTS } from "./donnees/elements";
+import { CYCLE, ELEMENTS, type ElementNaruto } from "./donnees/elements";
 import { PROFILS } from "./donnees/profils";
 import { BESTIAIRE } from "./donnees/bestiaire";
 import { BOSS } from "./donnees/boss";
@@ -22,7 +22,18 @@ import { DetecteurDeSignes } from "./entree/detecteurSignes";
 import { enregistrerTextes } from "./i18n";
 
 export { CLASSES, FAMILLES, SIGNES, type SigneNaruto };
-export { TAIJUTSU, ARMES, CYCLE, ELEMENTS, PROFILS, BESTIAIRE, BOSS, MISSIONS, DESSINS_ENCRE };
+export {
+  TAIJUTSU,
+  ARMES,
+  CYCLE,
+  ELEMENTS,
+  PROFILS,
+  BESTIAIRE,
+  BOSS,
+  MISSIONS,
+  DESSINS_ENCRE,
+  type ElementNaruto
+};
 
 export const PACK_KATA: Pack<SigneNaruto> = {
   id: "kata",

@@ -19,6 +19,7 @@ import { PostureMediaPipe } from "../moteur/corps/posture";
 import { LecteurDeGestes, type JetonCorps } from "../moteur/corps/gestes";
 import { MachineAPostures, type Attitude } from "../moteur/corps/postures";
 import { fiable, immobilite } from "../moteur/corps/reperes";
+import { Arcade } from "./arcade";
 import { Banc } from "./banc";
 import { Sequence } from "../moteur/grammaire/sequence";
 import { BoucleDeRendu, calculerCadre, dessinerCadre, versEcran } from "../moteur/rendu/cadre";
@@ -99,6 +100,17 @@ const corps = new Sequence<JetonCorps>(TAIJUTSU, {
 let armeChoisie = 0;
 const stocks = new Map(ARMES.map(a => [a.id, a.stock]));
 let rasengan: Rasengan3D | null = null; // la scène 3D n'est créée qu'au premier Rasengan
+
+const arcade = new Arcade({
+  demarrerCamera: async () => {
+    if (!window.kagami?.pret) await demarrer();
+  },
+  reinitialiserStocks: () => {
+    for (const a of ARMES) stocks.set(a.id, a.stock);
+    montrerArme();
+  },
+  annoncer: texte => message(texte)
+});
 
 let sauvegarde: Sauvegarde = charger();
 let cadre: Cadre = calculerCadre({ l: innerWidth, h: innerHeight }, { largeur: 0, hauteur: 0 }, PIXELS);
@@ -212,9 +224,11 @@ const rendu = new BoucleDeRendu((dt, temps) => {
   dessinerCadre(ctx, cadre, video, camera.deFace);
   effets.appeler("fond", ctx, e);
   // la personne détourée, seulement si un effet en a besoin
-  if (silhouette.pret && effets.besoinSilhouette()) {
+  if (silhouette.pret && (effets.besoinSilhouette() || arcade.actif)) {
     e.personne = (silhouette.decouper(video, temps) ?? undefined) as Image | undefined;
   }
+  arcade.avancer(dt, temps, ordonnanceur.posture);
+  arcade.dessiner(ctx, cadre.l, cadre.h, temps);
   effets.appeler("derriere", ctx, e);
   const remplacee = effets.appeler("personne", ctx, e);
   if (e.personne && !remplacee) dessinerCadre(ctx, cadre, e.personne, camera.deFace);
@@ -327,6 +341,7 @@ function montrerPosture(attitude: Attitude): void {
 function traiterGeste(geste: JetonCorps): void {
   const maintenant = performance.now();
   dernierGeste = geste;
+  arcade.geste(geste);
 
   if (geste === "lancer") {
     lancerArme(maintenant);
@@ -354,6 +369,7 @@ function lancerArme(maintenant: number): void {
   if (reste !== null && reste !== undefined) stocks.set(arme.id, reste - 1);
 
   effets.lancer(arme.effet, contexte(maintenant, 0));
+  arcade.arme(arme, maintenant);
   jouer("shuriken");
   montrerArme();
 }
@@ -385,9 +401,9 @@ function traiter(vue: Awaited<ReturnType<typeof detecteur.reconnaitre>>): void {
 
   const tenu = sequence.jetonTenu(maintenant);
   montrerTenu(tenu);
-  // Un jeton tenu peut ne correspondre a aucune technique : c'est le palier « charge »,
-  // dont le plan 4 fera la charge de chakra et le mode ermite. Pour l'instant il ne
-  // declenche rien, mais il ne doit surtout pas jeter.
+  if (tenu?.palier === "charge") {
+    arcade.charger(ECART_DETECTION / 1000);
+  }
   if (tenu?.technique && tenu.palier === "tenue" && tenu.part >= 1) {
     declencher(tenu.technique, maintenant);
   }
@@ -400,8 +416,9 @@ function jetonValide(jeton: SigneNaruto): void {
   dernierJetonValide = jeton;
 
   // « Kai ! » : le Bélier rompt un genjutsu, comme dans l'anime
-  if (jeton === PACK_KATA.jetonKai && effets.genjutsuActif()) {
+  if (jeton === PACK_KATA.jetonKai && (effets.genjutsuActif() || arcade.sousIllusion)) {
     effets.rompreGenjutsu(contexte(maintenant, 0));
+    arcade.kai();
     jouer("kai");
     sequence.vider();
     message(t("message.kai"));
@@ -423,6 +440,7 @@ function jetonValide(jeton: SigneNaruto): void {
 function declencher(technique: Technique<SigneNaruto>, maintenant: number): void {
   sequence.vider();
   enAttente = null;
+  if (!arcade.technique(technique, maintenant)) return;
 
   const e = contexte(maintenant, 0);
   const def = effets.lancer(technique.effet, e);
@@ -751,6 +769,10 @@ function bravo(technique: Technique<SigneNaruto>): void {
 // ---- les boutons ----
 
 el("btnDemarrer").addEventListener("click", () => void demarrer());
+el("btnArcade").addEventListener("click", () => arcade.ouvrirChoix());
+el("btnFermerMissions").addEventListener("click", () => arcade.fermerChoix());
+el("btnQuitterArcade").addEventListener("click", () => arcade.quitter());
+el("btnRetourDojo").addEventListener("click", () => arcade.quitter());
 el("btnFr").addEventListener("click", () => basculerLangue("fr"));
 el("btnEn").addEventListener("click", () => basculerLangue("en"));
 el("btnEncyclo").addEventListener("click", ouvrirEncyclopedie);

@@ -11,8 +11,9 @@ import { FR } from "../../src/packs/naruto/i18n/fr";
 
 const main = readFileSync("src/app/main.ts", "utf8");
 const banc = readFileSync("src/app/banc.ts", "utf8");
-/** Tout ce qui touche au DOM du jeu : le cablage, et le panneau du banc. */
-const code = [main, banc].join("\n");
+const arcade = readFileSync("src/app/arcade.ts", "utf8");
+/** Tout ce qui touche au DOM du jeu : le cablage, l'arcade et le panneau du banc. */
+const code = [main, banc, arcade].join("\n");
 const style = readFileSync("src/packs/naruto/assets/style.css", "utf8");
 const camera = readFileSync("src/moteur/entree/camera.ts", "utf8");
 const html = readFileSync("index.html", "utf8");
@@ -51,13 +52,27 @@ test("chaque code d'erreur caméra a une traduction dans les deux langues", () =
 test("aucune clé de traduction n'est définie sans être utilisée nulle part", () => {
   // Une clé orpheline est le signe d'un renommage à moitié fait — c'était le cas de
   // « camera.erreur », qui existait pendant que « camera.occupee » manquait.
-  const sources = ["src/app/main.ts", "src/app/portail.ts", "src/moteur/ui/encyclopedie.ts"]
+  const sources = [
+    "src/app/main.ts",
+    "src/app/arcade.ts",
+    "src/app/portail.ts",
+    "src/moteur/ui/encyclopedie.ts"
+  ]
     .map(f => readFileSync(f, "utf8"))
     .join("\n") + html;
 
   const orphelines = Object.keys(FR).filter(cle => {
     // construites a l'execution depuis un identifiant de donnees
-    for (const prefixe of ["jutsu.", "signe.", "taijutsu.", "arme.", "posture."]) {
+    for (const prefixe of [
+      "jutsu.",
+      "signe.",
+      "taijutsu.",
+      "arme.",
+      "posture.",
+      "element.",
+      "mission.",
+      "arcade.refus."
+    ]) {
       if (cle.startsWith(prefixe)) return false;
     }
     if (/^camera\./.test(cle)) return false; // construites depuis le code d'erreur

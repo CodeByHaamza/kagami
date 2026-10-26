@@ -119,6 +119,25 @@ export interface ProfilCombat {
   role: Role;
 }
 
+/**
+ * Une attaque ennemie : toujours annoncée avant de toucher (spec §9.6). Quatre réponses
+ * côté joueur : esquiver au corps, garder, contrer avec une défense, ou abattre la
+ * source avant l'impact.
+ */
+export interface Attaque {
+  id: string;
+  element: string | null;
+  /** Durée du télégraphe en secondes de jeu (~2 s pour un boss). */
+  duree: number;
+  degats: number;
+  esquivable: boolean;
+  /** Plonge le joueur dans l'illusion au lieu de le blesser (Itachi). */
+  genjutsu?: boolean;
+  /** Chakra aspiré à l'impact (Kisame). */
+  draineChakra?: number;
+}
+
+
 
 // ---- les particules ----
 

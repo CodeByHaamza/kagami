@@ -4,6 +4,11 @@
 
 import { ESLint } from "eslint";
 
+// Le premier lintText charge ESLint, typescript-eslint et le compilateur TypeScript : à
+// froid, pendant que vingt autres fichiers de test se disputent la machine, ça dépasse
+// les 5 s par défaut de Vitest. Le test n'est pas lent, c'est son démarrage qui l'est.
+const DEMARRAGE_ESLINT = 30_000;
+
 test("un import de moteur/ vers packs/ est refusé", async () => {
   const eslint = new ESLint({ overrideConfigFile: "eslint.config.js" });
   const [resultat] = await eslint.lintText(
@@ -12,7 +17,7 @@ test("un import de moteur/ vers packs/ est refusé", async () => {
   );
   expect(resultat!.errorCount).toBeGreaterThan(0);
   expect(JSON.stringify(resultat!.messages)).toMatch(/no-restricted-imports/);
-});
+}, DEMARRAGE_ESLINT);
 
 test("un import de packs/ vers moteur/ est autorisé", async () => {
   const eslint = new ESLint({ overrideConfigFile: "eslint.config.js" });
@@ -21,4 +26,4 @@ test("un import de packs/ vers moteur/ est autorisé", async () => {
     { filePath: "src/packs/naruto/donnees/signes.ts" }
   );
   expect(resultat!.errorCount).toBe(0);
-});
+}, DEMARRAGE_ESLINT);

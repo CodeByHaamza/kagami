@@ -137,6 +137,38 @@ export interface Attaque {
   draineChakra?: number;
 }
 
+/** Un ennemi ordinaire du bestiaire d'un pack. */
+export interface ModeleEnnemi {
+  id: string;
+  kanji: string;
+  romaji: string;
+  pv: number;
+  vitesse: number;
+  affinite: string | null;
+  attaque: Attaque;
+  /** Écart entre deux attaques, en secondes de jeu. */
+  cadence: number;
+  /** Revient une fois à mi-vie après sa première mort (Edo Tensei). */
+  seReforme?: boolean;
+}
+
+/** Un boss : plus d'une attaque, qu'il alterne dans l'ordre. */
+export interface ModeleBoss extends Omit<ModeleEnnemi, "attaque"> {
+  attaques: readonly Attaque[];
+}
+
+export interface Vague {
+  ennemis: readonly { modele: string; nombre: number }[];
+  boss?: string;
+}
+
+export interface Mission {
+  id: string;
+  rang: Rang;
+  vagues: readonly Vague[];
+}
+
+
 
 
 // ---- les particules ----
@@ -268,6 +300,9 @@ export interface Pack<J extends string = string> {
   cycle?: readonly string[];
   /** Le profil de combat de chaque technique, indexé par son identifiant. */
   profils?: Readonly<Record<string, ProfilCombat>>;
+  bestiaire?: Readonly<Record<string, ModeleEnnemi>>;
+  boss?: Readonly<Record<string, ModeleBoss>>;
+  missions?: readonly Mission[];
 }
 
 /** Une arme de jet. Le cout est en chakra ; zero pour toutes, c'est le point. */

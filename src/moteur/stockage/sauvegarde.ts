@@ -1,8 +1,9 @@
 // Ce que le joueur garde d'une visite à l'autre.
 //
-// La version d'origine éparpillait trois clés `ninjutsu-*` sans version. Ici une seule
-// clé versionnée : les plans suivants (progression, grades, fiche ninja) vont étendre
-// ce schéma, et la version permet de le faire sans effacer ce qui est déjà débloqué.
+// Version 2 : intègre la fiche ninja (clan, village, contrat d'invocation) et la
+// progression (grade, missions réussies, examens passés, records du Dojo).
+// Les sauvegardes v1 et les clés historiques ninjutsu-* sont migrées automatiquement
+// sans perte de données.
 //
 // Tous les accès sont protégés : en navigation privée, avec les cookies bloqués ou le
 // quota plein, `localStorage` jette au lieu de répondre. L'appli doit continuer à
@@ -10,7 +11,7 @@
 
 import type { Langue } from "../types";
 
-export const VERSION = 1;
+export const VERSION = 2;
 
 const CLE = `kagami.v${VERSION}`;
 
@@ -20,6 +21,31 @@ const ANCIENNES = {
   compteurs: "ninjutsu-compteurs",
   photos: "ninjutsu-photos"
 } as const;
+
+export type Grade = "academie" | "genin" | "chunin" | "jonin" | "kage";
+export type Village = "konoha" | "suna" | "kiri" | "iwa" | "kumo";
+export type Contrat = "crapauds" | "serpents" | "limaces" | "chiens";
+
+export interface FicheNinja {
+  nom: string;
+  clan: string;
+  village: Village;
+  contrat: Contrat;
+}
+
+export interface Progression {
+  grade: Grade;
+  missionsReussies: string[];
+  examensPasses: string[];
+  recordsDojo: Record<string, number>;
+}
+
+export const PROGRESSION_PAR_DEFAUT: Progression = {
+  grade: "academie",
+  missionsReussies: [],
+  examensPasses: [],
+  recordsDojo: {}
+};
 
 export interface Photo {
   image: string;
@@ -43,6 +69,8 @@ export interface Sauvegarde {
   /** La meilleure photo prise de chaque jeton. */
   photos: Record<string, Photo>;
   langue: Langue;
+  fiche: FicheNinja | null;
+  progression: Progression;
 }
 
 export const PAR_DEFAUT: Sauvegarde = {
@@ -52,10 +80,15 @@ export const PAR_DEFAUT: Sauvegarde = {
   entraines: [],
   compteurs: {},
   photos: {},
-  langue: "fr"
+  langue: "fr",
+  fiche: null,
+  progression: PROGRESSION_PAR_DEFAUT
 };
 
-const copieParDefaut = (): Sauvegarde => structuredClone(PAR_DEFAUT);
+const copieParDefaut = (): Sauvegarde => ({
+  ...structuredClone(PAR_DEFAUT),
+  progression: structuredClone(PROGRESSION_PAR_DEFAUT)
+});
 
 function lireBrut(cle: string): unknown {
   try {
@@ -85,6 +118,29 @@ function oublier(cle: string): void {
 
 const estObjet = (v: unknown): v is Record<string, unknown> =>
   typeof v === "object" && v !== null && !Array.isArray(v);
+
+/** Migre une sauvegarde v1 vers la v2. */
+function migrerDepuisV1(): Sauvegarde | null {
+  const v1 = lireBrut("kagami.v1");
+  if (!estObjet(v1)) return null;
+
+  const reprise: Sauvegarde = {
+    ...copieParDefaut(),
+    version: VERSION,
+    premiereVisite: v1.premiereVisite === true,
+    decouvertes: Array.isArray(v1.decouvertes) ? (v1.decouvertes as string[]) : [],
+    entraines: Array.isArray(v1.entraines) ? (v1.entraines as string[]) : [],
+    compteurs: estObjet(v1.compteurs) ? (v1.compteurs as Record<string, number>) : {},
+    photos: estObjet(v1.photos) ? (v1.photos as Record<string, Photo>) : {},
+    langue: v1.langue === "en" ? "en" : "fr",
+    fiche: null,
+    progression: structuredClone(PROGRESSION_PAR_DEFAUT)
+  };
+
+  ecrireBrut(CLE, reprise);
+  oublier("kagami.v1");
+  return reprise;
+}
 
 /** Reprend les trois clés de la version d'origine, puis les efface. */
 function migrerDepuisAncien(): Sauvegarde | null {
@@ -116,10 +172,18 @@ export function charger(): Sauvegarde {
 
   if (estObjet(brut)) {
     if (brut.version !== VERSION) return copieParDefaut();
-    return { ...copieParDefaut(), ...(brut as Partial<Sauvegarde>), version: VERSION };
+    return {
+      ...copieParDefaut(),
+      ...(brut as Partial<Sauvegarde>),
+      progression: {
+        ...structuredClone(PROGRESSION_PAR_DEFAUT),
+        ...(estObjet(brut.progression) ? brut.progression : {})
+      },
+      version: VERSION
+    };
   }
 
-  return migrerDepuisAncien() ?? copieParDefaut();
+  return migrerDepuisV1() ?? migrerDepuisAncien() ?? copieParDefaut();
 }
 
 export function enregistrer(sauvegarde: Sauvegarde): void {

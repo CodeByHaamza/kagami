@@ -94,6 +94,52 @@ test("une sauvegarde incomplète est complétée par les valeurs par défaut", (
   expect(reprise.decouvertes).toEqual([]);
   expect(reprise.compteurs).toEqual({});
   expect(reprise.langue).toBe(PAR_DEFAUT.langue);
+  expect(reprise.fiche).toBeNull();
+  expect(reprise.progression.grade).toBe("academie");
+});
+
+test("une sauvegarde v1 est migrée vers la v2 avec ses données intactes", () => {
+  stockage.donnees.set(
+    "kagami.v1",
+    JSON.stringify({
+      version: 1,
+      premiereVisite: false,
+      decouvertes: ["goukakyu", "chidori"],
+      entraines: ["goukakyu"],
+      compteurs: { tigre: 12 },
+      photos: {},
+      langue: "en"
+    })
+  );
+
+  const reprise = charger();
+  expect(reprise.version).toBe(2);
+  expect(reprise.decouvertes).toEqual(["goukakyu", "chidori"]);
+  expect(reprise.langue).toBe("en");
+  expect(reprise.fiche).toBeNull();
+  expect(reprise.progression.grade).toBe("academie");
+  expect(reprise.progression.recordsDojo).toEqual({});
+  expect(stockage.donnees.has("kagami.v1")).toBe(false);
+  expect(stockage.donnees.has("kagami.v2")).toBe(true);
+});
+
+test("une sauvegarde v2 stocke la fiche ninja et la progression", () => {
+  const v2 = {
+    ...PAR_DEFAUT,
+    fiche: { nom: "Naruto", clan: "Uzumaki", village: "konoha" as const, contrat: "crapauds" as const },
+    progression: {
+      grade: "genin" as const,
+      missionsReussies: ["rangD"],
+      examensPasses: ["examenGenin"],
+      recordsDojo: { goukakyu: 1420 }
+    }
+  };
+  enregistrer(v2);
+
+  const relu = charger();
+  expect(relu.fiche?.nom).toBe("Naruto");
+  expect(relu.progression.grade).toBe("genin");
+  expect(relu.progression.recordsDojo.goukakyu).toBe(1420);
 });
 
 test("localStorage indisponible ne fait pas tomber l'appli", () => {

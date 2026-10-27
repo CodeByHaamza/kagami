@@ -17,7 +17,7 @@
 // dans les deux langues pour un panneau que seul le propriétaire du dépôt verra.
 
 import type { Detection, Posture } from "../moteur/types";
-import { serialiser, type Session } from "../moteur/rejeu/format";
+import { deserialiser, serialiser, type Session } from "../moteur/rejeu/format";
 import { EnregistreurDeSession, LecteurDeSession } from "../moteur/rejeu/lecteur";
 
 /** Ce que le panneau affiche. Le moteur les calcule ; le banc ne fait que les montrer. */
@@ -225,7 +225,6 @@ export class Banc<J extends string = string> {
 
   private async ouvrir(fichier: File): Promise<void> {
     try {
-      const { deserialiser } = await import("../moteur/rejeu/format");
       this.rejouer(deserialiser(await fichier.text()));
     } catch (erreur) {
       ecrire("bancEtat", (erreur as Error).message);

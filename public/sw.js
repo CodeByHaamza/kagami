@@ -1,6 +1,6 @@
 // Service Worker pour le fonctionnement hors-ligne de Kagami (PWA).
 
-const CACHE_NAME = "kagami-v1";
+const CACHE_NAME = "kagami-v2";
 const ASSETS_A_METTRE_EN_CACHE = [
   "/",
   "/index.html",
@@ -31,6 +31,8 @@ self.addEventListener("activate", event => {
 
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
+  // Ne traiter que les requêtes HTTP/HTTPS valides (évite les extensions de navigateur ou schémas internes)
+  if (!event.request.url.startsWith("http://") && !event.request.url.startsWith("https://")) return;
 
   // Stratégie Stale-While-Revalidate pour une réactivité maximale
   event.respondWith(
@@ -40,7 +42,7 @@ self.addEventListener("fetch", event => {
           if (reponseReseau && reponseReseau.status === 200) {
             const copie = reponseReseau.clone();
             caches.open(CACHE_NAME).then(cache => {
-              cache.put(event.request, copie);
+              cache.put(event.request, copie).catch(() => {});
             });
           }
           return reponseReseau;

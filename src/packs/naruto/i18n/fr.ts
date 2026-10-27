@@ -180,7 +180,7 @@ export const FR: Dictionnaire = {
   "decouverte.nouveau": "Nouveau jutsu découvert : {nom} !",
   "message.kai": "解 Kai ! L'illusion est rompue.",
   "camera.permission": "La caméra a été refusée. Autorise-la dans ton navigateur, puis recharge la page.",
-  "camera.absente": "Aucune caméra trouvée sur cet appareil.",
+  "camera.absente": "Aucune caméra trouvée. Astuce : ajoute ?banc à l'adresse pour tester sans caméra, ou ouvre sur ton téléphone via npm run dev:reseau.",
   "camera.nonSecurise": "La caméra demande une connexion sécurisée (https ou localhost).",
   "modele.chargement": "Chargement du modèle de reconnaissance…",
   "modele.erreur": "Le modèle n'a pas pu être chargé. Vérifie que « git lfs pull » a bien été lancé.",

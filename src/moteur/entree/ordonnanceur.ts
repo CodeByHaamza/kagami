@@ -59,6 +59,14 @@ export class Ordonnanceur<J extends string = string, G extends string = string> 
     return this.attitude;
   }
 
+  get actif(): boolean {
+    return this.enMarche;
+  }
+
+  demarrer(): void {
+    this.enMarche = true;
+  }
+
   arreter(): void {
     this.enMarche = false;
   }

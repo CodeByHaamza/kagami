@@ -38,6 +38,7 @@ button {
   border: 1px solid var(--ligne);
   border-radius: 10px;
   cursor: pointer;
+  touch-action: manipulation;
 }
 button:hover:not(:disabled) { border-color: var(--orange); }
 button:disabled { opacity: 0.5; cursor: wait; }
@@ -367,7 +368,15 @@ button.lien { min-height: 0; padding: 0; font: inherit; color: #9a3412; text-dec
   /* pas la place à côté du signe vu : en dessous, et seulement la première ligne */
   .en-cours { top: max(150px, calc(env(safe-area-inset-top) + 142px)); left: 12px; right: auto; max-width: 75vw; text-align: left; }
   .en-cours p:nth-child(n + 2) { display: none; }
-  .barre h1 { font-size: 16px; }
+  .barre { gap: 6px; padding: 6px 8px; }
+  .barre h1 { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .barre button { width: 38px; height: 38px; min-height: 38px; font-size: 16px; }
+  .ecran { padding: 10px; }
+  .fiche { padding: 18px 14px; }
+}
+
+@media (max-width: 420px) {
+  .barre h1 span[data-i18n="pack.nom"] { display: none; }
 }
 
 /* Le choix de la langue vit dans la fiche d'accueil : c'est le seul endroit où on en a

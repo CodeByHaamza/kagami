@@ -437,6 +437,7 @@ function lancerArme(maintenant: number): void {
   effets.lancer(arme.effet, contexte(maintenant, 0));
   arcade.arme(arme, maintenant);
   jouer("shuriken");
+  navigator.vibrate?.([15, 25, 20]);
   montrerArme();
 }
 
@@ -528,6 +529,7 @@ function declencher(technique: Technique<SigneNaruto>, maintenant: number): void
   }
 
   jouer("jutsu");
+  navigator.vibrate?.([35, 45, 60]);
   if (def.sonDepart) jouer(def.sonDepart);
   if (def.son) setTimeout(() => jouer(def.son!), 250);
   crier(technique);
@@ -853,6 +855,7 @@ function apercu(technique: Technique<SigneNaruto>): void {
   const def = effets.lancer(technique.effet, e);
   if (def?.rasengan3d) lancerRasengan(e);
   jouer("jutsu");
+  navigator.vibrate?.([35, 45, 60]);
   banniere(technique);
 }
 
@@ -977,6 +980,7 @@ el("btnSon").addEventListener("click", () => {
   bouton.setAttribute("aria-pressed", String(muet));
   bouton.textContent = muet ? "🔇" : "🔊";
   couperSon(muet);
+  if (!muet) void activerSon();
 });
 el("btnFinGuide").addEventListener("click", fermerEntrainement);
 el("btnApercu").addEventListener("click", () => {
@@ -1024,6 +1028,7 @@ document.addEventListener("visibilitychange", () => {
     rendu.arreter();
     ordonnanceur.arreter();
   } else {
+    ordonnanceur.demarrer();
     void camera
       .ouvrir()
       .then(flux => {
@@ -1035,9 +1040,59 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 
-// Armes : changer avec 'A', lancer avec Espace (ou au clic sur le widget)
+function fermerModalesOuvertes(): boolean {
+  let ferme = false;
+  if (!el("encyclo").hidden) {
+    el("encyclo").hidden = true;
+    ferme = true;
+  }
+  if (!el("ficheNinja").hidden) {
+    ficheNinja.fermer();
+    ferme = true;
+  }
+  if (!el("calibration").hidden) {
+    el("calibration").hidden = true;
+    ferme = true;
+  }
+  if (!el("missions").hidden) {
+    arcade.fermerChoix();
+    ferme = true;
+  }
+  if (!el("academie").hidden) {
+    academie.fermer();
+    ferme = true;
+  }
+  if (!el("journal").hidden) {
+    el("journal").hidden = true;
+    ferme = true;
+  }
+  if (guide) {
+    fermerEntrainement();
+    ferme = true;
+  }
+  return ferme;
+}
+
+// Clic sur l'arrière-plan semi-transparent pour fermer les panneaux modaux
+for (const ecran of document.querySelectorAll<HTMLElement>(".ecran")) {
+  if (ecran.id === "portail" || ecran.id === "accueil") continue;
+  ecran.addEventListener("click", ev => {
+    if (ev.target === ecran) {
+      if (ecran.id === "missions") arcade.fermerChoix();
+      else if (ecran.id === "ficheNinja") ficheNinja.fermer();
+      else if (ecran.id === "academie") academie.fermer();
+      else ecran.hidden = true;
+    }
+  });
+}
+
+// Raccourcis clavier : Échap (fermer modales), 'A' (changer arme), Espace (lancer arme)
 addEventListener("keydown", e => {
   if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+  if (e.key === "Escape" || e.code === "Escape") {
+    if (fermerModalesOuvertes()) e.preventDefault();
+    return;
+  }
   if (e.key === "a" || e.key === "A") {
     armeChoisie = (armeChoisie + 1) % ARMES.length;
     montrerArme();

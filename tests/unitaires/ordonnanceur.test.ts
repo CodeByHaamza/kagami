@@ -174,14 +174,19 @@ test("revenir en concentration ne ressuscite pas l'enchaînement abandonné", as
   expect(vidages).toHaveLength(2);
 });
 
-test("arrêter coupe tout", async () => {
+test("arrêter coupe tout, puis redémarrer reprend l'écoute", async () => {
   const b = monter();
   b.poser(CONCENTRATION);
   await b.tourner(400);
 
   b.ordonnanceur.arreter();
+  expect(b.ordonnanceur.actif).toBe(false);
   const avant = { ...b.appels };
   await b.tourner(400);
-
   expect(b.appels).toEqual(avant);
+
+  b.ordonnanceur.demarrer();
+  expect(b.ordonnanceur.actif).toBe(true);
+  await b.tourner(400);
+  expect(b.appels.posture).toBeGreaterThan(avant.posture);
 });

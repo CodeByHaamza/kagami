@@ -180,7 +180,7 @@ export const EN: Dictionnaire = {
   "decouverte.nouveau": "New jutsu discovered: {nom}!",
   "message.kai": "解 Kai! The illusion breaks.",
   "camera.permission": "Camera access was denied. Allow it in your browser, then reload the page.",
-  "camera.absente": "No camera found on this device.",
+  "camera.absente": "No camera found. Tip: add ?banc to the URL to test without a camera, or open on your phone via npm run dev:reseau.",
   "camera.nonSecurise": "The camera needs a secure connection (https or localhost).",
   "modele.chargement": "Loading the recognition model…",
   "modele.erreur": "The model could not be loaded. Check that \"git lfs pull\" has been run.",

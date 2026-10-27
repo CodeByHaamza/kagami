@@ -240,3 +240,4 @@ export const ULTIMES = {
     }
   }
 } as const satisfies Readonly<Record<string, Effet>>;
+

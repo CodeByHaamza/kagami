@@ -1,7 +1,8 @@
 // Rendu des cosmétiques en réalité augmentée (bandeaux de village et masques ANBU).
 //
-// Projeté sur le visage à partir des repères faciaux et crâniens de MediaPipe Pose
-// (repères 0, 1–8). Le tracé respecte le style graphique calligraphique / estampe.
+// Projeté sur le front et le visage à partir des repères MediaPipe Pose (repères 0, 1–8).
+// Le rendu utilise des dégradés métalliques 3D brossés, biseaux ciselés, rivets d'acier
+// et tissu shinobi texturé pour un rendu manga semi-réaliste haute fidélité.
 
 import type { Contexte2D, Point3, Posture } from "../types";
 
@@ -24,14 +25,23 @@ export interface PoseTete {
   angle: number;
 }
 
+export interface OptionsCosmetiqueAR {
+  largeur: number;
+  hauteur: number;
+  cosmetique: CosmetiqueNinja;
+  projeter?: (pt: Point3) => { x: number; y: number };
+}
+
 /**
  * Détermine la position, la taille et l'orientation du front ou du visage
- * d'après les repères de posture du joueur (oreilles, yeux, nez).
+ * d'après les repères de posture du joueur (oreilles, yeux, nez),
+ * en tenant compte de la projection écran et de l'effet miroir éventuel.
  */
 export function estimerPoseTete(
   posture: Posture | null,
   largeurEcran: number,
-  hauteurEcran: number
+  hauteurEcran: number,
+  projeter?: (pt: Point3) => { x: number; y: number }
 ): PoseTete | null {
   if (!posture || !posture.points || posture.points.length < 9) return null;
 
@@ -43,51 +53,69 @@ export function estimerPoseTete(
 
   if (!nez || !oeilG || !oeilD) return null;
 
-  // Calcul du centre et de l'écartement de référence
-  let ptA: Point3 = oeilG;
-  let ptB: Point3 = oeilD;
-  let facteurLargeur = 2.4;
+  const conv = projeter ?? ((pt: Point3) => ({ x: pt.x * largeurEcran, y: pt.y * hauteurEcran }));
 
-  if (oreilleG && oreilleD && (oreilleG.visibilite ?? 1) > 0.3 && (oreilleD.visibilite ?? 1) > 0.3) {
-    ptA = oreilleG;
-    ptB = oreilleD;
-    facteurLargeur = 1.35;
-  }
+  const pNez = conv(nez);
+  const pOeilG = conv(oeilG);
+  const pOeilD = conv(oeilD);
 
-  const ax = ptA.x * largeurEcran;
-  const ay = ptA.y * hauteurEcran;
-  const bx = ptB.x * largeurEcran;
-  const by = ptB.y * hauteurEcran;
+  // Centre médian des yeux
+  const centreYeuxX = (pOeilG.x + pOeilD.x) / 2;
+  const centreYeuxY = (pOeilG.y + pOeilD.y) / 2;
 
-  const dx = bx - ax;
-  const dy = by - ay;
-  const dist = Math.hypot(dx, dy);
-  if (dist < 10) return null;
+  // Vecteur entre les yeux (qui s'adapte à l'inclinaison et au miroir)
+  const dx = pOeilD.x - pOeilG.x;
+  const dy = pOeilD.y - pOeilG.y;
+  const distYeux = Math.hypot(dx, dy);
+  if (distYeux < 5) return null;
 
   const angle = Math.atan2(dy, dx);
-  const centreX = (ax + bx) / 2;
-  const centreY = (ay + by) / 2;
 
-  // Décalage perpendiculaire vers le front (au-dessus des yeux/nez)
-  const normX = -Math.sin(angle);
-  const normY = Math.cos(angle);
+  // Vecteur orienté du nez vers les yeux (direction du haut du visage)
+  const vHautX = centreYeuxX - pNez.x;
+  const vHautY = centreYeuxY - pNez.y;
+  const distNezYeux = Math.hypot(vHautX, vHautY);
 
-  // Le nez aide à caler la hauteur du visage
-  const hauteurVisage = dist * 1.5;
-  const frontX = centreX - normX * (dist * 0.45);
-  const frontY = centreY - normY * (dist * 0.45);
+  let frontX: number;
+  let frontY: number;
+
+  if (distNezYeux > 8) {
+    // Le front se cale à environ 1.35x la distance nez-yeux au-dessus des yeux
+    const facteurFront = 1.35;
+    frontX = centreYeuxX + vHautX * facteurFront;
+    frontY = centreYeuxY + vHautY * facteurFront;
+  } else {
+    // Repli géométrique perpendiculaire à l'axe des yeux
+    const normX = -Math.sin(angle);
+    const normY = Math.cos(angle);
+    frontX = centreYeuxX + normX * (distYeux * 0.65);
+    frontY = centreYeuxY - Math.abs(normY) * (distYeux * 0.65);
+  }
+
+  let largeur = distYeux * 2.5;
+  if (oreilleG && oreilleD && (oreilleG.visibilite ?? 1) > 0.25 && (oreilleD.visibilite ?? 1) > 0.25) {
+    const pOreilleG = conv(oreilleG);
+    const pOreilleD = conv(oreilleD);
+    const distOreilles = Math.hypot(pOreilleD.x - pOreilleG.x, pOreilleD.y - pOreilleG.y);
+    if (distOreilles > distYeux) {
+      largeur = distOreilles * 1.35;
+    }
+  }
+
+  const hauteurVisage = distYeux * 3.0;
 
   return {
     x: frontX,
     y: frontY,
-    largeur: dist * facteurLargeur,
+    largeur,
     hauteur: hauteurVisage,
     angle
   };
 }
 
 /**
- * Dessine un bandeau frontal avec plaque métallique et symbole de village gravé.
+ * Dessine un bandeau frontal réaliste avec tissu shinobi plissé,
+ * plaque d'acier brossé en relief 3D, rivets chromés et emblème gravé en creux.
  */
 export function dessinerBandeau(
   ctx: Contexte2D,
@@ -101,49 +129,116 @@ export function dessinerBandeau(
   ctx.translate(x, y);
   ctx.rotate(angle);
 
-  const hauteurTissu = largeur * 0.36;
-  const largeurPlaque = largeur * 0.62;
+  const hauteurTissu = largeur * 0.38;
+  const largeurPlaque = largeur * 0.64;
   const hauteurPlaque = hauteurTissu * 0.72;
 
-  // 1. Tissu noué (bleu nuit shinobi)
-  ctx.fillStyle = "#1e293b";
-  ctx.beginPath();
-  ctx.roundRect(-largeur / 2, -hauteurTissu / 2, largeur, hauteurTissu, 4);
-  ctx.fill();
+  // 1. Tissu noué (bleu nuit shinobi profond avec texture de plis)
+  ctx.save();
+  ctx.shadowColor = "rgba(0, 0, 0, 0.6)";
+  ctx.shadowBlur = 8;
+  ctx.shadowOffsetY = 3;
 
-  // 2. Plaque d'acier brossé
-  const gradient = ctx.createLinearGradient(0, -hauteurPlaque / 2, 0, hauteurPlaque / 2);
-  gradient.addColorStop(0, "#cbd5e1");
-  gradient.addColorStop(0.5, "#94a3b8");
-  gradient.addColorStop(1, "#64748b");
-  ctx.fillStyle = gradient;
+  ctx.fillStyle = "#090d16";
+  ctx.beginPath();
+  ctx.roundRect(-largeur / 2 - 12, -hauteurTissu / 2, largeur + 24, hauteurTissu, 4);
+  ctx.fill();
+  ctx.restore();
+
+  // Coutures et reflets du tissu
+  ctx.strokeStyle = "#1e293b";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(-largeur / 2, -hauteurTissu / 2 + 2);
+  ctx.lineTo(largeur / 2, -hauteurTissu / 2 + 2);
+  ctx.moveTo(-largeur / 2, hauteurTissu / 2 - 2);
+  ctx.lineTo(largeur / 2, hauteurTissu / 2 - 2);
+  ctx.stroke();
+
+  // 2. Ombre portée sous la plaque métallique
+  ctx.save();
+  ctx.fillStyle = "rgba(0, 0, 0, 0.55)";
+  ctx.beginPath();
+  ctx.roundRect(-largeurPlaque / 2, -hauteurPlaque / 2 + 3, largeurPlaque, hauteurPlaque, 6);
+  ctx.fill();
+  ctx.restore();
+
+  // 3. Plaque d'acier brossé 3D (dégradé incurvé)
+  const gradPlaque = ctx.createLinearGradient(0, -hauteurPlaque / 2, 0, hauteurPlaque / 2);
+  gradPlaque.addColorStop(0, "#f8fafc");
+  gradPlaque.addColorStop(0.15, "#cbd5e1");
+  gradPlaque.addColorStop(0.5, "#94a3b8");
+  gradPlaque.addColorStop(0.85, "#64748b");
+  gradPlaque.addColorStop(1, "#334155");
+
+  ctx.fillStyle = gradPlaque;
   ctx.strokeStyle = "#0f172a";
-  ctx.lineWidth = Math.max(1.5, largeur * 0.015);
+  ctx.lineWidth = Math.max(1.8, largeurPlaque * 0.015);
   ctx.beginPath();
   ctx.roundRect(-largeurPlaque / 2, -hauteurPlaque / 2, largeurPlaque, hauteurPlaque, 6);
   ctx.fill();
   ctx.stroke();
 
-  // 3. Rivets aux 4 coins
-  ctx.fillStyle = "#334155";
-  const rOffsetL = largeurPlaque * 0.42;
-  const rOffsetH = hauteurPlaque * 0.32;
-  const rayonRivet = Math.max(1.5, hauteurPlaque * 0.08);
-  for (const dx of [-rOffsetL, rOffsetL]) {
-    for (const dy of [-rOffsetH, rOffsetH]) {
+  // Biseau intérieur gravé
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.45)";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.roundRect(
+    -largeurPlaque / 2 + 2.5,
+    -hauteurPlaque / 2 + 2.5,
+    largeurPlaque - 5,
+    hauteurPlaque - 5,
+    4
+  );
+  ctx.stroke();
+
+  // 4. Les 6 rivets canoniques d'acier (3 à gauche, 3 à droite)
+  const offsetLX = largeurPlaque * 0.44;
+  const rayonRivet = Math.max(2, hauteurPlaque * 0.075);
+  const positionsY = [-hauteurPlaque * 0.32, 0, hauteurPlaque * 0.32];
+
+  for (const dx of [-offsetLX, offsetLX]) {
+    for (const dy of positionsY) {
+      // Cavité d'ombre
+      ctx.fillStyle = "#1e293b";
       ctx.beginPath();
-      ctx.arc(dx, dy, rayonRivet, 0, Math.PI * 2);
+      ctx.arc(dx, dy + 0.5, rayonRivet, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Dôme métallique
+      ctx.fillStyle = "#cbd5e1";
+      ctx.beginPath();
+      ctx.arc(dx, dy, rayonRivet * 0.85, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Reflet spéculaire
+      ctx.fillStyle = "#ffffff";
+      ctx.beginPath();
+      ctx.arc(dx - rayonRivet * 0.25, dy - rayonRivet * 0.25, rayonRivet * 0.3, 0, Math.PI * 2);
       ctx.fill();
     }
   }
 
-  // 4. Emblème gravé du village
-  ctx.fillStyle = "#0f172a";
-  ctx.strokeStyle = "#0f172a";
-  ctx.lineWidth = Math.max(2, hauteurPlaque * 0.12);
-  ctx.lineCap = "round";
+  // 5. Emblème gravé en creux avec double relief
+  const rayonEmbleme = hauteurPlaque * 0.36;
 
-  dessinerEmbleme(ctx, village, hauteurPlaque * 0.4);
+  // Relief supérieur (lumière blanche sous l'entaille)
+  ctx.save();
+  ctx.translate(0, 1);
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.6)";
+  ctx.lineWidth = Math.max(2, hauteurPlaque * 0.11);
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  dessinerEmbleme(ctx, village, rayonEmbleme);
+  ctx.restore();
+
+  // Entaille profonde noire d'encre
+  ctx.strokeStyle = "#090d16";
+  ctx.fillStyle = "#090d16";
+  ctx.lineWidth = Math.max(2, hauteurPlaque * 0.11);
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  dessinerEmbleme(ctx, village, rayonEmbleme);
 
   ctx.restore();
 }
@@ -151,46 +246,50 @@ export function dessinerBandeau(
 function dessinerEmbleme(ctx: Contexte2D, village: VillageBandeau, rayon: number): void {
   ctx.beginPath();
   if (village === "konoha") {
-    // Spirale de feuille Konoha
-    ctx.arc(0, 0, rayon * 0.6, 0, Math.PI * 1.5, false);
-    ctx.moveTo(0, -rayon * 0.6);
-    ctx.lineTo(rayon * 0.8, -rayon * 0.9);
+    // Spirale de feuille Konoha canonique avec pointe et encoche
+    ctx.arc(0, 0, rayon * 0.58, 0.3, Math.PI * 1.6, false);
+    ctx.moveTo(0, -rayon * 0.58);
+    ctx.lineTo(rayon * 0.75, -rayon * 0.85);
+    ctx.moveTo(-rayon * 0.45, rayon * 0.35);
+    ctx.lineTo(-rayon * 0.75, rayon * 0.65);
     ctx.stroke();
   } else if (village === "suna") {
-    // Sablier Suna
-    ctx.moveTo(-rayon * 0.5, -rayon * 0.6);
-    ctx.lineTo(rayon * 0.5, -rayon * 0.6);
-    ctx.lineTo(-rayon * 0.5, rayon * 0.6);
-    ctx.lineTo(rayon * 0.5, rayon * 0.6);
+    // Sablier Suna stylisé
+    ctx.moveTo(-rayon * 0.55, -rayon * 0.65);
+    ctx.lineTo(rayon * 0.55, -rayon * 0.65);
+    ctx.lineTo(-rayon * 0.55, rayon * 0.65);
+    ctx.lineTo(rayon * 0.55, rayon * 0.65);
     ctx.closePath();
     ctx.stroke();
   } else if (village === "kiri") {
-    // 4 vagues Kiri
-    for (let i = -1; i <= 1; i += 0.66) {
-      const y = i * rayon * 0.4;
-      ctx.moveTo(-rayon * 0.6, y);
-      ctx.quadraticCurveTo(-rayon * 0.2, y - rayon * 0.2, 0, y);
-      ctx.quadraticCurveTo(rayon * 0.2, y + rayon * 0.2, rayon * 0.6, y);
+    // 4 vagues parallèles d'eau brumeuse
+    for (const i of [-0.6, -0.2, 0.2, 0.6]) {
+      const y = i * rayon * 0.7;
+      ctx.moveTo(-rayon * 0.65, y);
+      ctx.quadraticCurveTo(-rayon * 0.2, y - rayon * 0.25, 0, y);
+      ctx.quadraticCurveTo(rayon * 0.2, y + rayon * 0.25, rayon * 0.65, y);
     }
     ctx.stroke();
   } else if (village === "iwa") {
-    // Rochers Iwa
-    ctx.moveTo(-rayon * 0.5, rayon * 0.5);
-    ctx.lineTo(0, -rayon * 0.6);
-    ctx.lineTo(rayon * 0.5, rayon * 0.5);
+    // Rochers angulaires Iwa
+    ctx.moveTo(-rayon * 0.6, rayon * 0.55);
+    ctx.lineTo(-rayon * 0.2, -rayon * 0.65);
+    ctx.lineTo(0.1, -rayon * 0.1);
+    ctx.lineTo(0.3, -rayon * 0.4);
+    ctx.lineTo(rayon * 0.65, rayon * 0.55);
     ctx.closePath();
     ctx.stroke();
   } else if (village === "kumo") {
-    // Nuage Kumo
-    ctx.arc(-rayon * 0.25, 0, rayon * 0.35, Math.PI * 0.5, Math.PI * 1.5);
-    ctx.arc(rayon * 0.15, -rayon * 0.15, rayon * 0.4, Math.PI, Math.PI * 2);
-    ctx.arc(rayon * 0.35, rayon * 0.1, rayon * 0.3, 0, Math.PI);
+    // Double nuage stylisé Kumo
+    ctx.arc(-rayon * 0.22, 0, rayon * 0.32, Math.PI * 0.5, Math.PI * 1.5);
+    ctx.arc(rayon * 0.16, -rayon * 0.14, rayon * 0.38, Math.PI, Math.PI * 2);
+    ctx.arc(rayon * 0.32, rayon * 0.1, rayon * 0.28, 0, Math.PI);
     ctx.stroke();
   }
 }
 
 /**
- * Dessine un masque ANBU calligraphié sur l'intégralité du visage.
+ * Dessine un masque ANBU félin haute résolution en porcelaine sculptée.
  */
 export function dessinerMasqueAnbu(
   ctx: Contexte2D,
@@ -201,68 +300,87 @@ export function dessinerMasqueAnbu(
   angle: number
 ): void {
   ctx.save();
-  ctx.translate(x, y + hauteur * 0.2);
+  ctx.translate(x, y + hauteur * 0.22);
   ctx.rotate(angle);
 
-  const w = largeur * 0.75;
-  const h = hauteur * 1.1;
+  const w = largeur * 0.78;
+  const h = hauteur * 1.15;
 
-  // 1. Fond porcelaine blanche
-  ctx.fillStyle = "#f8fafc";
+  // 1. Ombre portée sous le masque
+  ctx.save();
+  ctx.shadowColor = "rgba(0, 0, 0, 0.6)";
+  ctx.shadowBlur = 14;
+  ctx.shadowOffsetY = 6;
+
+  // 2. Coque en porcelaine ivoire avec léger dégradé 3D
+  const gradMasque = ctx.createRadialGradient(0, -h * 0.1, w * 0.1, 0, 0, h * 0.6);
+  gradMasque.addColorStop(0, "#ffffff");
+  gradMasque.addColorStop(0.7, "#f1f5f9");
+  gradMasque.addColorStop(1, "#cbd5e1");
+
+  ctx.fillStyle = gradMasque;
   ctx.strokeStyle = "#0f172a";
-  ctx.lineWidth = Math.max(2, w * 0.02);
+  ctx.lineWidth = Math.max(2.5, w * 0.025);
 
   ctx.beginPath();
-  // Oreille gauche féline
+  // Oreille féline gauche
   ctx.moveTo(-w * 0.4, -h * 0.4);
-  ctx.lineTo(-w * 0.48, -h * 0.58);
+  ctx.lineTo(-w * 0.48, -h * 0.6);
   ctx.lineTo(-w * 0.2, -h * 0.48);
-  // Sommet crâne
-  ctx.quadraticCurveTo(0, -h * 0.52, w * 0.2, -h * 0.48);
-  // Oreille droite féline
-  ctx.lineTo(w * 0.48, -h * 0.58);
+  // Courbe supérieure crânienne
+  ctx.quadraticCurveTo(0, -h * 0.53, w * 0.2, -h * 0.48);
+  // Oreille féline droite
+  ctx.lineTo(w * 0.48, -h * 0.6);
   ctx.lineTo(w * 0.4, -h * 0.4);
-  // Joue et menton fuselé
-  ctx.quadraticCurveTo(w * 0.5, 0, w * 0.35, h * 0.35);
-  ctx.quadraticCurveTo(0, h * 0.55, -w * 0.35, h * 0.35);
-  ctx.quadraticCurveTo(-w * 0.5, 0, -w * 0.4, -h * 0.4);
+  // Pommettes et menton fuselé
+  ctx.quadraticCurveTo(w * 0.52, 0, w * 0.36, h * 0.36);
+  ctx.quadraticCurveTo(0, h * 0.56, -w * 0.36, h * 0.36);
+  ctx.quadraticCurveTo(-w * 0.52, 0, -w * 0.4, -h * 0.4);
   ctx.closePath();
   ctx.fill();
   ctx.stroke();
+  ctx.restore();
 
-  // 2. Fentes des yeux noires stylisées
-  ctx.fillStyle = "#09090b";
+  // 3. Fentes d'yeux noires évasées
+  ctx.fillStyle = "#05070a";
   for (const cote of [-1, 1]) {
     ctx.beginPath();
-    ctx.ellipse(cote * w * 0.22, -h * 0.06, w * 0.12, h * 0.05, cote * 0.25, 0, Math.PI * 2);
+    ctx.ellipse(cote * w * 0.22, -h * 0.06, w * 0.12, h * 0.045, cote * 0.28, 0, Math.PI * 2);
     ctx.fill();
+
+    // Contour rouge biseauté autour de l'œil
+    ctx.strokeStyle = "#dc2626";
+    ctx.lineWidth = Math.max(2, w * 0.02);
+    ctx.stroke();
   }
 
-  // 3. Peintures de guerre rouges (encre carmin ANBU)
+  // 4. Peintures de guerre rouges (encre carmin ANBU)
   ctx.strokeStyle = "#dc2626";
   ctx.fillStyle = "#dc2626";
-  ctx.lineWidth = Math.max(2.5, w * 0.035);
+  ctx.lineWidth = Math.max(3, w * 0.04);
+  ctx.lineCap = "round";
 
-  // Moustaches / flammes sur les joues
+  // Moustaches félines courbes sur les joues
   for (const cote of [-1, 1]) {
     ctx.beginPath();
-    ctx.moveTo(cote * w * 0.1, h * 0.08);
-    ctx.quadraticCurveTo(cote * w * 0.3, h * 0.04, cote * w * 0.45, h * 0.14);
-    ctx.moveTo(cote * w * 0.08, h * 0.16);
-    ctx.quadraticCurveTo(cote * w * 0.28, h * 0.14, cote * w * 0.42, h * 0.24);
+    ctx.moveTo(cote * w * 0.12, h * 0.08);
+    ctx.quadraticCurveTo(cote * w * 0.32, h * 0.03, cote * w * 0.45, h * 0.14);
+    ctx.moveTo(cote * w * 0.1, h * 0.18);
+    ctx.quadraticCurveTo(cote * w * 0.3, h * 0.15, cote * w * 0.42, h * 0.25);
     ctx.stroke();
 
-    // Pointe sur les oreilles
+    // Peinture triangulaire carmin dans les oreilles
     ctx.beginPath();
-    ctx.moveTo(cote * w * 0.35, -h * 0.45);
-    ctx.lineTo(cote * w * 0.45, -h * 0.55);
-    ctx.lineTo(cote * w * 0.25, -h * 0.48);
+    ctx.moveTo(cote * w * 0.36, -h * 0.46);
+    ctx.lineTo(cote * w * 0.45, -h * 0.56);
+    ctx.lineTo(cote * w * 0.26, -h * 0.49);
+    ctx.closePath();
     ctx.fill();
   }
 
-  // Symbole frontal rouge
+  // Symbole frontal rouge carmin (flamme ANBU)
   ctx.beginPath();
-  ctx.arc(0, -h * 0.28, w * 0.06, 0, Math.PI * 2);
+  ctx.arc(0, -h * 0.28, w * 0.065, 0, Math.PI * 2);
   ctx.fill();
 
   ctx.restore();
@@ -274,15 +392,11 @@ export function dessinerMasqueAnbu(
 export function dessinerCosmetiqueAR(
   ctx: Contexte2D,
   posture: Posture | null,
-  options: {
-    largeur: number;
-    hauteur: number;
-    cosmetique: CosmetiqueNinja;
-  }
+  options: OptionsCosmetiqueAR
 ): void {
   if (options.cosmetique === "aucun" || !posture) return;
 
-  const pose = estimerPoseTete(posture, options.largeur, options.hauteur);
+  const pose = estimerPoseTete(posture, options.largeur, options.hauteur, options.projeter);
   if (!pose) return;
 
   if (options.cosmetique === "masque_anbu") {

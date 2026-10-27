@@ -29,3 +29,4 @@ describe("genererVagueSurvie", () => {
     expect(mission.vagues[4]!.boss).toBe("zabuza");
   });
 });
+

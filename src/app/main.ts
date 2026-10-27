@@ -287,7 +287,15 @@ const rendu = new BoucleDeRendu((dt, temps) => {
     dessinerCosmetiqueAR(ctx, postureCourante, {
       largeur: cadre.l,
       hauteur: cadre.h,
-      cosmetique: sauvegarde.fiche.cosmetique
+      cosmetique: sauvegarde.fiche.cosmetique,
+      projeter: pt =>
+        versEcran(
+          cadre,
+          { largeur: video.videoWidth || 640 },
+          camera.deFace,
+          pt.x * (video.videoWidth || 640),
+          pt.y * (video.videoHeight || 480)
+        )
     });
   }
   effets.appeler("devant", ctx, e);
@@ -589,6 +597,17 @@ function montrerJetonVu(vue: { jeton: SigneNaruto; score: number } | null): void
     el("vuKanji").textContent = SIGNES[vue.jeton].kanji;
     el("vuNom").textContent = t(`signe.${vue.jeton}.nom`);
     el("vuScore").style.width = Math.round(vue.score * 100) + "%";
+
+    const imgVu = document.getElementById("vuImg") as HTMLImageElement | null;
+    if (imgVu) {
+      const src = IMAGES_SIGNES[vue.jeton];
+      if (src) {
+        imgVu.src = src;
+        imgVu.hidden = false;
+      } else {
+        imgVu.hidden = true;
+      }
+    }
     return;
   }
   if (performance.now() - derniereVue > REMANENCE) bloc.classList.remove("visible");
@@ -636,12 +655,39 @@ function majGuide(): void {
   el("guideSuite").innerHTML = guide.signes
     .map((s, i) => {
       const etat = i < p.fait ? " fait" : i === p.fait ? " suivant" : "";
-      return `<span class="pastille${etat}"><b>${SIGNES[s].kanji}</b>${t(`signe.${s}.nom`)}</span>`;
+      const img = IMAGES_SIGNES[s];
+      const imgHtml = img ? `<img src="${img}" class="pastille-vignette" alt="${s}" />` : "";
+      return `<span class="pastille${etat}">${imgHtml}<b>${SIGNES[s].kanji}</b><span>${t(`signe.${s}.nom`)}</span></span>`;
     })
     .join("");
-  el("guideProchain").textContent = p.prochain
-    ? t("guide.prochain", { signe: t(`signe.${p.prochain}.nom`) })
-    : "";
+
+  const prochain = p.prochain;
+  const aideProchain = document.getElementById("guideAideProchain");
+  const imgProchain = document.getElementById("guideImgProchain") as HTMLImageElement | null;
+  const descProchain = document.getElementById("guideDescProchain");
+
+  if (prochain) {
+    el("guideProchain").textContent = t("guide.prochain", {
+      signe: `${SIGNES[prochain].kanji} · ${t(`signe.${prochain}.nom`)}`
+    });
+    if (descProchain) {
+      descProchain.textContent = t(`signe.${prochain}.position`);
+    }
+    if (imgProchain) {
+      const src = IMAGES_SIGNES[prochain];
+      if (src) {
+        imgProchain.src = src;
+        imgProchain.hidden = false;
+      } else {
+        imgProchain.hidden = true;
+      }
+    }
+    if (aideProchain) aideProchain.hidden = false;
+  } else {
+    el("guideProchain").textContent = t("guide.bravo");
+    if (descProchain) descProchain.textContent = "";
+    if (aideProchain) aideProchain.hidden = true;
+  }
 }
 
 /** Doit correspondre a la duree de l'animation `banniere` de la feuille de style. */
@@ -787,9 +833,9 @@ async function ouvrirEntrainement(technique: Technique<SigneNaruto>): Promise<vo
   // Depuis l'accueil la caméra n'est pas encore ouverte : sans ça, le panneau
   // d'entraînement s'affiche derrière un écran d'accueil toujours là.
   if (!window.kagami?.pret) await demarrer();
-  // Puis on montre à quoi ressemble le jutsu visé : on apprend mieux une cible qu'on
-  // a vue une fois.
-  if (window.kagami?.pret) apercu(technique);
+  // Ne lance plus l'effet visuel du jutsu automatiquement : le joueur s'entraîne à faire les signes.
+  // La bannière annonce la technique visée, et "Montre-moi" permet de voir l'effet à la demande.
+  banniere(technique);
 }
 
 function fermerEntrainement(): void {

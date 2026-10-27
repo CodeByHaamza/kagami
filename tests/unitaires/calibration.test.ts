@@ -46,3 +46,4 @@ describe("verifierCadrage", () => {
     expect(verifierCadrage(null).statut).toBe("absent");
   });
 });
+

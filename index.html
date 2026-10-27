@@ -28,6 +28,7 @@
 
     <!-- le signe que le modèle voit en ce moment -->
     <div id="signeVu" class="signe-vu" aria-live="polite">
+      <img id="vuImg" class="vu-img" src="" alt="" hidden />
       <span id="vuKanji" class="kanji"></span>
       <span id="vuNom"></span>
       <div class="jauge"><div id="vuScore"></div></div>
@@ -110,7 +111,15 @@
         <p class="texte" id="guideTexte"></p>
       </div>
       <div id="guideSuite" class="suite"></div>
-      <p id="guideProchain" class="prochain"></p>
+      <div id="guideAideProchain" class="guide-aide-prochain">
+        <div class="guide-img-cadre">
+          <img id="guideImgProchain" class="guide-img-prochain" src="" alt="" />
+        </div>
+        <div class="guide-detail-prochain">
+          <p id="guideProchain" class="prochain"></p>
+          <p id="guideDescProchain" class="guide-desc-prochain"></p>
+        </div>
+      </div>
       <div class="guide-chrono">
         <span class="chrono-temps" id="guideChrono">0.00s</span>
         <span class="chrono-record" id="guideRecord"></span>

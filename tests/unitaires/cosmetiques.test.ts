@@ -26,6 +26,9 @@ function creerContexteFactice(): Contexte2D {
     roundRect: vi.fn(),
     createLinearGradient: vi.fn().mockReturnValue({
       addColorStop: vi.fn()
+    }),
+    createRadialGradient: vi.fn().mockReturnValue({
+      addColorStop: vi.fn()
     })
   } as unknown as Contexte2D;
 }
@@ -81,3 +84,4 @@ describe("dessin cosmétiques", () => {
     expect(ctx.restore).toHaveBeenCalled();
   });
 });
+

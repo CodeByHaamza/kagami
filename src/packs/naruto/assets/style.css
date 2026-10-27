@@ -89,10 +89,10 @@ button.principal { color: #1a0d02; background: var(--orange); border-color: var(
   left: 12px;
   z-index: 5;
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto auto 1fr;
   align-items: center;
-  gap: 2px 12px;
-  min-width: 170px;
+  gap: 2px 10px;
+  min-width: 180px;
   padding: 8px 14px;
   background: var(--panneau);
   border: 1px solid var(--ligne);
@@ -102,7 +102,14 @@ button.principal { color: #1a0d02; background: var(--orange); border-color: var(
   transition: opacity 0.2s, transform 0.2s;
 }
 .signe-vu.visible { opacity: 1; transform: none; }
-.signe-vu .kanji { grid-row: span 2; font-size: 44px; line-height: 1; color: var(--orange); }
+.vu-img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  grid-row: span 2;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+}
+.signe-vu .kanji { grid-row: span 2; font-size: 38px; line-height: 1; color: var(--orange); }
 #vuNom { font-weight: 700; }
 .signe-vu .jauge { height: 6px; background: #2a2a36; border-radius: 3px; overflow: hidden; }
 #vuScore { height: 100%; width: 0; background: var(--orange); transition: width 0.15s; }
@@ -542,6 +549,75 @@ button.lien { min-height: 0; padding: 0; font: inherit; color: #9a3412; text-dec
 .pastille.suivant {
   color: var(--texte);
   font-weight: 700;
+  border-color: var(--orange);
+  box-shadow: 0 0 10px rgba(249, 115, 22, 0.45);
+  transform: scale(1.04);
+}
+
+.pastille-vignette {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.guide-aide-prochain {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+  padding: 8px 12px;
+  background: rgba(15, 15, 24, 0.85);
+  border: 1px solid rgba(249, 115, 22, 0.4);
+  border-radius: 10px;
+  animation: pulsation-aide 2s infinite ease-in-out;
+}
+
+@keyframes pulsation-aide {
+  0%, 100% { border-color: rgba(249, 115, 22, 0.4); box-shadow: 0 0 4px rgba(249, 115, 22, 0.1); }
+  50% { border-color: rgba(249, 115, 22, 0.85); box-shadow: 0 0 12px rgba(249, 115, 22, 0.3); }
+}
+
+.guide-img-cadre {
+  width: 54px;
+  height: 54px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1.5px solid var(--orange);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.guide-img-prochain {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+}
+
+.guide-detail-prochain {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.guide-detail-prochain .prochain {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--texte);
+}
+
+.guide-desc-prochain {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--doux);
 }
 
 /* ---- « bravo » ---- */

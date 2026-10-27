@@ -496,3 +496,4 @@ export function dessinerArbreMokuton(
 
   ctx.restore();
 }
+

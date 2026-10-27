@@ -36,3 +36,4 @@ describe("evaluerFrappeRythme", () => {
     expect(j.jugement).toBe("rate");
   });
 });
+

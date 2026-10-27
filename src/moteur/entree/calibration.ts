@@ -63,3 +63,4 @@ export function verifierCadrage(largeurEpaulesNormalisee: number | null): Diagno
 
   return { statut: "bon" };
 }
+

@@ -47,3 +47,4 @@ export function creerMissionSurvie(totalVagues = 50): Mission {
     vagues
   };
 }
+

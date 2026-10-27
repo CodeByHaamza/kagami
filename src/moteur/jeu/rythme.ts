@@ -90,3 +90,4 @@ export function enregistrerFrappe(score: ScoreRythme, resultat: ResultatFrappe):
     score.comboMax = score.combo;
   }
 }
+

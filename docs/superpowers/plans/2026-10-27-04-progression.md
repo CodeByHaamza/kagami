@@ -43,10 +43,10 @@
   `Sauvegarde` enrichi de `fiche: FicheNinja | null` et `progression: Progression` ;
   Migration v1 → v2 automatique.
 
-- [ ] **Step 1 : tests de la sauvegarde v2 et de la migration v1**
-- [ ] **Step 2 : implémenter la sauvegarde v2**
-- [ ] **Step 3 : vérifier les tests** (`npm test -- sauvegarde`)
-- [ ] **Step 4 : commit** — `Sauvegarde v2 : fiche ninja, progression et records du Dojo`
+- [x] **Step 1 : tests de la sauvegarde v2 et de la migration v1**
+- [x] **Step 2 : implémenter la sauvegarde v2**
+- [x] **Step 3 : vérifier les tests** (`npm test -- sauvegarde`)
+- [x] **Step 4 : commit** — `Sauvegarde v2 : fiche ninja, progression et records du Dojo`
 
 ---
 
@@ -63,10 +63,10 @@
   `gradesOrdre: readonly Grade[]` ;
   `progressionSuivante(progression): { prochainGrade?: Grade; type: "examen" | "recommandation"; prerequisRempli: boolean }`.
 
-- [ ] **Step 1 : tests unitaires d'éligibilité et de filtrage par grade**
-- [ ] **Step 2 : implémenter les règles canoniques de progression**
-- [ ] **Step 3 : vérifier les tests** (`npm test -- progression`)
-- [ ] **Step 4 : commit** — `Règles de progression et déblocages canoniques par grade`
+- [x] **Step 1 : tests unitaires d'éligibilité et de filtrage par grade**
+- [x] **Step 2 : implémenter les règles canoniques de progression**
+- [x] **Step 3 : vérifier les tests** (`npm test -- progression`)
+- [x] **Step 4 : commit** — `Règles de progression et déblocages canoniques par grade`
 
 ---
 

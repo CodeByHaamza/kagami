@@ -85,10 +85,10 @@
   - Limaces : Régénération vitale accrue.
   - Chiens : Pistage ninken (télégraphes ralentis / anticipés).
 
-- [ ] **Step 1 : tests de chaque spécialité de contrat**
-- [ ] **Step 2 : implémenter et brancher dans `Combat`**
-- [ ] **Step 3 : vérifier les tests** (`npm test -- contrat combat`)
-- [ ] **Step 4 : commit** — `Les spécialités des quatre contrats d'invocation en combat`
+- [x] **Step 1 : tests de chaque spécialité de contrat**
+- [x] **Step 2 : implémenter et brancher dans `Combat`**
+- [x] **Step 3 : vérifier les tests** (`npm test -- contrat combat`)
+- [x] **Step 4 : commit** — `Les spécialités des quatre contrats d'invocation en combat`
 
 ---
 

@@ -7,6 +7,7 @@
 
 import type { Attitude } from "../corps/postures";
 import { Scene, type Entite } from "../scene/scene";
+import type { Contrat } from "../stockage/sauvegarde";
 import type {
   ArmeDuPack,
   Attaque,
@@ -16,6 +17,11 @@ import type {
   ProfilCombat,
   Technique
 } from "../types";
+import {
+  ajusterAttaqueParContrat,
+  appliquerSpecialiteContrat,
+  multiplicateurDegatsContrat
+} from "./contrat";
 import { coutChakra, multiplicateur, puissance } from "./degats";
 import { HorlogeDeJeu } from "./horloge";
 import { Joueur } from "./joueur";
@@ -51,6 +57,7 @@ export interface OptionsCombat {
   ecartApparition?: number;
   entracte?: number;
   ralentiActif?: boolean;
+  contrat?: Contrat | null;
 }
 
 /** Profondeur minimale pour qu'un coup au corps (taijutsu) atteigne sa cible. */
@@ -63,6 +70,7 @@ export class Combat {
   readonly joueur = new Joueur();
   readonly horloge: HorlogeDeJeu;
   readonly deroulement: DeroulementMission;
+  readonly contrat: Contrat | null;
 
   private readonly cycle: readonly string[];
   private readonly profils: Readonly<Record<string, ProfilCombat>>;
@@ -74,12 +82,14 @@ export class Combat {
   private readonly indicePattern = new Map<number, number>();
   private readonly fileEvenements: EvenementCombat[] = [];
   private derniereVague = 1;
+  private attitudeCourante: Attitude = "neutre";
 
   constructor(options: OptionsCombat) {
     this.cycle = options.cycle;
     this.profils = options.profils;
     this.bestiaire = options.bestiaire;
     this.boss = options.boss;
+    this.contrat = options.contrat ?? null;
     this.horloge = new HorlogeDeJeu({ actif: options.ralentiActif ?? true });
     this.deroulement = new DeroulementMission(options.mission, {
       ecartApparition: options.ecartApparition,
@@ -103,8 +113,10 @@ export class Combat {
     this.mettreAJourMission(0);
     if (this.etat === "victoire" || this.etat === "defaite") return;
 
+    this.attitudeCourante = attitude;
     const dtJeu = this.horloge.avancer(dtReel, attitude);
     this.joueur.avancer(dtReel);
+    appliquerSpecialiteContrat(this.contrat, this.joueur, this.enVol, { dtReel, attitude });
 
     // 1. Entrées de la vague en cours.
     const entrees = this.deroulement.apparitions(dtJeu);
@@ -173,12 +185,13 @@ export class Combat {
     }
 
     const base = puissance(profil, Math.max(1, t.signes.length));
+    const multContrat = multiplicateurDegatsContrat(this.contrat, this.attitudeCourante);
     const cibles = estTaijutsu ? this.scene.aPortee(PORTEE_TAIJUTSU) : this.scene.vivantes();
 
     let morts = 0;
     for (const c of cibles) {
       const m = multiplicateur(profil.element, c.affinite, this.cycle);
-      const degats = Math.round(base * m);
+      const degats = Math.round(base * m * multContrat);
       const tuer = this.scene.toucher(c, degats, maintenant);
       this.fileEvenements.push({ type: "touche", entite: c, degats, multiplicateur: m });
       if (tuer) {
@@ -218,6 +231,9 @@ export class Combat {
   }
 
   esquive(): boolean {
+    if (this.contrat === "serpents") {
+      appliquerSpecialiteContrat("serpents", this.joueur, this.enVol, { actionEsquive: true });
+    }
     let auMoinsUne = false;
     for (const tel of this.enVol) {
       if (tel.esquiver()) auMoinsUne = true;
@@ -288,7 +304,8 @@ export class Combat {
 
     e.etat = "telegraphe";
     e.depuis = maintenant;
-    const tel = new Telegraphe(attaque, e);
+    const attAjustee = ajusterAttaqueParContrat(this.contrat, attaque);
+    const tel = new Telegraphe(attAjustee, e);
     this.enVol.push(tel);
     this.fileEvenements.push({ type: "telegraphe", telegraphe: tel });
   }

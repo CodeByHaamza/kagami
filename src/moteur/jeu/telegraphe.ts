@@ -43,8 +43,8 @@ export class Telegraphe {
     this.ecoule += Math.max(0, dtJeu);
   }
 
-  esquiver(): boolean {
-    if (!this.attaque.esquivable) return false;
+  esquiver(force = false): boolean {
+    if (!force && !this.attaque.esquivable) return false;
     this.esquivee = true;
     return true;
   }

@@ -29,7 +29,7 @@ const ENTRACTE_PAR_DEFAUT = 2;
 function preparerFile(vague: Vague | undefined): Apparition[] {
   if (!vague) return [];
   const file: Apparition[] = [];
-  for (const lot of vague.ennemis) {
+  for (const lot of vague.ennemis ?? []) {
     for (let i = 0; i < lot.nombre; i++) file.push({ modele: lot.modele, boss: false });
   }
   if (vague.boss) file.push({ modele: vague.boss, boss: true });

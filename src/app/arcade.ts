@@ -53,8 +53,7 @@ export class Arcade {
   monter(): void {
     const grade = this.pont.getGrade?.() ?? "academie";
     const conteneur = el("listeMissions");
-    const toutes = [...MISSIONS, creerMissionSurvie(50)];
-    conteneur.innerHTML = toutes.map(m => {
+    conteneur.innerHTML = MISSIONS.map(m => {
       const accessible = estMissionAccessible(m.rang, grade);
       const classeVerrouillee = accessible ? "" : " verrouillee";
       const disabled = accessible ? "" : " disabled";
@@ -71,8 +70,15 @@ export class Arcade {
 
     for (const b of conteneur.querySelectorAll<HTMLButtonElement>("[data-mission]:not([disabled])")) {
       b.addEventListener("click", () => {
-        const mission = toutes.find(m => m.id === b.dataset.mission);
+        const mission = MISSIONS.find(m => m.id === b.dataset.mission);
         if (mission) void this.lancer(mission);
+      });
+    }
+
+    const btnSurvie = document.getElementById("btnSurvieInfinie");
+    if (btnSurvie) {
+      btnSurvie.addEventListener("click", () => {
+        void this.lancer(creerMissionSurvie(50));
       });
     }
   }

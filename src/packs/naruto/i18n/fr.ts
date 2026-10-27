@@ -9,6 +9,7 @@ export const FR: Dictionnaire = {
   "accueil.arcade": "Mode arcade",
   "arcade.titre": "Missions d'arcade",
   "arcade.sousTitre": "Cinq rangs, du Genin au Kage. Les ennemis arrivent derrière toi.",
+  "arcade.survieDesc": "Vagues infinies & marathon de boss",
   "arcade.vie": "Vie",
   "arcade.chakra": "Chakra",
   "arcade.invocation": "Invocation",

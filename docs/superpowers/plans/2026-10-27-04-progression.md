@@ -105,10 +105,10 @@
   `interface ExamenDefinition { id: string; gradeCible: Grade; epreuves: readonly EpreuveExamen[] }` ;
   `class SessionExamen` : suit le temps, vérifie la technique réalisée, valide l'étape ou constate l'échec.
 
-- [ ] **Step 1 : tests du déroulement d'un examen**
-- [ ] **Step 2 : implémenter le gestionnaire d'examen et les définitions Naruto (Bunshin, etc.)**
-- [ ] **Step 3 : vérifier les tests** (`npm test -- examen`)
-- [ ] **Step 4 : commit** — `Les examens de l'Académie pour le passage de grade`
+- [x] **Step 1 : tests du déroulement d'un examen**
+- [x] **Step 2 : implémenter le gestionnaire d'examen et les définitions Naruto (Bunshin, etc.)**
+- [x] **Step 3 : vérifier les tests** (`npm test -- examen`)
+- [x] **Step 4 : commit** — `Les examens de l'Académie pour le passage de grade`
 
 ---
 

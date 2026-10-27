@@ -43,10 +43,10 @@
   `Sauvegarde` enrichi de `fiche: FicheNinja | null` et `progression: Progression` ;
   Migration v1 → v2 automatique.
 
-- [x] **Step 1 : tests de la sauvegarde v2 et de la migration v1**
-- [x] **Step 2 : implémenter la sauvegarde v2**
-- [x] **Step 3 : vérifier les tests** (`npm test -- sauvegarde`)
-- [x] **Step 4 : commit** — `Sauvegarde v2 : fiche ninja, progression et records du Dojo`
+- [ ] **Step 1 : tests de la sauvegarde v2 et de la migration v1**
+- [ ] **Step 2 : implémenter la sauvegarde v2**
+- [ ] **Step 3 : vérifier les tests** (`npm test -- sauvegarde`)
+- [ ] **Step 4 : commit** — `Sauvegarde v2 : fiche ninja, progression et records du Dojo`
 
 ---
 
@@ -63,10 +63,10 @@
   `gradesOrdre: readonly Grade[]` ;
   `progressionSuivante(progression): { prochainGrade?: Grade; type: "examen" | "recommandation"; prerequisRempli: boolean }`.
 
-- [x] **Step 1 : tests unitaires d'éligibilité et de filtrage par grade**
-- [x] **Step 2 : implémenter les règles canoniques de progression**
-- [x] **Step 3 : vérifier les tests** (`npm test -- progression`)
-- [x] **Step 4 : commit** — `Règles de progression et déblocages canoniques par grade`
+- [ ] **Step 1 : tests unitaires d'éligibilité et de filtrage par grade**
+- [ ] **Step 2 : implémenter les règles canoniques de progression**
+- [ ] **Step 3 : vérifier les tests** (`npm test -- progression`)
+- [ ] **Step 4 : commit** — `Règles de progression et déblocages canoniques par grade`
 
 ---
 
@@ -85,10 +85,10 @@
   - Limaces : Régénération vitale accrue.
   - Chiens : Pistage ninken (télégraphes ralentis / anticipés).
 
-- [x] **Step 1 : tests de chaque spécialité de contrat**
-- [x] **Step 2 : implémenter et brancher dans `Combat`**
-- [x] **Step 3 : vérifier les tests** (`npm test -- contrat combat`)
-- [x] **Step 4 : commit** — `Les spécialités des quatre contrats d'invocation en combat`
+- [ ] **Step 1 : tests de chaque spécialité de contrat**
+- [ ] **Step 2 : implémenter et brancher dans `Combat`**
+- [ ] **Step 3 : vérifier les tests** (`npm test -- contrat combat`)
+- [ ] **Step 4 : commit** — `Les spécialités des quatre contrats d'invocation en combat`
 
 ---
 
@@ -105,10 +105,10 @@
   `interface ExamenDefinition { id: string; gradeCible: Grade; epreuves: readonly EpreuveExamen[] }` ;
   `class SessionExamen` : suit le temps, vérifie la technique réalisée, valide l'étape ou constate l'échec.
 
-- [x] **Step 1 : tests du déroulement d'un examen**
-- [x] **Step 2 : implémenter le gestionnaire d'examen et les définitions Naruto (Bunshin, etc.)**
-- [x] **Step 3 : vérifier les tests** (`npm test -- examen`)
-- [x] **Step 4 : commit** — `Les examens de l'Académie pour le passage de grade`
+- [ ] **Step 1 : tests du déroulement d'un examen**
+- [ ] **Step 2 : implémenter le gestionnaire d'examen et les définitions Naruto (Bunshin, etc.)**
+- [ ] **Step 3 : vérifier les tests** (`npm test -- examen`)
+- [ ] **Step 4 : commit** — `Les examens de l'Académie pour le passage de grade`
 
 ---
 
@@ -125,10 +125,10 @@
   - `arreter(temps): { dureeMs: number; estNouveauRecord: boolean }`
   - `reinitialiser()`
 
-- [x] **Step 1 : tests unitaires du chronomètre**
-- [x] **Step 2 : implémenter `chrono.ts`**
-- [x] **Step 3 : vérifier les tests** (`npm test -- chrono`)
-- [x] **Step 4 : commit** — `Chronomètre du Dojo et suivi des records d'exécution`
+- [ ] **Step 1 : tests unitaires du chronomètre**
+- [ ] **Step 2 : implémenter `chrono.ts`**
+- [ ] **Step 3 : vérifier les tests** (`npm test -- chrono`)
+- [ ] **Step 4 : commit** — `Chronomètre du Dojo et suivi des records d'exécution`
 
 ---
 
@@ -143,12 +143,12 @@
 - Modify: `src/packs/naruto/i18n/{fr,en}.ts`
 - Create: `tests/e2e/progression.spec.ts`
 
-- [x] **Step 1 : ajouter l'écran Fiche Ninja (nom, clan, village, contrat)**
-- [x] **Step 2 : ajouter l'écran Académie (passage d'examen)**
-- [x] **Step 3 : intégrer le chrono et affichage des records dans le Dojo / entraînement**
-- [x] **Step 4 : conditionner l'accès aux missions d'arcade selon le grade**
-- [x] **Step 5 : tests e2e Playwright**
-- [x] **Step 6 : commit** — `Interface : écran Fiche Ninja, Académie et chrono du Dojo`
+- [ ] **Step 1 : ajouter l'écran Fiche Ninja (nom, clan, village, contrat)**
+- [ ] **Step 2 : ajouter l'écran Académie (passage d'examen)**
+- [ ] **Step 3 : intégrer le chrono et affichage des records dans le Dojo / entraînement**
+- [ ] **Step 4 : conditionner l'accès aux missions d'arcade selon le grade**
+- [ ] **Step 5 : tests e2e Playwright**
+- [ ] **Step 6 : commit** — `Interface : écran Fiche Ninja, Académie et chrono du Dojo`
 
 ---
 
@@ -157,5 +157,6 @@
 **Files:**
 - Modify: `CLAUDE.md`, `README.md`, `src/packs/naruto/README.md`, `docs/superpowers/specs/2026-10-24-moteur-anime-webcam-design.md`
 
-- [x] **Step 1 : mettre à jour les tables de progression, badges et roadmap**
-- [x] **Step 2 : commit** — `Documentation du plan 4 : progression, examens et fiche ninja`
+- [ ] **Step 1 : mettre à jour les tables de progression, badges et roadmap**
+- [ ] **Step 2 : commit** — `Documentation du plan 4 : progression, examens et fiche ninja`
+

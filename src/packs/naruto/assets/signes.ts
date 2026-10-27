@@ -6,7 +6,7 @@
 // Douze signes sur quatorze : la planche d'origine ne couvre que le zodiaque. Gassho et
 // Mizunoe n'ont pas d'image, l'encyclopedie retombe alors sur le kanji.
 
-const fichiers = import.meta.glob<string>("./signes/*.webp", {
+const fichiers = import.meta.glob<string>("./signes/*.{webp,svg}", {
   eager: true,
   query: "?url",
   import: "default"
@@ -15,7 +15,7 @@ const fichiers = import.meta.glob<string>("./signes/*.webp", {
 /** L'URL de l'image d'un signe, ou undefined s'il n'en a pas. */
 export const IMAGES_SIGNES: Readonly<Record<string, string>> = Object.fromEntries(
   Object.entries(fichiers).map(([chemin, url]) => [
-    chemin.replace("./signes/", "").replace(".webp", ""),
+    chemin.replace("./signes/", "").replace(/\.(webp|svg)$/, ""),
     url
   ])
 );

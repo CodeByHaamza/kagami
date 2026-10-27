@@ -1,5 +1,6 @@
 // Raiton : les effets de foudre
 
+import { dessinerDragon } from "./creatures";
 import { hasard, TOUR, lisse, FOUDRE, sprite, emettre, eclair, tracer, emoji, teinte, voile } from "./outils";
 import type { Point } from "./outils";
 import type { Contexte2D, Effet } from "../../../moteur/types";
@@ -92,8 +93,13 @@ export const FOUDRES = {
       }
       const force = 1 - lisse((p - 1.8) / 1);
       if (force > 0) dessinerEclairs(ctx, s.trait, 28 * force);
-      // la tête du dragon de foudre, blanche et bleue
-      if (p < 1.5) emoji(ctx, "🐉", e.main.x, e.main.y - e.h * 0.2, Math.min(e.l, e.h) * 0.4, { filtre: "grayscale(1) brightness(1.8) drop-shadow(0 0 20px #6cbcff)", alpha: 1 - lisse((p - 0.9) / 0.6) });
+      // Kirin : bête mythique de foudre en dessin vectoriel céleste
+      if (p < 1.5) {
+        dessinerDragon(ctx, "foudre", e.main.x, e.main.y - e.h * 0.2, Math.min(e.l, e.h) * 0.45, {
+          alpha: 1 - lisse((p - 0.9) / 0.6),
+          couleurAura: "#6cbcff"
+        });
+      }
       teinte(ctx, e, "#ffffff", 0.7 * (1 - lisse(p / 0.4)));
       e.secouer(16 * force);
     }

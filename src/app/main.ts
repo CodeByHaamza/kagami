@@ -14,6 +14,7 @@ import "@fontsource/yuji-syuku/400.css";
 import "../packs/naruto/assets/style.css";
 
 import { Camera, ErreurCamera } from "../moteur/entree/camera";
+import { analyserEclairage, verifierCadrage } from "../moteur/entree/calibration";
 import { Ordonnanceur } from "../moteur/entree/ordonnanceur";
 import { PostureMediaPipe } from "../moteur/corps/posture";
 import { LecteurDeGestes, type JetonCorps } from "../moteur/corps/gestes";
@@ -836,12 +837,43 @@ function bravo(technique: Technique<SigneNaruto>): void {
   }, 2600);
 }
 
+function ouvrirCalibration(): void {
+  let statEclairage: "sombre" | "bon" | "eblouissant" = "bon";
+  try {
+    if (toile.width > 0 && toile.height > 0) {
+      const data = ctx.getImageData(0, 0, Math.min(100, toile.width), Math.min(100, toile.height));
+      statEclairage = analyserEclairage(data.data).statut;
+    }
+  } catch {
+    // Si la caméra n'a pas encore dessiné, garde le statut bon par défaut
+  }
+
+  const statCadrage = verifierCadrage(ordonnanceur.corpsPret ? 0.38 : null).statut;
+
+  el("calibEclairage").textContent = t(`calibration.${statEclairage}`);
+  el("calibDistance").textContent = t(statCadrage === "absent" ? "posture.neutre" : `calibration.${statCadrage}`);
+
+  let conseil = t("calibration.conseil.parfait");
+  if (statEclairage === "sombre") {
+    conseil = t("calibration.conseil.sombre");
+  } else if (statCadrage === "tropPres") {
+    conseil = t("calibration.conseil.tropPres");
+  } else if (statCadrage === "tropLoin") {
+    conseil = t("calibration.conseil.tropLoin");
+  }
+  el("calibConseil").textContent = conseil;
+
+  el("calibration").hidden = false;
+}
+
 // ---- les boutons ----
 
 el("btnDemarrer").addEventListener("click", () => void demarrer());
 el("btnArcade").addEventListener("click", () => arcade.ouvrirChoix());
 el("btnFicheNinja").addEventListener("click", () => ficheNinja.ouvrir());
 el("btnFicheNinjaAccueil").addEventListener("click", () => ficheNinja.ouvrir());
+el("btnCalibration").addEventListener("click", () => ouvrirCalibration());
+el("btnFermerCalibration").addEventListener("click", () => (el("calibration").hidden = true));
 el("btnAcademie").addEventListener("click", () => academie.ouvrir());
 el("btnFermerMissions").addEventListener("click", () => arcade.fermerChoix());
 el("btnQuitterArcade").addEventListener("click", () => arcade.quitter());

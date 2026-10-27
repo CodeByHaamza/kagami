@@ -74,3 +74,4 @@ export class ChronometreDojo {
     this._debutMs = null;
   }
 }
+

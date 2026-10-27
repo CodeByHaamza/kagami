@@ -79,7 +79,8 @@ test("aucune clé de traduction n'est définie sans être utilisée nulle part",
       "grade.",
       "village.",
       "contrat.",
-      "academie.recommandation."
+      "academie.recommandation.",
+      "calibration."
     ]) {
       if (cle.startsWith(prefixe)) return false;
     }

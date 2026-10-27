@@ -76,3 +76,4 @@ test("l'entraînement au Dojo affiche le chronomètre et l'emplacement de record
   await page.locator("#btnFinGuide").click();
   await expect(page.locator("#guide")).toBeHidden();
 });
+

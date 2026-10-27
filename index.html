@@ -187,6 +187,9 @@
         <button id="btnFicheNinjaAccueil" type="button" data-i18n="accueil.ficheNinja">
           Fiche ninja
         </button>
+        <button id="btnCalibration" type="button" data-i18n="accueil.calibration">
+          Calibration caméra
+        </button>
         <button id="btnEncycloAccueil" type="button" data-i18n="accueil.encyclopedie">
           Voir l'encyclopédie
         </button>
@@ -332,6 +335,26 @@
           <p id="academieStatut" class="academie-statut"></p>
           <button id="btnLancerExamen" class="principal" type="button" data-i18n="academie.commencer">Passer l'épreuve</button>
         </div>
+      </div>
+    </div>
+
+    <!-- L'écran Calibration caméra & éclairage (§10.3) -->
+    <div id="calibration" class="ecran" hidden>
+      <div class="fiche">
+        <h2 data-i18n="calibration.titre">Calibration & éclairage</h2>
+        <p class="sous-titre" data-i18n="calibration.explication"></p>
+        <div class="fiche-ninja-vue">
+          <div class="ligne-fiche">
+            <b data-i18n="calibration.eclairage">Luminosité de la pièce :</b>
+            <span id="calibEclairage">...</span>
+          </div>
+          <div class="ligne-fiche">
+            <b data-i18n="calibration.distance">Distance de la caméra :</b>
+            <span id="calibDistance">...</span>
+          </div>
+        </div>
+        <p id="calibConseil" class="academie-statut"></p>
+        <button id="btnFermerCalibration" class="principal" type="button" data-i18n="calibration.valider">Cadrage validé</button>
       </div>
     </div>
 

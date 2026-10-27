@@ -1,5 +1,6 @@
 // Doton et Mokuton : les effets de terre et de bois
 
+import { dessinerArbreMokuton, dessinerChienNinja, dessinerDragon } from "./creatures";
 import { hasard, lisse, TERRE, emettre, eclair, tracer, emoji, bois } from "./outils";
 import type { Point } from "./outils";
 import type { Contexte2D, Effet, Particules } from "../../../moteur/types";
@@ -82,7 +83,7 @@ export const TERRES = {
         const foulee = t > 0.6 ? Math.abs(Math.sin((t - 0.6) * 10)) * 18 : 0;
         const x = c.x + c.sens * Math.max(0, t - 0.6) * e.l * 0.6;
         const y = e.h + taille - saut * e.h * 0.35 - foulee;
-        emoji(ctx, "🐕", x, y, taille, { miroir: c.sens > 0 }); // l'emoji regarde vers la gauche
+        dessinerChienNinja(ctx, x, y, taille, { miroir: c.sens > 0 });
       }
     }
   },
@@ -99,7 +100,7 @@ export const TERRES = {
         s.parti = true;
         poussiere(P, x, e.h - 10, 60);
       }
-      emoji(ctx, "🐉", x, y, taille, { miroir: true, filtre: "sepia(1) saturate(0.6) brightness(0.65)" });
+      dessinerDragon(ctx, "terre", x, y, taille, { miroir: true, couleurAura: "#78350f" });
       // les boulets de boue partent de sa gueule et grossissent vers toi
       if (e.t > 1 && e.t < 3.6) {
         emettre(e.dt, 6, () => P.ajouter({
@@ -212,7 +213,7 @@ export const TERRES = {
         const t = e.t - a.retard;
         if (t < 0) continue;
         const pousse = lisse(t / 0.6) * fin;
-        emoji(ctx, "🌳", a.x, e.h - a.taille * 0.45 * pousse, a.taille * pousse);
+        dessinerArbreMokuton(ctx, a.x, e.h, a.taille, pousse);
       }
       emettre(e.dt, 20 * fin, () => P.ajouter({ texte: "🍃", mode: "source-over", x: hasard(0, e.l), y: -10, vx: hasard(-60, 60), vy: hasard(80, 200), taille: hasard(8, 14), duree: 3, vrot: hasard(-4, 4) }));
       e.secouer(e.t < 1.2 ? 5 : 0);

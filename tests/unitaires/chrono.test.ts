@@ -79,3 +79,4 @@ describe("ChronometreDojo", () => {
     expect(chrono.tempsEcoule(2000)).toBe(0);
   });
 });
+

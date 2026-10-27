@@ -8,7 +8,6 @@ import type { Grade, Progression } from "../stockage/sauvegarde";
 import type { ProfilCombat, Rang } from "../types";
 
 export const GRADES_ORDRE: readonly Grade[] = ["academie", "genin", "chunin", "jonin", "kage"];
-export const gradesOrdre = GRADES_ORDRE;
 
 /** Les rangs de jutsu accessibles par grade. */
 const RANGS_PAR_GRADE: Record<Grade, readonly (Rang | null)[]> = {
@@ -65,7 +64,7 @@ export interface StatutProgression {
  */
 export function statutProgression(
   progression: Progression,
-  nombreJutsusConnus: number = 0
+  nombreJutsusConnus: number
 ): StatutProgression {
   switch (progression.grade) {
     case "academie":
@@ -104,4 +103,3 @@ export function statutProgression(
   }
 }
 
-export const progressionSuivante = statutProgression;

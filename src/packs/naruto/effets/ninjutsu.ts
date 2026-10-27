@@ -3,6 +3,7 @@
 // Plusieurs effets utilisent la personne détourée (e.personne) : les clones, la bûche
 // de la permutation, la métamorphose... Sans détourage, ils font une version simplifiée.
 
+import { dessinerCrapaud, dessinerKyuubi, dessinerRashoumon, dessinerShinigami } from "./creatures";
 import { hasard, TOUR, lisse, enveloppe, VIOLET, CENDRE, TERRE, emettre, fumee, feuilles, emoji, kanji, eclair, tracer, vignette, buche, bois } from "./outils";
 import type { Point } from "./outils";
 import { toileHorsEcran } from "./outils";
@@ -135,7 +136,7 @@ export const NINJUTSUS = {
       }
       cacherPersonne(ctx, e);
       const taille = Math.min(e.l, e.h) * 0.75 * (1 + 0.03 * Math.sin(e.t * 4));
-      emoji(ctx, "🦊", centre(e).x, centre(e).y, taille, { halo: "#ff7a1a" });
+      dessinerKyuubi(ctx, centre(e).x, centre(e).y, taille);
       return true;
     }
   },
@@ -240,7 +241,7 @@ export const NINJUTSUS = {
       if (sortie > 0 && e.t < 5.8) {
         // il grossit trop, puis rebondit jusqu'à sa taille
         const rebond = sortie < 0.5 ? 1.15 * lisse(sortie / 0.5) : 1 + 0.15 * Math.exp(-(sortie - 0.5) * 6) * Math.cos((sortie - 0.5) * 18);
-        emoji(ctx, "🐸", e.l / 2, e.h * 0.62, taille * rebond * (1 + 0.02 * Math.sin(e.t * 3)), { halo: "rgba(0, 0, 0, 0.6)" });
+        dessinerCrapaud(ctx, e.l / 2, e.h * 0.62, taille * rebond * (1 + 0.02 * Math.sin(e.t * 3)));
       }
       if (!s.fin && e.t > 5.6) {
         s.fin = true;
@@ -295,7 +296,7 @@ export const NINJUTSUS = {
       ctx.moveTo(e.l / 2, y + hauteur * 0.14);
       ctx.lineTo(e.l / 2, e.h);
       ctx.stroke();
-      emoji(ctx, "👹", e.l / 2, y + hauteur * 0.42, hauteur * 0.32); // le visage du démon sur la porte
+      dessinerRashoumon(ctx, e.l / 2, y + hauteur * 0.42, largeur * 0.6, hauteur * 0.5);
       if (e.t < 0.6) {
         emettre(e.dt, 60, () => P.ajouter({ x: hasard(x, x + largeur), y: e.h - 5, vx: hasard(-200, 200), vy: hasard(-400, -100), ay: 900, taille: hasard(6, 14), duree: 0.8, couleurs: TERRE, mode: "source-over" }));
         e.secouer(8);
@@ -351,7 +352,7 @@ export const NINJUTSUS = {
       const a = enveloppe(e.t, 7, 1.2, 0.8);
       ctx.fillStyle = "rgba(15, 0, 25, " + 0.55 * a + ")";
       ctx.fillRect(0, 0, e.l, e.h);
-      emoji(ctx, "👹", e.l / 2, e.h * (0.62 - 0.14 * a), e.h * 0.95, { alpha: 0.85 * a, filtre: "grayscale(0.5) brightness(0.8) hue-rotate(240deg)", halo: "#a855f7" });
+      dessinerShinigami(ctx, e.l / 2, e.h * (0.62 - 0.14 * a), e.h * 0.75, { alpha: 0.85 * a });
     },
     devant(ctx, e, s, P) {
       emettre(e.dt, 50, () => P.ajouter({

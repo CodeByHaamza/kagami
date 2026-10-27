@@ -42,3 +42,4 @@ export const EXAMENS_NARUTO: readonly ExamenDefinition[] = [
     ]
   }
 ];
+

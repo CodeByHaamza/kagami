@@ -1,5 +1,6 @@
 // Suiton : les effets d'eau
 
+import { dessinerDragon, dessinerRequin } from "./creatures";
 import { hasard, enveloppe, EAU, FUMEE, emettre, emoji, teinte, voile } from "./outils";
 import type { Contexte2D, ContexteEffet, Effet, NouvelleParticule } from "../../../moteur/types";
 
@@ -47,8 +48,8 @@ export const EAUX = {
         x: x - sens * taille * 0.4 + hasard(-15, 15), y: y + hasard(-taille * 0.2, taille * 0.2),
         vx: -sens * hasard(40, 160), vy: hasard(-120, 60), ay: 300, taille: hasard(8, 18), croissance: 10, duree: hasard(0.5, 0.9)
       })));
-      // l'emoji regarde vers la gauche : on le retourne s'il va à droite
-      if (p < 1) emoji(ctx, "🦈", x, y, taille, { miroir: sens > 0, halo: "#3a9be8" });
+      // Requin de chakra d'eau profilé (Suikōdan)
+      if (p < 1) dessinerRequin(ctx, x, y, taille, { miroir: sens > 0 });
     }
   },
 
@@ -65,8 +66,8 @@ export const EAUX = {
         x: x + hasard(-taille / 3, taille / 3), y: y + hasard(0, taille / 2), vx: hasard(-80, 80), vy: hasard(100, 300),
         ay: 400, taille: hasard(8, 20), duree: hasard(0.6, 1)
       })));
-      // le dragon vert devient bleu
-      emoji(ctx, "🐉", x, y, taille, { rotation: Math.cos(e.t * 2.2) * 0.4, filtre: "hue-rotate(80deg) saturate(1.4)", halo: "#8fdcff" });
+      // Dragon oriental Suiton d'eau tourbillonnant
+      dessinerDragon(ctx, "eau", x, y, taille, { rotation: Math.cos(e.t * 2.2) * 0.4, couleurAura: "#8fdcff" });
       teinte(ctx, e, "#1d63b5", 0.12);
       e.secouer(3);
     }

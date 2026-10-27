@@ -1,5 +1,6 @@
 // Katon : les effets de feu
 
+import { dessinerDragon } from "./creatures";
 import { hasard, TOUR, lisse, FEU, NOIR, CENDRE, sprite, emettre, emoji, teinte, vignette, sharingan } from "./outils";
 import type { ContexteEffet, Effet } from "../../../moteur/types";
 
@@ -99,8 +100,8 @@ export const FEUX = {
         x: x + hasard(-20, 20), y: y + hasard(-20, 20), vx: hasard(-60, 60), vy: hasard(-80, 20),
         taille: hasard(taille * 0.25, taille * 0.5), croissance: 20, duree: hasard(0.6, 1.1), couleurs: FEU
       }));
-      // le dragon vert devient orange en tournant ses couleurs
-      emoji(ctx, "🐉", x, y, taille, { rotation: Math.cos(p * Math.PI * 3) * 0.5, filtre: "hue-rotate(-90deg) saturate(1.6)", halo: "#ff7a1a" });
+      // Dragon de feu Katon en dessin vectoriel
+      dessinerDragon(ctx, "feu", x, y, taille, { rotation: Math.cos(p * Math.PI * 3) * 0.5, couleurAura: "#ff7a1a" });
       teinte(ctx, e, "#ff6a14", 0.12);
       e.secouer(3);
     }

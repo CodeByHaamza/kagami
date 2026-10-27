@@ -2,173 +2,173 @@
 
 <img src="docs/images/banniere.svg" alt="Kagami — les gestes de ton anime, reconnus à la webcam" width="760">
 
-### Tu fais le geste devant ta caméra. Une IA le reconnaît. La technique part à l'écran.
+### Tu formes les signes devant ta caméra. Une IA les reconnaît. La technique part à l'écran.
 
 <br>
 
 <a href="https://github.com/CodeByHaamza/kagami/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/CodeByHaamza/kagami/ci.yml?branch=main&style=for-the-badge&label=CI&labelColor=14141f&color=6fcf7f" alt="CI"></a>
 <img src="https://img.shields.io/badge/TypeScript-strict-3178c6?style=for-the-badge&labelColor=14141f" alt="TypeScript strict">
-<img src="https://img.shields.io/badge/tests-410-6fcf7f?style=for-the-badge&labelColor=14141f" alt="410 tests">
+<img src="https://img.shields.io/badge/tests-438-6fcf7f?style=for-the-badge&labelColor=14141f" alt="438 tests">
+<img src="https://img.shields.io/badge/PWA-offline-e8963c?style=for-the-badge&labelColor=14141f" alt="PWA">
 <img src="https://img.shields.io/badge/licence-MIT-9a7aff?style=for-the-badge&labelColor=14141f" alt="MIT">
 
 </div>
 
 ---
 
-## Ce que c'est
+## ⚡ Présentation
 
-**Kagami** (鏡, « le miroir ») est un moteur : ta webcam devient une glace où tu te vois
-avec les pouvoirs. Il ne connaît aucun anime — il sait lire des **jetons** (un geste
-reconnu), les assembler en **techniques**, et dessiner l'effet par-dessus ton image.
-
-Chaque anime est un **pack** : son modèle de reconnaissance, son catalogue, ses effets,
-ses textes. Ajouter un anime, c'est ajouter un dossier, pas rouvrir le moteur.
+**Kagami** (鏡, « le miroir ») transforme ta caméra en miroir interactif manga. Grâce à l'intelligence artificielle en temps réel directement dans ton navigateur :
+- **58 techniques ninjas canoniques** (Katon, Suiton, Doton, Raiton, Fūton, Rinnegan, Senjutsu, Hyōton, Hiden).
+- **Entraînement guidé interactif** : illustrations visuelles haute définition des mains, description exacte du placement des doigts et chronomètre au centième de seconde.
+- **Mode Arcade & Survie Infinie** : affronte les déserteurs, les escouades de l'Anbu Racine et les boss légendaires (*Zabuza, Kisame, Deidara, Itachi, Madara*).
+- **Cosmétiques en Réalité Augmentée** : bandeaux frontaux en acier brossé 3D gravés des 5 grands villages (*Konoha, Suna, Kiri, Iwa, Kumo*) et masque félin ANBU d'infiltration projetés sur ton visage.
+- **Enregistreur de clips vidéo WebM (`⏺`)** : capture directe à 30 FPS pour immortaliser et partager tes jutsus en un clic.
+- **100% Local & Sécurisé** : aucune image ne quitte ton appareil. Aucun serveur externe, fonctionnement hors-ligne (PWA).
 
 <div align="center">
 
-| | Pack | Anime | Ce qu'on y fait | État |
+| | Pack | Univers | Contenu | Statut |
 | :---: | --- | --- | --- | :---: |
-| 型 | [**Kata**](src/packs/naruto/) | Naruto | 14 signes, 58 jutsus, 7 taijutsu, 3 armes, 5 missions d'arcade | **disponible** |
-| 気 | — | Dragon Ball | poses du corps, montée de ki | envisagé |
-| 呪 | — | Jujutsu Kaisen | gestes, extension du territoire | envisagé |
-| 波 | — | JoJo | poses | envisagé |
+| 型 | [**Kata**](src/packs/naruto/) | Naruto | 14 signes, 58 jutsus, 7 taijutsu, 3 armes, Arcade 5 rangs + Survie | **Prêt à l'emploi** |
+| 気 | — | Dragon Ball | Poses du corps, montée d'aura ki | Envisagé |
+| 呪 | — | Jujutsu Kaisen | Signes de mains, extension du territoire | Envisagé |
 
 </div>
 
-## Essayer
+---
+
+## 🚀 Démarrage rapide
+
+### 1. Installation
 
 ```bash
 git clone https://github.com/CodeByHaamza/kagami.git
 cd kagami
-git lfs pull     # les modèles de reconnaissance sont suivis par Git LFS
+git lfs pull     # télécharge les poids de reconnaissance YOLOX et MediaPipe
 npm install
-npm run dev      # puis http://localhost:5173
 ```
 
-Il faut une webcam et un navigateur récent. La caméra exige `https` ou `localhost` :
-c'est une règle des navigateurs, pas du projet. Rien ne sort de ta machine — ton image
-ne quitte jamais l'onglet.
+### 2. Lancer l'application
 
-Pas de webcam sur la machine ? `npm run dev:reseau` sert l'appli en **HTTPS** sur le
-réseau local : on l'ouvre depuis un téléphone, on accepte l'avertissement du certificat
-auto-signé une fois, et la caméra du téléphone fait l'affaire.
-
-Avec Docker :
+#### Option A — Sur ton PC (avec webcam)
 
 ```bash
-docker compose up dev            # développement, http://localhost:5173
-docker compose up --build web    # version construite, http://localhost:8080
+npm run dev
+```
+Ouvre ensuite [http://localhost:5173](http://localhost:5173) dans Chrome, Edge ou Firefox.
+
+#### Option B — Directement sur ton iPhone / Smartphone (idéal si ton PC n'a pas de caméra)
+
+Kagami embarque un serveur HTTPS local automatique (obligatoire pour que Safari et iOS autorisent l'accès à la caméra) :
+
+```bash
+npm run dev:reseau
+```
+1. Le terminal t'affiche l'adresse réseau locale, par exemple : `https://192.168.1.XX:5173/` ou `https://172.20.10.7:5173/`.
+2. Ouvre **Safari** sur ton iPhone connecté au même Wi-Fi ou partage de connexion.
+3. Clique sur **« Avancé »** puis **« Continuer vers le site »** (certificat HTTPS local).
+4. Autorise l'accès à la caméra : l'application tourne en plein écran !
+
+#### Option C — Utiliser l'iPhone comme webcam pour le PC
+
+Installe l'application gratuite **Camo** (ou **DroidCam**) sur ton iPhone et ton PC. Dès que l'iPhone est branché en USB, lance `npm run dev` sur ton PC et sélectionne la caméra Camo.
+
+#### Option D — Mode banc de test sans caméra
+
+Pour explorer l'interface, les jutsus et le son sans allumer de caméra :
+```text
+http://localhost:5173/?banc
 ```
 
-## Comment ça marche
+---
+
+## 🎮 Modes de jeu & Fonctionnalités
 
 ```text
-         ┌─ reconnaisseur de jetons ─→ jetons ─→ grammaire ─→ technique ─┐
-caméra ──┤                                                               ├─→ scène ─→ rendu
-         └─ lecteur de posture ──────→ posture, gestes ──→ action ───────┘
+               ┌─ Dojo (Entraînement guidé, chrono & records)
+               ├─ Académie (Examens de passage de grade : Genin → Kage)
+KAGAMI ────────┼─ Arcade (Missions canoniques Rangs D à S)
+               ├─ Survie Infinie (Le Gouffre Ninja : marathon de boss)
+               └─ Fiche Ninja & AR (Bandeaux de village, masques ANBU)
 ```
 
-Deux boucles tournent en parallèle : la **détection** (12 fois par seconde au plus, le
-modèle est le facteur limitant) et l'**affichage** (à chaque image de l'écran). Un jeton
-n'est validé que s'il est vu sur deux images d'affilée — le modèle se trompe d'une image
-à l'autre, et sans ce filtre rien ne serait jouable.
+### 🥋 1. Le Dojo (Entraînement guidé)
+- Clique sur l'**Encyclopédie (📜)** ou choisis un jutsu.
+- L'entraînement affiche le nom et le kanji de la technique **sans déclencher l'effet à l'avance**.
+- **Aide visuelle dynamique** :
+  - **Illustration du prochain signe** : affiche le dessin exact des mains à former.
+  - **Description gestuelle** : instructions anatomiques précises pour positionner tes doigts.
+  - **Frise de séquence** : les pastilles avancent et s'illuminent au fur et à mesure que tu formes les signes.
+- **Chronomètre au centième** : bats tes records de vitesse d'incantation et enregistre tes performances dans ta sauvegarde locale.
 
-Seules deux pièces sont propres à un anime : le reconnaisseur et le catalogue. Une règle
-de lint interdit à `src/moteur/` d'importer quoi que ce soit de `src/packs/`, et un test
-la vérifie.
+### ⚔️ 2. L'Arcade & Le Gouffre Ninja (Survie Infinie)
+- **Missions Rangs D à S** : franchis les vagues d'ennemis (Zetsu, ninjas déserteurs des 5 éléments, Anbu Racine, ninjas réincarnés Edo Tensei).
+- **Survie Infinie (∞)** : affronte des vagues procédurales infinies avec des boss récurrents de plus en plus redoutables (*Zabuza, Kisame, Deidara, Itachi, Madara*).
+- **Système de combat complet** :
+  - *Attaque* : jutsus élémentaires et coups au corps (Directs, Balayages, Rafales).
+  - *Défense & Esquive* : posture de garde, esquives latérales corporelles, saut.
+  - *Rupture d'illusion* : signe du Bélier (*« Kai ! »*) pour dissiper les genjutsu d'Itachi.
 
-### Deux postures, deux alphabets
+### 忍 3. Fiche Ninja & Cosmétiques en Réalité Augmentée
+- Personnalise ton ninja : nom, clan, village caché (*Konoha, Suna, Kiri, Iwa, Kumo*) et contrat d'invocation (*Crapauds, Serpents, Limaces, Chiens*).
+- **Cosmétiques AR verrouillés sur le visage** :
+  - Bandeaux frontaux 3D avec plaque métallique brossée, 6 rivets chromés et emblème gravé.
+  - Masque de porcelaine ANBU avec peintures de guerre félines carmin.
+  - La projection compense l'effet miroir de la caméra et s'adapte en temps réel à l'orientation et à la distance de ta tête.
 
-Les mains servent à la fois à former les sceaux et à frapper : un direct serait lu comme
-un signe raté. La posture du corps tranche, et c'est elle qui décide **qui écoute**.
+### ⏺ 4. Enregistreur de clips vidéo
+- Clique sur le bouton **`⏺`** dans la barre supérieure pour lancer l'enregistrement de ton écran.
+- Exécute tes plus beaux enchaînements : l'enregistrement se coupe automatiquement au bout de quelques secondes ou sur un second clic, et télécharge instantanément un clip vidéo **WebM** fluide prêt à être partagé.
 
-| Posture | Ce qui écoute | Comment on y entre |
-| --- | --- | --- |
-| 印 **concentration** | les signes de mains | poignets joints devant le corps |
-| 戦 **combat** | les gestes du corps | poignets hauts, ou garde de boxe |
-| — **neutre** | rien | tout le reste |
+---
 
-C'est une solution technique — trois modèles ne tiennent pas la cadence ensemble — qui
-se trouve être la règle de l'œuvre : former des sceaux prend du temps et laisse ouvert.
-Le jeu hérite gratuitement de la tension qui fait qu'un ninja s'interrompt en pleine
-incantation.
+## 🧠 Comment ça marche sous le capot
 
-Les gestes du corps sont un **second alphabet pour la même grammaire** : frapper,
-garder, lancer, tourner, sauter, esquiver. Le taijutsu s'assemble exactement comme un
-jutsu — `directG`, `directD`, `coupDePied`, `coupDePied` donne le Shishi Rendan. Toutes
-les mesures sont normalisées en largeurs d'épaules, pour qu'un seuil vaille pareil à un
-mètre de la caméra et à trois.
+```text
+         ┌─ Reconnaissance de signes (YOLOX-Nano) ──→ Jetons ──┐
+Caméra ──┤                                                     ├─→ Scène ─→ Rendu Canvas 2D
+         └─ Lecture de posture (MediaPipe Pose, 33 pts) ─→ Gestes ─┘
+```
 
-### Le banc de rejeu
+1. **Deux postures pour deux usages** :
+   - 🧘 **Concentration (印)** : poignets joints devant la poitrine $\rightarrow$ le reconnaisseur de signes de main écoute.
+   - 🥋 **Combat (戦)** : poignets hauts ou garde levée $\rightarrow$ le moteur de taijutsu et d'esquive prend le relais.
+2. **Cloisonnement architectural strict** : le moteur générique (`src/moteur/`) n'importe jamais de pack spécifique (`src/packs/`).
+3. **Accélération matérielle** : inférence WebAssembly SIMD multi-threadée, détourage par WebGL/Canvas et PWA avec Service Worker hors-ligne.
 
-Régler un seuil de geste en bougeant devant une webcam jusqu'à ce que ça marche n'est ni
-reproductible ni mesurable. Le banc enregistre ce que la caméra montre, l'écrit dans un
-fichier, et le **rejoue à la place de la caméra** — le moteur ne voit pas la différence.
-Il s'ouvre avec `?banc` dans l'adresse, et affiche en direct la posture, le dernier
-geste, le dernier jeton, l'immobilité et la fiabilité des points.
+---
 
-<div align="center">
-<img src="docs/images/enchainement.svg" alt="Un enchaînement de six signes qui déclenche la boule de feu suprême" width="660">
-<br><sub>Six signes à la suite, chacun tenu une demi-seconde. Le curseur avance quand le modèle valide.</sub>
-</div>
-
-## La pile
-
-| Quoi | Avec quoi |
-| --- | --- |
-| Reconnaissance des signes | [YOLOX-Nano](https://github.com/Kazuhito00/NARUTO-HandSignDetection) via onnxruntime-web (WebAssembly) |
-| Détourage de la personne | [MediaPipe Image Segmenter](https://ai.google.dev/edge/mediapipe/solutions/vision/image_segmenter) |
-| Lecture du corps | [MediaPipe Pose Landmarker](https://ai.google.dev/edge/mediapipe/solutions/vision/pose_landmarker), 33 points |
-| Effets | Canvas 2D, et Three.js pour le Rasengan |
-| Build et tests | Vite · TypeScript strict · Vitest · Playwright |
-
-Tout tourne dans le navigateur. Pas de serveur, pas de compte, aucune donnée qui sorte.
-
-## Développer
+## 🛠️ Commandes développeur
 
 ```bash
-npm run dev        # serveur de développement
-npm run dev:reseau # le même en HTTPS sur le réseau local, pour essayer au téléphone
-npm test           # 410 tests unitaires + vérification des types
-npm run test:e2e   # 26 tests dans un vrai navigateur (démarrer npm run dev à côté)
-npm run lint       # ESLint, dont la règle moteur ↛ packs
-npm run build      # sortie statique dans dist/
+npm run dev        # Lance le serveur local Vite (http://localhost:5173)
+npm run dev:reseau # Lance le serveur en HTTPS sur le réseau local pour mobile
+npm test           # Exécute les 438 tests unitaires Vitest + typage TypeScript strict
+npm run test:e2e   # Exécute les 26 tests end-to-end Playwright
+npm run lint       # Vérification du code avec ESLint
+npm run build      # Build de production statique dans dist/
 ```
 
-Le **banc de rejeu** s'ouvre sur `http://localhost:5173/?banc` : il enregistre une
-session, la rejoue à la place de la caméra, et montre les nombres sur lesquels on règle
-les seuils de gestes. Ils sont dans `src/moteur/corps/` — `SEUILS` pour les postures,
-`REGLAGES_PAR_DEFAUT` pour les mouvements — et ce sont des points de départ, pas des
-mesures.
+---
 
-Pour ajouter un jutsu, un effet ou un pack entier : [CONTRIBUTING.md](CONTRIBUTING.md).
-Les conventions du dépôt sont dans [CLAUDE.md](CLAUDE.md).
-
-## Feuille de route
+## 🗺️ Feuille de route
 
 - [x] **1** — extraction, TypeScript, tests, séparation moteur / packs
 - [x] **2** — lecture du corps : postures, taijutsu, armes, banc de rejeu
 - [x] **3** — arcade : vagues, boss, cycle élémentaire, HUD parchemin, ralenti d'incantation
 - [x] **4** — progression : grades, examens, fiche ninja, contrats d'invocation, chrono du Dojo
-- [ ] **5** — contenu et assets : signes dessinés, silhouettes à l'encre, nouveaux jutsus
-- [ ] **6** — finition : démo en ligne, enregistreur de clip, README avec de vraies images de jeu
+- [x] **5** — contenu et assets : signes dessinés, silhouettes à l'encre, nouveaux jutsus
+- [x] **6** — finition : cosmétiques AR, enregistreur de clip, PWA hors-ligne
 
-La conception complète est dans [`docs/superpowers/specs/`](docs/superpowers/specs/),
-les plans dans [`docs/superpowers/plans/`](docs/superpowers/plans/).
+---
 
-## Licence et crédits
+## 📜 Licence & Crédits
 
-Le code est sous [licence MIT](LICENSE). Les œuvres dont s'inspirent les packs ne le sont
-pas : **NARUTO © Masashi Kishimoto / Shueisha**. Projet de fan, non officiel, non
-commercial.
-
-> ⚠️ Les illustrations des douze signes sont découpées d'une planche de captures de
-> l'anime, à titre de **référence provisoire**. Elles doivent être remplacées par nos
-> propres visuels avant que le dépôt devienne public. Tout le reste — sons, effets,
-> bannières — est fabriqué pour le projet.
-
-- Modèle de détection : [NARUTO-HandSignDetection](https://github.com/Kazuhito00/NARUTO-HandSignDetection) de Kazuhito Takahashi, licence MIT
-- Détourage : [MediaPipe](https://ai.google.dev/edge/mediapipe), licence Apache 2.0
+- Code source sous [Licence MIT](LICENSE) — Copyright (c) 2026 **CodeByHaamza**.
+- L'univers et les œuvres dont s'inspire le pack Kata appartiennent à leurs auteurs respectifs : **NARUTO © Masashi Kishimoto / Shueisha**. Projet de fan, non officiel et à vocation non commerciale.
+- Modèle de signes : [NARUTO-HandSignDetection](https://github.com/Kazuhito00/NARUTO-HandSignDetection) (Kazuhito Takahashi, MIT).
+- Vision & Posture : [MediaPipe Solutions](https://ai.google.dev/edge/mediapipe) (Google, Apache 2.0).
 
 ---
 
@@ -178,11 +178,9 @@ commercial.
   <img src="https://github.com/CodeByHaamza.png" width="84" alt="CodeByHaamza" style="border-radius:50%">
 </a>
 
-### [CodeByHaamza](https://github.com/CodeByHaamza)
+### Conçu avec passion par [CodeByHaamza](https://github.com/CodeByHaamza)
 
 <a href="https://github.com/CodeByHaamza"><img src="https://img.shields.io/badge/GitHub-CodeByHaamza-14141f?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"></a>
 <a href="https://github.com/CodeByHaamza/kagami/stargazers"><img src="https://img.shields.io/github/stars/CodeByHaamza/kagami?style=for-the-badge&labelColor=14141f&color=e8963c" alt="Étoiles"></a>
-
-<sub>Si tu fais un Rasengan correct du premier coup, dis-le-moi.</sub>
 
 </div>

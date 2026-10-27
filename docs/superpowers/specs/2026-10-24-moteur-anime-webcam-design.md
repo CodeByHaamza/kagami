@@ -13,7 +13,7 @@
 | ✅ | §5 l'existant · §7.1–7.3 moteur et packs · §7.6 grammaire · §12 les deux READMEs · §13 nommage | [plan 1](../plans/2026-10-24-01-extraction-moteur-kata.md) |
 | ✅ | §7.4 les entrées · §7.5 partage du temps · §7.7 les deux postures · §8 le corps comme manette · §8.1 armes · §8.3 taijutsu | [plan 2](../plans/2026-10-25-02-lecture-du-corps.md) |
 | ✅ | §7.8 ralenti d'incantation · §8.2 Kawarimi · §9.1–9.7 combat, bestiaire, boss, missions · §10.1 HUD d'arcade | [plan 3](../plans/2026-10-26-03-arcade.md) |
-| ⬜ | §9.8–9.11 grades, clan, contrat, kekkei genkai · §10.5 chrono du Dojo | plan 4 |
+| ✅ | §9.8–9.11 grades, clan, contrat, kekkei genkai · §10.5 chrono du Dojo | [plan 4](../plans/2026-10-27-04-progression.md) |
 | ⬜ | §9.5 visuel du bestiaire · §9.13–9.14 refonte des créatures et contenu · §10.3 calibration | plan 5 |
 | ⬜ | §9.12 cosmétiques · §10.4 enregistreur de clip | plan 6 |
 

@@ -8,7 +8,7 @@
 
 <a href="https://github.com/CodeByHaamza/kagami/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/CodeByHaamza/kagami/ci.yml?branch=main&style=for-the-badge&label=CI&labelColor=14141f&color=6fcf7f" alt="CI"></a>
 <img src="https://img.shields.io/badge/TypeScript-strict-3178c6?style=for-the-badge&labelColor=14141f" alt="TypeScript strict">
-<img src="https://img.shields.io/badge/tests-364-6fcf7f?style=for-the-badge&labelColor=14141f" alt="364 tests">
+<img src="https://img.shields.io/badge/tests-410-6fcf7f?style=for-the-badge&labelColor=14141f" alt="410 tests">
 <img src="https://img.shields.io/badge/licence-MIT-9a7aff?style=for-the-badge&labelColor=14141f" alt="MIT">
 
 </div>
@@ -129,8 +129,8 @@ Tout tourne dans le navigateur. Pas de serveur, pas de compte, aucune donnée qu
 ```bash
 npm run dev        # serveur de développement
 npm run dev:reseau # le même en HTTPS sur le réseau local, pour essayer au téléphone
-npm test           # 364 tests unitaires + vérification des types
-npm run test:e2e   # 22 tests dans un vrai navigateur (démarrer npm run dev à côté)
+npm test           # 410 tests unitaires + vérification des types
+npm run test:e2e   # 26 tests dans un vrai navigateur (démarrer npm run dev à côté)
 npm run lint       # ESLint, dont la règle moteur ↛ packs
 npm run build      # sortie statique dans dist/
 ```
@@ -149,7 +149,7 @@ Les conventions du dépôt sont dans [CLAUDE.md](CLAUDE.md).
 - [x] **1** — extraction, TypeScript, tests, séparation moteur / packs
 - [x] **2** — lecture du corps : postures, taijutsu, armes, banc de rejeu
 - [x] **3** — arcade : vagues, boss, cycle élémentaire, HUD parchemin, ralenti d'incantation
-- [ ] **4** — progression : grades, examens, fiche ninja, invocations
+- [x] **4** — progression : grades, examens, fiche ninja, contrats d'invocation, chrono du Dojo
 - [ ] **5** — contenu et assets : signes dessinés, silhouettes à l'encre, nouveaux jutsus
 - [ ] **6** — finition : démo en ligne, enregistreur de clip, README avec de vraies images de jeu
 

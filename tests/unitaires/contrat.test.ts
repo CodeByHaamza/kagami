@@ -38,13 +38,12 @@ function creerCombat(contrat?: "crapauds" | "serpents" | "limaces" | "chiens", m
 
 describe("Spécialité Crapauds (Mont Myōboku - Mode Ermite)", () => {
   test("en posture neutre, pas de multiplicateur supplémentaire", () => {
-    const j = new Joueur();
     expect(multiplicateurDegatsContrat("crapauds", "neutre")).toBe(1);
-    expect(multiplicateurDegatsContrat(null, "charge")).toBe(1);
+    expect(multiplicateurDegatsContrat(null, "concentration")).toBe(1);
   });
 
-  test("sous concentration (posture charge / senjutsu), l'attaque est boostée de ×1.5", () => {
-    expect(multiplicateurDegatsContrat("crapauds", "charge")).toBe(EFFETS_CONTRAT.crapauds.boostAttaque);
+  test("sous concentration (posture concentration / senjutsu), l'attaque est boostée de ×1.5", () => {
+    expect(multiplicateurDegatsContrat("crapauds", "concentration")).toBe(EFFETS_CONTRAT.crapauds.boostAttaque);
     expect(EFFETS_CONTRAT.crapauds.boostAttaque).toBe(1.5);
   });
 
@@ -61,9 +60,9 @@ describe("Spécialité Crapauds (Mont Myōboku - Mode Ermite)", () => {
     cNeutre.technique(jutsu("goukakyu"), 200);
     const evtNeutre = cNeutre.prendreEvenements().find(e => e.type === "touche") as { degats: number };
 
-    // Combat Crapauds en posture charge
+    // Combat Crapauds en posture concentration
     const cCrapaud = creerCombat("crapauds", missionBoss);
-    cCrapaud.avancer(0.1, 100, "charge");
+    cCrapaud.avancer(0.1, 100, "concentration");
     cCrapaud.technique(jutsu("goukakyu"), 200);
     const evtCrapaud = cCrapaud.prendreEvenements().find(e => e.type === "touche") as { degats: number };
 
@@ -105,14 +104,14 @@ describe("Spécialité Limaces (Forêt Shikkotsu - Régénération de Katsuyu)",
 
 describe("Spécialité Chiens ninja (Pistage Ninken)", () => {
   test("augmente la durée du télégraphe pour donner plus de temps de réaction", () => {
-    const att: Attaque = { nom: "Coup", degats: 20, duree: 1.0, esquivable: true };
+    const att: Attaque = { id: "coup", element: null, degats: 20, duree: 1.0, esquivable: true };
     const ajustee = ajusterAttaqueParContrat("chiens", att);
     expect(ajustee.duree).toBe(1.0 * EFFETS_CONTRAT.chiens.bonusAnticipation);
     expect(ajustee.duree).toBe(1.25);
   });
 
   test("sans contrat chiens, la durée de l'attaque est inchangée", () => {
-    const att: Attaque = { nom: "Coup", degats: 20, duree: 1.0, esquivable: true };
+    const att: Attaque = { id: "coup", element: null, degats: 20, duree: 1.0, esquivable: true };
     const neutre = ajusterAttaqueParContrat("crapauds", att);
     expect(neutre.duree).toBe(1.0);
   });
@@ -132,7 +131,7 @@ describe("Spécialité Serpents (Grotte Ryūchi - Réflexe ermite)", () => {
   test("le réflexe serpent permet d'esquiver même les attaques normalement inesquivables", () => {
     const scene = new Scene();
     const source = scene.ajouter("deserteur", { pv: 50, vitesse: 1, affinite: null, boss: false }, 0);
-    const inesquivable: Attaque = { nom: "Brume", degats: 30, duree: 1.5, esquivable: false };
+    const inesquivable: Attaque = { id: "brume", element: null, degats: 30, duree: 1.5, esquivable: false };
     const tel = new Telegraphe(inesquivable, source);
 
     // Tentative normale

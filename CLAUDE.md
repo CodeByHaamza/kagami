@@ -130,6 +130,29 @@ de rang D à S — vient par `src/packs/naruto/donnees/`.
   regroupés. Le ralenti est un paramètre du **mode**, jamais de la grammaire : le Dojo
   n'en a pas, et les constantes de détection tournent toujours en temps réel.
 
+## La progression, les examens et la fiche ninja
+
+La progression suit rigoureusement le canon de l'œuvre (§9.8–§9.11) :
+
+- **Échelle canonique** : Académie → Genin → Chūnin → Jōnin → Kage.
+  L'ANBU n'est pas un grade mais une unité d'élite débloquée à partir du rang Jōnin.
+- **Déblocages par grade** (`src/moteur/progression/progression.ts`) :
+  chaque grade ouvre l'accès aux techniques et aux missions du rang correspondant.
+- **Passage de grade** :
+  - *Académie → Genin* : Examen de sortie Bunshin no Jutsu.
+  - *Genin → Chūnin* : Examen Chūnin (vitesse Shunshin et maîtrise élémentaire Gōkakyū) après réussite de la mission de rang C.
+  - *Chūnin → Jōnin* : Recommandation (8 jutsus maîtrisés + mission rang B réussie).
+  - *Jōnin → Kage* : Recommandation suprême (mission de rang S réussie).
+- **Contrats d'invocation** (`src/moteur/jeu/contrat.ts`) :
+  - *Crapauds* : Mode Ermite Myōboku (boost attaque ×1.5 sous concentration).
+  - *Serpents* : Réflexe ermite Ryūchi (mue/substitution esquivant toute attaque).
+  - *Limaces* : Forêt Shikkotsu (régénération vitale passive).
+  - *Chiens ninja* : Pistage ninken (télégraphes ennemis ralentis / anticipés).
+- **Chrono du Dojo** (`src/moteur/jeu/chrono.ts`) :
+  chronométrage au centième de seconde de l'exécution des mudras pour battre ses records personnels.
+- **Sauvegarde v2** (`src/moteur/stockage/sauvegarde.ts`) :
+  migration automatique et transparente des données v1 vers v2 (fiche ninja, grade, missions, examens, records).
+
 ## Ajouter quelque chose
 
 Un jutsu, un effet, un geste, un pack : voir [CONTRIBUTING.md](CONTRIBUTING.md).

@@ -100,7 +100,7 @@ describe("Définitions canoniques Naruto (EXAMENS_NARUTO)", () => {
   });
 
   test("tous les jutsus demandés dans les examens existent dans le pack Naruto", () => {
-    const jutsusIds = new Set(JUTSUS.map(j => j.id));
+    const jutsusIds = new Set<string>(JUTSUS.map(j => j.id));
     for (const ex of EXAMENS_NARUTO) {
       for (const ep of ex.epreuves) {
         expect(jutsusIds.has(ep.techniqueId)).toBe(true);

@@ -148,7 +148,7 @@
 - [x] **Step 3 : intégrer le chrono et affichage des records dans le Dojo / entraînement**
 - [x] **Step 4 : conditionner l'accès aux missions d'arcade selon le grade**
 - [x] **Step 5 : tests e2e Playwright**
-- [ ] **Step 6 : commit** — `Interface : écran Fiche Ninja, Académie et chrono du Dojo`
+- [x] **Step 6 : commit** — `Interface : écran Fiche Ninja, Académie et chrono du Dojo`
 
 ---
 
@@ -157,5 +157,5 @@
 **Files:**
 - Modify: `CLAUDE.md`, `README.md`, `src/packs/naruto/README.md`, `docs/superpowers/specs/2026-10-24-moteur-anime-webcam-design.md`
 
-- [ ] **Step 1 : mettre à jour les tables de progression, badges et roadmap**
-- [ ] **Step 2 : commit** — `Documentation du plan 4 : progression, examens et fiche ninja`
+- [x] **Step 1 : mettre à jour les tables de progression, badges et roadmap**
+- [x] **Step 2 : commit** — `Documentation du plan 4 : progression, examens et fiche ninja`

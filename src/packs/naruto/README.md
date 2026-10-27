@@ -145,6 +145,27 @@ seul mouvement de lancer existe dans la nature, et prétendre distinguer un shur
 kunai à la trajectoire du poignet serait inventer. C'est l'arme **sélectionnée** qui
 part — touche `A` pour en changer, en attendant que le mode arcade lui donne sa place.
 
+## 階級 · Les grades et la progression
+
+La progression ninja suit rigoureusement l'échelle de l'œuvre (§9.8) :
+
+| Grade | Titre | Déblocages jutsus | Déblocages missions | Comment monter |
+| :---: | --- | :---: | :---: | --- |
+| 忍生 | **Académie** | Rang E | Rang D | Examen Genin (Bunshin no Jutsu) |
+| 下忍 | **Genin** | Rangs E, D, C | Rangs D, C | Examen Chūnin (après mission C) |
+| 中忍 | **Chūnin** | Rangs E, D, C, B | Rangs D, C, B | Recommandation (mission B + 8 jutsus) |
+| 上忍 | **Jōnin** | Rangs E à A | Rangs D à S | Recommandation Kage (mission S) |
+| 影 | **Kage** | Tous + rang S et ultimes | Rangs D à S | Sommet shinobi atteint |
+
+## 契約 · Les quatre contrats d'invocation
+
+Chaque contrat d'invocation confère une spécialité active ou passive en combat (§9.10) :
+
+- **Crapauds (Mont Myōboku)** : Mode Ermite — boost d'attaque ×1.5 sous concentration.
+- **Serpents (Grotte Ryūchi)** : Réflexe ermite — mue et substitution esquivant toute attaque.
+- **Limaces (Forêt Shikkotsu)** : Soin de Katsuyu — régénération vitale passive permanente.
+- **Chiens ninja (Ninken)** : Pistage olfactif — anticipation accrue et ralentissement des télégraphes ennemis.
+
 ## Comment on joue
 
 1. Mains bien visibles, à hauteur de poitrine, dans un endroit éclairé.
@@ -154,13 +175,14 @@ part — touche `A` pour en changer, en attendant que le mode arcade lui donne s
 5. Pour frapper au corps, lève les poings : les signes se taisent, les gestes comptent.
 
 L'**encyclopédie** 📜 donne tous les enchaînements et garde une photo de chaque signe que
-tu réussis. Le mode **entraînement** t'en fait répéter un en te montrant le suivant.
+tu réussis. Le mode **entraînement** t'en fait répéter un en te montrant le suivant et
+mesure ta vitesse au **chronomètre du Dojo**.
 
 ## Sous le capot
 
 | | |
 | --- | --- |
-| `donnees/` | les 14 signes, les 52 jutsus, les 7 taijutsu, les 3 armes, les familles. Kanji et romaji seulement : les noms traduisibles sont dans `i18n/`. |
+| `donnees/` | les 14 signes, les 52 jutsus, les 7 taijutsu, les 3 armes, les examens canoniques, les familles. Kanji et romaji seulement : les noms traduisibles sont dans `i18n/`. |
 | `entree/` | le reconnaisseur YOLOX, et le prétraitement sorti en fonctions pures |
 | `effets/` | les effets des jutsus, du taijutsu et des armes, et la scène Three.js du Rasengan |
 | `i18n/` | français et anglais, mêmes clés des deux côtés (un test le vérifie) |
@@ -173,7 +195,7 @@ inventés pour l'appli, et marqués `source: "appli"` dans les données.
 
 ## Ce qui vient
 
-Grades de l'Académie au Kage, examens, fiche ninja, mode ermite, Rinnegan.
+Refonte des silhouettes à l'encre et des visuels des signes (plan 5), enregistreur de clip et cosmétiques (plan 6).
 Voir la
 [feuille de route](../../../README.md#feuille-de-route).
 

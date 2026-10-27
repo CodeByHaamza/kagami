@@ -40,7 +40,7 @@ export function multiplicateurDegatsContrat(
   contrat: Contrat | null | undefined,
   attitude: Attitude
 ): number {
-  if (contrat === "crapauds" && attitude === "charge") {
+  if (contrat === "crapauds" && attitude === "concentration") {
     return EFFETS_CONTRAT.crapauds.boostAttaque;
   }
   return 1;

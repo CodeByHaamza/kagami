@@ -1,7 +1,7 @@
 // Katon : les effets de feu
 
 import { dessinerDragon } from "./creatures";
-import { hasard, TOUR, lisse, FEU, NOIR, CENDRE, sprite, emettre, emoji, teinte, vignette, sharingan } from "./outils";
+import { hasard, TOUR, lisse, FEU, NOIR, CENDRE, sprite, emettre, teinte, vignette, sharingan } from "./outils";
 import type { ContexteEffet, Effet } from "../../../moteur/types";
 
 // la bouche est un peu au-dessus des mains (pendant les signes, elles sont devant la poitrine)

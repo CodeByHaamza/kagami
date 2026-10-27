@@ -32,6 +32,7 @@ export const FR: Dictionnaire = {
   "mission.rangB.nom": "Brume et Samehada — Zabuza & Kisame",
   "mission.rangA.nom": "Chasse à l'Akatsuki — Kisame, Deidara, Itachi",
   "mission.rangS.nom": "Quatrième Grande Guerre — Madara",
+  "mission.survie.nom": "Gouffre Ninja — Survie Infinie",
   "posture.neutre": "Au repos",
   "posture.concentration": "Concentration",
   "posture.combat": "Combat",

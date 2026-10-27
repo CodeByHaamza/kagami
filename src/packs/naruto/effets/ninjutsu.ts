@@ -4,7 +4,7 @@
 // de la permutation, la métamorphose... Sans détourage, ils font une version simplifiée.
 
 import { dessinerCrapaud, dessinerKyuubi, dessinerRashoumon, dessinerShinigami } from "./creatures";
-import { hasard, TOUR, lisse, enveloppe, VIOLET, CENDRE, TERRE, emettre, fumee, feuilles, emoji, kanji, eclair, tracer, vignette, buche, bois } from "./outils";
+import { hasard, TOUR, lisse, enveloppe, VIOLET, CENDRE, TERRE, emettre, fumee, feuilles, kanji, eclair, tracer, vignette, buche, bois } from "./outils";
 import type { Point } from "./outils";
 import { toileHorsEcran } from "./outils";
 import type { Contexte2D, ContexteEffet, Effet } from "../../../moteur/types";

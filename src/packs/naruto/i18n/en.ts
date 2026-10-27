@@ -32,6 +32,7 @@ export const EN: Dictionnaire = {
   "mission.rangB.nom": "Mist and Samehada — Zabuza & Kisame",
   "mission.rangA.nom": "Hunting the Akatsuki — Kisame, Deidara, Itachi",
   "mission.rangS.nom": "Fourth Great Ninja War — Madara",
+  "mission.survie.nom": "Ninja Abyss — Infinite Survival",
   "posture.neutre": "At rest",
   "posture.concentration": "Focus",
   "posture.combat": "Combat",

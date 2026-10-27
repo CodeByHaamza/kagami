@@ -7,6 +7,7 @@
 
 import type { Attitude } from "../moteur/corps/postures";
 import { Combat } from "../moteur/jeu/combat";
+import { creerMissionSurvie } from "../moteur/jeu/survie";
 import { estMissionAccessible } from "../moteur/progression/progression";
 import { dessinerScene } from "../moteur/rendu/scene";
 import { jouer } from "../moteur/son/son";
@@ -52,7 +53,8 @@ export class Arcade {
   monter(): void {
     const grade = this.pont.getGrade?.() ?? "academie";
     const conteneur = el("listeMissions");
-    conteneur.innerHTML = MISSIONS.map(m => {
+    const toutes = [...MISSIONS, creerMissionSurvie(50)];
+    conteneur.innerHTML = toutes.map(m => {
       const accessible = estMissionAccessible(m.rang, grade);
       const classeVerrouillee = accessible ? "" : " verrouillee";
       const disabled = accessible ? "" : " disabled";
@@ -69,7 +71,7 @@ export class Arcade {
 
     for (const b of conteneur.querySelectorAll<HTMLButtonElement>("[data-mission]:not([disabled])")) {
       b.addEventListener("click", () => {
-        const mission = MISSIONS.find(m => m.id === b.dataset.mission);
+        const mission = toutes.find(m => m.id === b.dataset.mission);
         if (mission) void this.lancer(mission);
       });
     }

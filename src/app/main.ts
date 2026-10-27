@@ -848,7 +848,10 @@ function ouvrirCalibration(): void {
     // Si la caméra n'a pas encore dessiné, garde le statut bon par défaut
   }
 
-  const statCadrage = verifierCadrage(ordonnanceur.corpsPret ? 0.38 : null).statut;
+  const p11 = postureCourante?.points[11];
+  const p12 = postureCourante?.points[12];
+  const epaules = p11 && p12 ? Math.abs(p11.x - p12.x) : null;
+  const statCadrage = verifierCadrage(epaules).statut;
 
   el("calibEclairage").textContent = t(`calibration.${statEclairage}`);
   el("calibDistance").textContent = t(statCadrage === "absent" ? "posture.neutre" : `calibration.${statCadrage}`);

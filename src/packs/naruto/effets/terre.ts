@@ -1,7 +1,7 @@
 // Doton et Mokuton : les effets de terre et de bois
 
 import { dessinerArbreMokuton, dessinerChienNinja, dessinerDragon } from "./creatures";
-import { hasard, lisse, TERRE, emettre, eclair, tracer, emoji, bois } from "./outils";
+import { hasard, lisse, TERRE, emettre, eclair, tracer, bois } from "./outils";
 import type { Point } from "./outils";
 import type { Contexte2D, Effet, Particules } from "../../../moteur/types";
 

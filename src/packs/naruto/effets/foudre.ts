@@ -1,7 +1,7 @@
 // Raiton : les effets de foudre
 
 import { dessinerDragon } from "./creatures";
-import { hasard, TOUR, lisse, FOUDRE, sprite, emettre, eclair, tracer, emoji, teinte, voile } from "./outils";
+import { hasard, TOUR, lisse, FOUDRE, sprite, emettre, eclair, tracer, teinte, voile } from "./outils";
 import type { Point } from "./outils";
 import type { Contexte2D, Effet } from "../../../moteur/types";
 

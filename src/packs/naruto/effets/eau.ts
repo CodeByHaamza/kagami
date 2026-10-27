@@ -1,7 +1,7 @@
 // Suiton : les effets d'eau
 
 import { dessinerDragon, dessinerRequin } from "./creatures";
-import { hasard, enveloppe, EAU, FUMEE, emettre, emoji, teinte, voile } from "./outils";
+import { hasard, enveloppe, EAU, FUMEE, emettre, teinte, voile } from "./outils";
 import type { Contexte2D, ContexteEffet, Effet, NouvelleParticule } from "../../../moteur/types";
 
 // une particule d'eau : de la matière, avec parfois un reflet de lumière

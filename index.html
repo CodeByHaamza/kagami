@@ -16,6 +16,7 @@
 
     <header class="barre">
       <h1><span class="kanji">鏡</span> <span data-i18n="pack.nom">Kata</span></h1>
+      <button id="btnFicheNinja" type="button" data-i18n-titre="barre.ficheNinja" data-i18n-aria="barre.ficheNinja">忍</button>
       <button id="btnEncyclo" type="button" data-i18n-titre="barre.encyclopedie" data-i18n-aria="barre.encyclopedie">📜</button>
       <button id="btnCamera" type="button" data-i18n-titre="barre.camera" data-i18n-aria="barre.camera">🔄</button>
       <button id="btnSon" type="button" aria-pressed="false" data-i18n-titre="barre.son" data-i18n-aria="barre.son">🔊</button>
@@ -81,6 +82,17 @@
       </button>
     </div>
 
+    <!-- Le HUD d'examen à l'Académie ninja -->
+    <div id="hudExamen" class="hud-arcade hud-examen" hidden>
+      <div class="examen-en-tete">
+        <h3 id="examenTitre"></h3>
+        <span class="examen-chrono" id="examenChrono">0.0s</span>
+      </div>
+      <button id="btnQuitterExamen" type="button" class="hud-quitter" data-i18n="academie.quitter">
+        Quitter
+      </button>
+    </div>
+
 
     <div id="enCours" class="en-cours"></div>
 
@@ -95,6 +107,10 @@
       </div>
       <div id="guideSuite" class="suite"></div>
       <p id="guideProchain" class="prochain"></p>
+      <div class="guide-chrono">
+        <span class="chrono-temps" id="guideChrono">0.00s</span>
+        <span class="chrono-record" id="guideRecord"></span>
+      </div>
       <div class="guide-boutons">
         <button id="btnApercu" type="button" data-i18n="guide.apercu">Montre-moi</button>
         <button id="btnFinGuide" type="button" data-i18n="guide.arreter">Arrêter</button>
@@ -164,6 +180,12 @@
         </button>
         <button id="btnArcade" type="button" data-i18n="accueil.arcade">
           Mode arcade
+        </button>
+        <button id="btnAcademie" type="button" data-i18n="accueil.academie">
+          Académie ninja
+        </button>
+        <button id="btnFicheNinjaAccueil" type="button" data-i18n="accueil.ficheNinja">
+          Fiche ninja
         </button>
         <button id="btnEncycloAccueil" type="button" data-i18n="accueil.encyclopedie">
           Voir l'encyclopédie
@@ -240,6 +262,76 @@
           <button id="btnFermerMissions" type="button" data-i18n-titre="encyclo.fermer" data-i18n-aria="encyclo.fermer">✕</button>
         </header>
         <div id="listeMissions" class="liste-missions"></div>
+      </div>
+    </div>
+
+    <!-- L'écran Fiche Ninja -->
+    <div id="ficheNinja" class="ecran" hidden>
+      <div class="parchemin">
+        <header>
+          <h2 data-i18n="fiche.titre">Fiche ninja</h2>
+          <button id="btnFermerFiche" type="button" data-i18n-titre="encyclo.fermer" data-i18n-aria="encyclo.fermer">✕</button>
+        </header>
+        <div id="ficheNinjaVue" class="fiche-ninja-vue">
+          <div class="ligne-fiche"><b>Grade :</b> <span id="ficheGrade"></span></div>
+          <div class="ligne-fiche"><b>Nom :</b> <span id="ficheNom"></span></div>
+          <div class="ligne-fiche"><b>Clan :</b> <span id="ficheClan"></span></div>
+          <div class="ligne-fiche"><b>Village :</b> <span id="ficheVillage"></span></div>
+          <div class="ligne-fiche"><b>Contrat d'invocation :</b> <span id="ficheContrat"></span></div>
+          <div class="ligne-fiche"><b>Missions réussies :</b> <span id="ficheMissions"></span></div>
+          <div class="ligne-fiche"><b>Examens réussis :</b> <span id="ficheExamens"></span></div>
+          <button id="btnModifierFiche" type="button" data-i18n="fiche.modifier">Modifier</button>
+        </div>
+        <form id="ficheNinjaForm" class="fiche-ninja-form" hidden>
+          <label>
+            <span data-i18n="fiche.champNom">Nom du ninja</span>
+            <input type="text" id="inputNinjaNom" required maxlength="24" />
+          </label>
+          <label>
+            <span data-i18n="fiche.champClan">Clan (inventé)</span>
+            <input type="text" id="inputNinjaClan" required maxlength="24" />
+          </label>
+          <label>
+            <span data-i18n="fiche.champVillage">Village</span>
+            <select id="selectNinjaVillage">
+              <option value="konoha">Konoha</option>
+              <option value="suna">Suna</option>
+              <option value="kiri">Kiri</option>
+              <option value="iwa">Iwa</option>
+              <option value="kumo">Kumo</option>
+            </select>
+          </label>
+          <label>
+            <span data-i18n="fiche.champContrat">Pacte d'invocation</span>
+            <select id="selectNinjaContrat">
+              <option value="crapauds">Crapauds</option>
+              <option value="serpents">Serpents</option>
+              <option value="limaces">Limaces</option>
+              <option value="chiens">Chiens ninja</option>
+            </select>
+          </label>
+          <div class="boutons-form">
+            <button id="btnEnregistrerFiche" class="principal" type="submit" data-i18n="fiche.enregistrer">Enregistrer</button>
+            <button id="btnAnnulerFiche" type="button" data-i18n="fiche.annuler">Annuler</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- L'écran Académie de Konoha -->
+    <div id="academie" class="ecran" hidden>
+      <div class="parchemin">
+        <header>
+          <h2 data-i18n="academie.titre">Académie de Konoha</h2>
+          <button id="btnFermerAcademie" type="button" data-i18n-titre="encyclo.fermer" data-i18n-aria="encyclo.fermer">✕</button>
+        </header>
+        <div id="academieContenu" class="academie-contenu">
+          <h3 id="academieExamenNom"></h3>
+          <p id="academieExamenDesc"></p>
+          <div id="academieEpreuves" class="academie-epreuves"></div>
+          <p id="academieStatut" class="academie-statut"></p>
+          <button id="btnLancerExamen" class="principal" type="button" data-i18n="academie.commencer">Passer l'épreuve</button>
+        </div>
       </div>
     </div>
 

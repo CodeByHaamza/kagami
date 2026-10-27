@@ -143,11 +143,11 @@
 - Modify: `src/packs/naruto/i18n/{fr,en}.ts`
 - Create: `tests/e2e/progression.spec.ts`
 
-- [ ] **Step 1 : ajouter l'écran Fiche Ninja (nom, clan, village, contrat)**
-- [ ] **Step 2 : ajouter l'écran Académie (passage d'examen)**
-- [ ] **Step 3 : intégrer le chrono et affichage des records dans le Dojo / entraînement**
-- [ ] **Step 4 : conditionner l'accès aux missions d'arcade selon le grade**
-- [ ] **Step 5 : tests e2e Playwright**
+- [x] **Step 1 : ajouter l'écran Fiche Ninja (nom, clan, village, contrat)**
+- [x] **Step 2 : ajouter l'écran Académie (passage d'examen)**
+- [x] **Step 3 : intégrer le chrono et affichage des records dans le Dojo / entraînement**
+- [x] **Step 4 : conditionner l'accès aux missions d'arcade selon le grade**
+- [x] **Step 5 : tests e2e Playwright**
 - [ ] **Step 6 : commit** — `Interface : écran Fiche Ninja, Académie et chrono du Dojo`
 
 ---

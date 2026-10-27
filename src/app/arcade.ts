@@ -7,8 +7,10 @@
 
 import type { Attitude } from "../moteur/corps/postures";
 import { Combat } from "../moteur/jeu/combat";
+import { estMissionAccessible } from "../moteur/progression/progression";
 import { dessinerScene } from "../moteur/rendu/scene";
 import { jouer } from "../moteur/son/son";
+import type { Contrat, Grade } from "../moteur/stockage/sauvegarde";
 import type { ArmeDuPack, Contexte2D, Mission, Technique } from "../moteur/types";
 import { t } from "../moteur/ui/i18n";
 import {
@@ -28,10 +30,14 @@ export interface PontArcade {
   demarrerCamera: () => Promise<void>;
   reinitialiserStocks: () => void;
   annoncer: (texte: string) => void;
+  getGrade?: () => Grade;
+  getContrat?: () => Contrat | null;
+  onVictoireMission?: (missionId: string, rang: string) => void;
 }
 
 export class Arcade {
   private combat: Combat | null = null;
+  private missionEnCours: Mission | null = null;
 
   constructor(private readonly pont: PontArcade) {}
 
@@ -44,19 +50,24 @@ export class Arcade {
   }
 
   monter(): void {
+    const grade = this.pont.getGrade?.() ?? "academie";
     const conteneur = el("listeMissions");
-    conteneur.innerHTML = MISSIONS.map(
-      m =>
-        `<button type="button" class="fiche-mission" data-mission="${m.id}">` +
+    conteneur.innerHTML = MISSIONS.map(m => {
+      const accessible = estMissionAccessible(m.rang, grade);
+      const classeVerrouillee = accessible ? "" : " verrouillee";
+      const disabled = accessible ? "" : " disabled";
+      return (
+        `<button type="button" class="fiche-mission${classeVerrouillee}" data-mission="${m.id}"${disabled}>` +
         `<span class="rang-sceau">${m.rang}</span>` +
         `<span class="mission-corps">` +
         `<b>${t(`mission.${m.id}.nom`)}</b>` +
         `<small>${t("arcade.vagues", { n: m.vagues.length })}</small>` +
         `</span>` +
         `</button>`
-    ).join("");
+      );
+    }).join("");
 
-    for (const b of conteneur.querySelectorAll<HTMLButtonElement>("[data-mission]")) {
+    for (const b of conteneur.querySelectorAll<HTMLButtonElement>("[data-mission]:not([disabled])")) {
       b.addEventListener("click", () => {
         const mission = MISSIONS.find(m => m.id === b.dataset.mission);
         if (mission) void this.lancer(mission);
@@ -75,12 +86,14 @@ export class Arcade {
 
   async lancer(mission: Mission): Promise<void> {
     this.fermerChoix();
+    this.missionEnCours = mission;
     this.combat = new Combat({
       mission,
       cycle: CYCLE,
       profils: PROFILS,
       bestiaire: BESTIAIRE,
-      boss: BOSS
+      boss: BOSS,
+      contrat: this.pont.getContrat?.() ?? null
     });
     this.pont.reinitialiserStocks();
     el("hudArcade").hidden = false;
@@ -92,6 +105,7 @@ export class Arcade {
 
   quitter(): void {
     this.combat = null;
+    this.missionEnCours = null;
     el("hudArcade").hidden = true;
     el("finMission").hidden = true;
   }
@@ -170,6 +184,9 @@ export class Arcade {
       } else if (ev.type === "impact" && ev.issue === "encaissee" && ev.degats > 0) {
         jouer("boum");
       } else if (ev.type === "victoire") {
+        if (this.missionEnCours) {
+          this.pont.onVictoireMission?.(this.missionEnCours.id, this.missionEnCours.rang);
+        }
         this.afficherFin(true);
       } else if (ev.type === "defaite") {
         this.afficherFin(false);

@@ -20,7 +20,10 @@ import { LecteurDeGestes, type JetonCorps } from "../moteur/corps/gestes";
 import { MachineAPostures, type Attitude } from "../moteur/corps/postures";
 import { fiable, immobilite } from "../moteur/corps/reperes";
 import { Arcade } from "./arcade";
+import { Academie } from "./academie";
+import { EcranFicheNinja } from "./ficheNinja";
 import { Banc } from "./banc";
+import { ChronometreDojo } from "../moteur/jeu/chrono";
 import { Sequence } from "../moteur/grammaire/sequence";
 import { BoucleDeRendu, calculerCadre, dessinerCadre, versEcran } from "../moteur/rendu/cadre";
 import { Effets } from "../moteur/rendu/effets";
@@ -101,6 +104,9 @@ let armeChoisie = 0;
 const stocks = new Map(ARMES.map(a => [a.id, a.stock]));
 let rasengan: Rasengan3D | null = null; // la scène 3D n'est créée qu'au premier Rasengan
 
+let sauvegarde: Sauvegarde = charger();
+const chrono = new ChronometreDojo();
+
 const arcade = new Arcade({
   demarrerCamera: async () => {
     if (!window.kagami?.pret) await demarrer();
@@ -109,10 +115,48 @@ const arcade = new Arcade({
     for (const a of ARMES) stocks.set(a.id, a.stock);
     montrerArme();
   },
-  annoncer: texte => message(texte)
+  annoncer: texte => message(texte),
+  getGrade: () => sauvegarde.progression.grade,
+  getContrat: () => sauvegarde.fiche?.contrat ?? null,
+  onVictoireMission: (id, rang) => {
+    if (!sauvegarde.progression.missionsReussies.includes(id)) {
+      sauvegarde.progression.missionsReussies.push(id);
+    }
+    const cleRang = `rang${rang}`;
+    if (!sauvegarde.progression.missionsReussies.includes(cleRang)) {
+      sauvegarde.progression.missionsReussies.push(cleRang);
+    }
+    enregistrer(sauvegarde);
+  }
 });
 
-let sauvegarde: Sauvegarde = charger();
+const ficheNinja = new EcranFicheNinja({
+  getFiche: () => sauvegarde.fiche,
+  getGrade: () => sauvegarde.progression.grade,
+  getMissionsReussies: () => sauvegarde.progression.missionsReussies,
+  getExamensPasses: () => sauvegarde.progression.examensPasses,
+  onSauvegarder: fiche => {
+    sauvegarde = { ...sauvegarde, fiche };
+    enregistrer(sauvegarde);
+    message(t("fiche.titre") + " " + t("fiche.enregistrer"));
+  }
+});
+
+const academie = new Academie({
+  getProgression: () => sauvegarde.progression,
+  getNombreJutsus: () => sauvegarde.entraines.length,
+  demarrerCamera: async () => {
+    if (!window.kagami?.pret) await demarrer();
+  },
+  onPromotion: (grade, examenId) => {
+    sauvegarde.progression.grade = grade;
+    if (!sauvegarde.progression.examensPasses.includes(examenId)) {
+      sauvegarde.progression.examensPasses.push(examenId);
+    }
+    enregistrer(sauvegarde);
+  },
+  annoncer: texte => message(texte)
+});
 let cadre: Cadre = calculerCadre({ l: innerWidth, h: innerHeight }, { largeur: 0, hauteur: 0 }, PIXELS);
 let derniere: { jeton: SigneNaruto; score: number; boite: DOMRectInit & { x1: number; y1: number; x2: number; y2: number } ; temps: number } | null = null;
 let guide: Technique<SigneNaruto> | null = null;
@@ -229,6 +273,10 @@ const rendu = new BoucleDeRendu((dt, temps) => {
   }
   arcade.avancer(dt, temps, ordonnanceur.posture);
   arcade.dessiner(ctx, cadre.l, cadre.h, temps);
+  if (academie.enExamen) academie.avancer(dt);
+  if (guide && chrono.actif) {
+    el("guideChrono").textContent = `${(chrono.tempsEcoule(temps) / 1000).toFixed(2)}s`;
+  }
   effets.appeler("derriere", ctx, e);
   const remplacee = effets.appeler("personne", ctx, e);
   if (e.personne && !remplacee) dessinerCadre(ctx, cadre, e.personne, camera.deFace);
@@ -440,6 +488,7 @@ function jetonValide(jeton: SigneNaruto): void {
 function declencher(technique: Technique<SigneNaruto>, maintenant: number): void {
   sequence.vider();
   enAttente = null;
+  if (academie.enExamen) academie.validerTechnique(technique.id);
   if (!arcade.technique(technique, maintenant)) return;
 
   const e = contexte(maintenant, 0);
@@ -711,6 +760,11 @@ async function ouvrirEntrainement(technique: Technique<SigneNaruto>): Promise<vo
   el("guideNom").textContent = t(`jutsu.${technique.id}.nom`);
   el("guideTexte").textContent = t(`jutsu.${technique.id}.texte`);
 
+  const record = sauvegarde.progression.recordsDojo[technique.id];
+  el("guideChrono").textContent = "0.00s";
+  el("guideRecord").textContent = record ? `Record : ${(record / 1000).toFixed(2)}s` : "";
+  chrono.demarrer(technique.id, performance.now());
+
   const panneau = el("guide");
   panneau.hidden = false;
   panneau.classList.remove("entre");
@@ -730,6 +784,7 @@ async function ouvrirEntrainement(technique: Technique<SigneNaruto>): Promise<vo
 
 function fermerEntrainement(): void {
   guide = null;
+  chrono.reinitialiser();
   sequence.reglages.oubli = OUBLI_NORMAL;
   el("guide").hidden = true;
 }
@@ -749,10 +804,25 @@ let minuteurBravo = 0;
 function bravo(technique: Technique<SigneNaruto>): void {
   const panneau = el("bravo");
   el("bravoQuoi").textContent = t(`jutsu.${technique.id}.nom`);
-  el("bravoCompte").textContent = t("guide.maitrises", {
+  let texteCompte = t("guide.maitrises", {
     faits: sauvegarde.entraines.length,
     total: PACK_KATA.techniques.length
   });
+
+  if (chrono.actif && guide?.id === technique.id) {
+    const res = chrono.arreter(technique.id, performance.now(), sauvegarde.progression.recordsDojo);
+    if (res.reussi) {
+      if (res.estNouveauRecord) {
+        sauvegarde.progression.recordsDojo[technique.id] = res.dureeMs;
+        enregistrer(sauvegarde);
+        texteCompte += " · " + t("chrono.recordBattu");
+      }
+      el("guideChrono").textContent = `${(res.dureeMs / 1000).toFixed(2)}s`;
+      el("guideRecord").textContent = `Record : ${(sauvegarde.progression.recordsDojo[technique.id]! / 1000).toFixed(2)}s`;
+    }
+  }
+
+  el("bravoCompte").textContent = texteCompte;
 
   panneau.hidden = false;
   panneau.classList.remove("visible");
@@ -770,6 +840,9 @@ function bravo(technique: Technique<SigneNaruto>): void {
 
 el("btnDemarrer").addEventListener("click", () => void demarrer());
 el("btnArcade").addEventListener("click", () => arcade.ouvrirChoix());
+el("btnFicheNinja").addEventListener("click", () => ficheNinja.ouvrir());
+el("btnFicheNinjaAccueil").addEventListener("click", () => ficheNinja.ouvrir());
+el("btnAcademie").addEventListener("click", () => academie.ouvrir());
 el("btnFermerMissions").addEventListener("click", () => arcade.fermerChoix());
 el("btnQuitterArcade").addEventListener("click", () => arcade.quitter());
 el("btnRetourDojo").addEventListener("click", () => arcade.quitter());

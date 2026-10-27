@@ -12,8 +12,10 @@ import { FR } from "../../src/packs/naruto/i18n/fr";
 const main = readFileSync("src/app/main.ts", "utf8");
 const banc = readFileSync("src/app/banc.ts", "utf8");
 const arcade = readFileSync("src/app/arcade.ts", "utf8");
-/** Tout ce qui touche au DOM du jeu : le cablage, l'arcade et le panneau du banc. */
-const code = [main, banc, arcade].join("\n");
+const ficheNinja = readFileSync("src/app/ficheNinja.ts", "utf8");
+const academie = readFileSync("src/app/academie.ts", "utf8");
+/** Tout ce qui touche au DOM du jeu : le cablage, l'arcade, la fiche ninja, l'académie et le banc. */
+const code = [main, banc, arcade, ficheNinja, academie].join("\n");
 const style = readFileSync("src/packs/naruto/assets/style.css", "utf8");
 const camera = readFileSync("src/moteur/entree/camera.ts", "utf8");
 const html = readFileSync("index.html", "utf8");
@@ -55,6 +57,8 @@ test("aucune clé de traduction n'est définie sans être utilisée nulle part",
   const sources = [
     "src/app/main.ts",
     "src/app/arcade.ts",
+    "src/app/ficheNinja.ts",
+    "src/app/academie.ts",
     "src/app/portail.ts",
     "src/moteur/ui/encyclopedie.ts"
   ]
@@ -71,7 +75,11 @@ test("aucune clé de traduction n'est définie sans être utilisée nulle part",
       "posture.",
       "element.",
       "mission.",
-      "arcade.refus."
+      "arcade.refus.",
+      "grade.",
+      "village.",
+      "contrat.",
+      "academie.recommandation."
     ]) {
       if (cle.startsWith(prefixe)) return false;
     }

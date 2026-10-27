@@ -870,3 +870,173 @@ button.lien { min-height: 0; padding: 0; font: inherit; color: #9a3412; text-dec
   margin-top: 12px;
 }
 
+/* ---- Fiche Ninja & Académie (Plan 4) ---- */
+
+.fiche-ninja-vue {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px 0;
+  text-align: left;
+}
+
+.ligne-fiche {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--ligne);
+  font-size: 14px;
+}
+
+.ligne-fiche b {
+  color: var(--doux);
+}
+
+.ligne-fiche span {
+  font-weight: 700;
+  color: var(--orange);
+}
+
+.fiche-ninja-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px 0;
+  text-align: left;
+}
+
+.fiche-ninja-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--doux);
+}
+
+.fiche-ninja-form input,
+.fiche-ninja-form select {
+  padding: 8px 10px;
+  background: #14131a;
+  border: 1px solid var(--ligne);
+  border-radius: 6px;
+  color: var(--texte);
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.fiche-ninja-form input:focus,
+.fiche-ninja-form select:focus {
+  border-color: var(--orange);
+  outline: none;
+}
+
+.boutons-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.academie-contenu {
+  margin: 16px 0;
+  text-align: left;
+}
+
+.academie-contenu h3 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  color: var(--orange);
+}
+
+.academie-epreuves {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.epreuve-item {
+  padding: 10px 14px;
+  background: #14131a;
+  border: 1px solid var(--ligne);
+  border-radius: 8px;
+}
+
+.epreuve-item b {
+  color: var(--texte);
+}
+
+.epreuve-item span {
+  color: var(--orange);
+  font-weight: 700;
+}
+
+.epreuve-item p {
+  margin: 4px 0 0 0;
+  font-size: 12px;
+  color: var(--doux);
+}
+
+.academie-statut {
+  margin: 14px 0;
+  font-weight: 700;
+  color: #6fcf7f;
+}
+
+/* Le HUD de l'épreuve à l'Académie */
+.hud-examen {
+  position: fixed;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 16px;
+  background: rgba(20, 19, 26, 0.92);
+  border: 1px solid var(--ligne);
+  border-radius: 12px;
+  z-index: 100;
+}
+
+.examen-en-tete {
+  display: flex;
+  flex-direction: column;
+}
+
+.examen-en-tete h3 {
+  margin: 0;
+  font-size: 14px;
+  color: var(--texte);
+}
+
+.examen-chrono {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--orange);
+}
+
+/* Le chrono au Dojo */
+.guide-chrono {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 6px 0;
+  font-size: 12px;
+}
+
+.chrono-temps {
+  font-weight: 800;
+  color: var(--orange);
+}
+
+.chrono-record {
+  color: var(--doux);
+}
+
+.fiche-mission.verrouillee {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(0.8);
+}
+
+

@@ -6,8 +6,8 @@ import {
   estTechniqueDisponible,
   statutProgression
 } from "../../src/moteur/progression/progression";
-import type { Grade, Progression } from "../../src/moteur/stockage/sauvegarde";
-import type { ProfilCombat, Rang } from "../../src/moteur/types";
+import type { Progression } from "../../src/moteur/stockage/sauvegarde";
+import type { ProfilCombat } from "../../src/moteur/types";
 
 const profilsFactices: Record<string, ProfilCombat> = {
   bunshin: { rang: "E", element: null, role: "utilitaire" },

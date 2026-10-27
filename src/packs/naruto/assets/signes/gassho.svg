@@ -1,10 +1,37 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
-  <circle cx="50" cy="50" r="46" fill="#14131a" stroke="#d97706" stroke-width="2"/>
-  <!-- Gasshō : deux mains jointes paume contre paume en prière -->
-  <path d="M 46 22 C 46 20, 54 20, 54 22 L 56 62 C 56 70, 44 70, 44 62 Z" fill="#fcd34d" stroke="#78350f" stroke-width="2"/>
-  <path d="M 40 35 C 38 33, 44 30, 47 34 L 48 64" fill="none" stroke="#78350f" stroke-width="2"/>
-  <path d="M 60 35 C 62 33, 56 30, 53 34 L 52 64" fill="none" stroke="#78350f" stroke-width="2"/>
-  <path d="M 50 20 L 50 68" stroke="#78350f" stroke-width="1.5"/>
-  <circle cx="50" cy="80" r="6" fill="#f59e0b"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <radialGradient id="haloGassho" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#14131a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- Fond du médaillon -->
+  <circle cx="60" cy="60" r="56" fill="#14131a" stroke="#d97706" stroke-width="2.5"/>
+  <circle cx="60" cy="60" r="48" fill="url(#haloGassho)"/>
 
+  <!-- Mains jointes (Gasshō / Prière) -->
+  <!-- Bras / Poignets -->
+  <path d="M 42 104 L 50 82 C 54 80, 66 80, 70 82 L 78 104 Z" fill="#78350f" opacity="0.3"/>
+  <path d="M 46 84 L 54 76 L 66 76 L 74 84 Z" fill="#d97706" opacity="0.4"/>
+
+  <!-- Pouces repliés vers l'avant -->
+  <ellipse cx="60" cy="68" rx="8" ry="6" fill="#fcd34d" stroke="#78350f" stroke-width="1.8"/>
+  <line x1="60" y1="62" x2="60" y2="74" stroke="#b45309" stroke-width="1.5"/>
+
+  <!-- Paumes et doigts joints vers le haut -->
+  <!-- Auriculaires extérieurs -->
+  <path d="M 44 64 C 42 50, 46 36, 52 28 C 54 36, 54 50, 52 64 Z" fill="#fbbf24" stroke="#78350f" stroke-width="1.5"/>
+  <path d="M 76 64 C 78 50, 74 36, 68 28 C 66 36, 66 50, 68 64 Z" fill="#fbbf24" stroke="#78350f" stroke-width="1.5"/>
+
+  <!-- Majeurs et index centraux pointés vers le ciel -->
+  <path d="M 50 64 C 49 42, 54 22, 58 16 C 60 14, 60 14, 62 16 C 66 22, 71 42, 70 64 Z" fill="#fef08a" stroke="#78350f" stroke-width="2"/>
+  <!-- Séparation médiane des paumes jointes -->
+  <line x1="60" y1="16" x2="60" y2="76" stroke="#92400e" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Lignes des phalanges -->
+  <line x1="55" y1="34" x2="65" y2="34" stroke="#b45309" stroke-width="1.2" opacity="0.8"/>
+  <line x1="53" y1="46" x2="67" y2="46" stroke="#b45309" stroke-width="1.2" opacity="0.8"/>
+
+  <!-- Kanji 祈 discret en bas -->
+  <text x="60" y="106" font-family="'Yuji Syuku', serif" font-size="14" fill="#fbbf24" text-anchor="middle" opacity="0.85">祈</text>
+</svg>

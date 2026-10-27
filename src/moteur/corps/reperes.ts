@@ -17,7 +17,7 @@ export const VISIBILITE_MINIMALE = 0.5;
 /** Les seuils, en largeurs d'épaules. À régler au banc de rejeu. */
 export const SEUILS = {
   /** Distance entre les poignets au-delà de laquelle les mains ne sont plus jointes. */
-  mains: 0.55,
+  mains: 0.72,
   /** Distance poignet–nez en deçà de laquelle le poignet est « près du visage ». */
   gardeVisage: 0.7,
   /** Écart entre les coudes au-delà duquel ils ne sont plus serrés. */
@@ -52,9 +52,10 @@ export function mainsRapprochees(p: Posture): boolean {
   return distance(g, d) / l < SEUILS.mains;
 }
 
-/** Les deux poignets sont-ils au-dessus de la ligne des épaules ? */
+/** Les deux poignets sont-ils au-dessus de la ligne des épaules (et non joints pour un signe) ? */
 export function mainsHautes(p: Posture): boolean {
   if (!fiable(p)) return false;
+  if (mainsRapprochees(p)) return false;
   const [pg, pd, eg, ed] = [
     point(p, "poignetG"),
     point(p, "poignetD"),

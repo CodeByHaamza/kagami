@@ -8,7 +8,7 @@
 
 <a href="https://github.com/CodeByHaamza/kagami/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/CodeByHaamza/kagami/ci.yml?branch=main&style=for-the-badge&label=CI&labelColor=14141f&color=6fcf7f" alt="CI"></a>
 <img src="https://img.shields.io/badge/TypeScript-strict-3178c6?style=for-the-badge&labelColor=14141f" alt="TypeScript strict">
-<img src="https://img.shields.io/badge/tests-438-6fcf7f?style=for-the-badge&labelColor=14141f" alt="438 tests">
+<img src="https://img.shields.io/badge/tests-440-6fcf7f?style=for-the-badge&labelColor=14141f" alt="440 tests">
 <img src="https://img.shields.io/badge/PWA-offline-e8963c?style=for-the-badge&labelColor=14141f" alt="PWA">
 <img src="https://img.shields.io/badge/licence-MIT-9a7aff?style=for-the-badge&labelColor=14141f" alt="MIT">
 
@@ -121,6 +121,15 @@ KAGAMI ────────┼─ Arcade (Missions canoniques Rangs D à S)
 - Clique sur le bouton **`⏺`** dans la barre supérieure pour lancer l'enregistrement de ton écran.
 - Exécute tes plus beaux enchaînements : l'enregistrement se coupe automatiquement au bout de quelques secondes ou sur un second clic, et télécharge instantanément un clip vidéo **WebM** fluide prêt à être partagé.
 
+### 🎯 5. Contrôles & Gestes (Armes & Signes)
+- **Lancer de Shuriken & Armes ninja** :
+  - *Au corps* : fouet descendant rapide du bras armé (droit ou gauche) partant du dessus de l'épaule.
+  - *Au clic / tap* : clique ou touche directement le widget d'arme en haut à gauche.
+  - *Au clavier* : touche **Espace** pour tirer l'arme équipée, touche **A** pour alterner entre Shuriken, Kunai et Parchemin explosif.
+- **Conseils pour réussir les signes de mains délicats** :
+  - **Mains jointes (Gasshō / 祈)** : colle tes deux paumes l'une contre l'autre devant la poitrine, doigts serrés vers le haut comme pour une prière. Reste en posture stable devant le torse.
+  - **Signe de l'eau (Mizunoe / 壬)** : place tes deux mains bien à plat l'une sur l'autre à l'horizontale devant ton buste (la paume d'une main repose sur le dos de l'autre main, doigts pointés sur le côté).
+
 ---
 
 ## 🧠 Comment ça marche sous le capot
@@ -144,7 +153,7 @@ Caméra ──┤                                                     ├─→ 
 ```bash
 npm run dev        # Lance le serveur local Vite (http://localhost:5173)
 npm run dev:reseau # Lance le serveur en HTTPS sur le réseau local pour mobile
-npm test           # Exécute les 438 tests unitaires Vitest + typage TypeScript strict
+npm test           # Exécute les 440 tests unitaires Vitest + typage TypeScript strict
 npm run test:e2e   # Exécute les 26 tests end-to-end Playwright
 npm run lint       # Vérification du code avec ESLint
 npm run build      # Build de production statique dans dist/

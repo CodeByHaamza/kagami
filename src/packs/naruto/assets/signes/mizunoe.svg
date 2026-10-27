@@ -1,9 +1,47 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
-  <circle cx="50" cy="50" r="46" fill="#14131a" stroke="#0284c7" stroke-width="2"/>
-  <!-- Mizunoe : symbole et mudra aquatique des techniques Suiton -->
-  <path d="M 38 24 L 46 58 C 46 68, 54 68, 54 58 L 62 24" fill="none" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
-  <path d="M 50 18 L 50 64" fill="none" stroke="#bae6fd" stroke-width="2.5" stroke-linecap="round"/>
-  <path d="M 32 44 Q 50 36 68 44" fill="none" stroke="#0284c7" stroke-width="2"/>
-  <circle cx="50" cy="78" r="5" fill="#38bdf8"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <radialGradient id="haloMizunoe" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0284c7" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#14131a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- Fond du médaillon Suiton -->
+  <circle cx="60" cy="60" r="56" fill="#14131a" stroke="#0284c7" stroke-width="2.5"/>
+  <circle cx="60" cy="60" r="48" fill="url(#haloMizunoe)"/>
 
+  <!-- Mizunoe : Deux mains à plat croisées l'une sur l'autre à l'horizontale -->
+  <!-- Main inférieure (gauche, pointant vers la droite) -->
+  <g id="mainInferieure" opacity="0.9">
+    <!-- Poignet gauche -->
+    <path d="M 18 68 L 36 65 L 36 78 L 18 78 Z" fill="#0369a1" opacity="0.5"/>
+    <!-- Paume inférieure -->
+    <rect x="34" y="62" width="34" height="18" rx="4" fill="#38bdf8" stroke="#0369a1" stroke-width="1.5"/>
+    <!-- Doigts inférieurs tendus vers la droite -->
+    <rect x="66" y="63" width="30" height="3.5" rx="1.5" fill="#bae6fd" stroke="#0284c7" stroke-width="1"/>
+    <rect x="66" y="67.5" width="33" height="3.5" rx="1.5" fill="#bae6fd" stroke="#0284c7" stroke-width="1"/>
+    <rect x="66" y="72" width="31" height="3.5" rx="1.5" fill="#bae6fd" stroke="#0284c7" stroke-width="1"/>
+    <rect x="66" y="76.5" width="26" height="3" rx="1.5" fill="#bae6fd" stroke="#0284c7" stroke-width="1"/>
+  </g>
+
+  <!-- Main supérieure (droite, posée au-dessus, pointant vers la gauche) -->
+  <g id="mainSuperieure">
+    <!-- Poignet droit -->
+    <path d="M 102 46 L 84 48 L 84 36 L 102 36 Z" fill="#0284c7" opacity="0.5"/>
+    <!-- Paume supérieure posée sur le dessus -->
+    <rect x="52" y="42" width="34" height="20" rx="4" fill="#7dd3fc" stroke="#075985" stroke-width="2"/>
+    <!-- Doigts supérieurs tendus vers la gauche -->
+    <rect x="22" y="44" width="32" height="3.8" rx="1.5" fill="#e0f2fe" stroke="#0369a1" stroke-width="1.2"/>
+    <rect x="19" y="49" width="35" height="3.8" rx="1.5" fill="#e0f2fe" stroke="#0369a1" stroke-width="1.2"/>
+    <rect x="21" y="54" width="33" height="3.8" rx="1.5" fill="#e0f2fe" stroke="#0369a1" stroke-width="1.2"/>
+    <rect x="26" y="59" width="28" height="3.2" rx="1.5" fill="#e0f2fe" stroke="#0369a1" stroke-width="1.2"/>
+    <!-- Pouce droit replié sur le côté -->
+    <path d="M 72 62 C 72 66, 64 68, 60 65" fill="none" stroke="#0369a1" stroke-width="1.8"/>
+  </g>
+
+  <!-- Vaguelette d'eau / Suiton au centre -->
+  <path d="M 36 94 Q 60 86 84 94" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="60" cy="98" r="2.5" fill="#38bdf8"/>
+
+  <!-- Kanji 壬 en haut au centre -->
+  <text x="60" y="26" font-family="'Yuji Syuku', serif" font-size="14" fill="#38bdf8" text-anchor="middle" opacity="0.9">壬</text>
+</svg>

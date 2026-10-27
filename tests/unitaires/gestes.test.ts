@@ -147,7 +147,7 @@ test("une garde tenue donne le jeton garde, une seule fois", () => {
 
 test("un lancer part du bras armé au-dessus de l'épaule", () => {
   // Bras replié, poignet derrière la tête, puis détente vers l'avant. C'est le fait
-  // de partir de haut qui distingue un lancer d'un direct — on ne sait rien de la main.
+  // de partir de haut avec un fouet descendant qui distingue un lancer d'un direct.
   const lecteur = new LecteurDeGestes();
   const sortis = jouer(
     lecteur,
@@ -160,6 +160,36 @@ test("un lancer part du bras armé au-dessus de l'épaule", () => {
 
   expect(sortis).toContain("lancer");
   expect(sortis).not.toContain("directD");
+});
+
+test("un lancer fonctionne aussi avec le bras gauche", () => {
+  const lecteur = new LecteurDeGestes();
+  const sortis = jouer(
+    lecteur,
+    mouvement(
+      { coudeG: P(0.26, 0.24), poignetG: P(0.44, 0.16) },
+      { coudeG: P(0.26, 0.33), poignetG: P(0.1, 0.38) },
+      180
+    )
+  );
+
+  expect(sortis).toContain("lancer");
+  expect(sortis).not.toContain("directG");
+});
+
+test("tendre le bras sans mouvement descendant ne déclenche pas un lancer intempestif", () => {
+  // Le poignet part haut mais reste à la même hauteur : c'est une détente droite/direct, pas un lancer de shuriken.
+  const lecteur = new LecteurDeGestes();
+  const sortis = jouer(
+    lecteur,
+    mouvement(
+      { coudeD: P(0.7, 0.24), poignetD: P(0.6, 0.2) },
+      { coudeD: P(0.8, 0.24), poignetD: P(0.95, 0.2) },
+      150
+    )
+  );
+
+  expect(sortis).not.toContain("lancer");
 });
 
 test("une rotation rapide des épaules donne rotation", () => {

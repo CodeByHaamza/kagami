@@ -400,7 +400,7 @@ async function boucleEntree(): Promise<void> {
 function montrerPosture(attitude: Attitude): void {
   el("posture").dataset.attitude = attitude;
   el("postureNom").textContent = t(`posture.${attitude}`);
-  el("armes").hidden = attitude !== "combat";
+  el("armes").hidden = attitude !== "combat" && !arcade.actif;
 }
 
 /** Un geste du corps : il nourrit la grammaire corporelle, ou lance une arme. */
@@ -448,6 +448,8 @@ function montrerArme(): void {
   el("armeNom").textContent = t(`arme.${arme.id}.nom`);
   el("armeStock").textContent =
     reste === null || reste === undefined ? t("arme.gratuite") : t("arme.stock", { reste });
+  const aide = document.getElementById("armeAide");
+  if (aide) aide.textContent = t("arme.aideLancer");
 }
 
 function traiter(vue: Awaited<ReturnType<typeof detecteur.reconnaitre>>): void {
@@ -942,6 +944,9 @@ el("btnEncyclo").addEventListener("click", ouvrirEncyclopedie);
 el("btnEncycloAccueil").addEventListener("click", ouvrirEncyclopedie);
 el("btnFermerEncyclo").addEventListener("click", () => (el("encyclo").hidden = true));
 el("btnCamera").addEventListener("click", () => void basculerCamera());
+el("armes").addEventListener("click", () => {
+  lancerArme(performance.now());
+});
 
 const enregistreurVideo = new EnregistreurVideo();
 const btnRec = el<HTMLButtonElement>("btnRecVideo");
@@ -1030,11 +1035,17 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 
-// Changer d'arme : une touche, en attendant que le plan 3 decide d'un geste.
+// Armes : changer avec 'A', lancer avec Espace (ou au clic sur le widget)
 addEventListener("keydown", e => {
-  if (e.key !== "a" && e.key !== "A") return;
-  armeChoisie = (armeChoisie + 1) % ARMES.length;
-  montrerArme();
+  if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+  if (e.key === "a" || e.key === "A") {
+    armeChoisie = (armeChoisie + 1) % ARMES.length;
+    montrerArme();
+  } else if (e.code === "Space" || e.key === " ") {
+    if (e.target instanceof HTMLButtonElement) return;
+    e.preventDefault();
+    lancerArme(performance.now());
+  }
 });
 
 battre(() =>

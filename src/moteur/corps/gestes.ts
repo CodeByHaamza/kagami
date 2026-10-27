@@ -68,6 +68,9 @@ interface Instant {
   hanches: number;
   angleEpaules: number;
   poignetDHaut: boolean;
+  poignetGHaut: boolean;
+  poignetDy: number;
+  poignetGy: number;
   garde: boolean;
   echelle: number;
 }
@@ -84,8 +87,11 @@ function mesurer(p: Posture): Instant {
     centre: centreDeMasse(p),
     hanches: (y(p, "hancheG") + y(p, "hancheD")) / 2,
     angleEpaules: eg && ed ? Math.atan2(ed.y - eg.y, ed.x - eg.x) : 0,
-    // le poignet droit au-dessus de l'épaule droite : l'armement d'un lancer
+    // le poignet au-dessus de l'épaule correspondante : l'armement d'un lancer
     poignetDHaut: y(p, "poignetD") < y(p, "epauleD"),
+    poignetGHaut: y(p, "poignetG") < y(p, "epauleG"),
+    poignetDy: y(p, "poignetD"),
+    poignetGy: y(p, "poignetG"),
     garde: gardeHaute(p),
     echelle: largeurEpaules(p) || 1
   };
@@ -135,7 +141,10 @@ export class LecteurDeGestes {
 
   /** Un geste redevient disponible quand le corps est revenu dans son état de départ. */
   private relacherLesVerrous(ici: Instant): void {
-    if (ici.extensionG < this.reglages.extensionRepliee) this.verrous.delete("directG");
+    if (ici.extensionG < this.reglages.extensionRepliee) {
+      this.verrous.delete("directG");
+      this.verrous.delete("lancer");
+    }
     if (ici.extensionD < this.reglages.extensionRepliee) {
       this.verrous.delete("directD");
       this.verrous.delete("lancer");
@@ -155,13 +164,17 @@ export class LecteurDeGestes {
     // La garde est un état, pas un mouvement : elle n'a pas de condition de vitesse.
     if (ici.garde) return "garde";
 
-    // Un lancer est une frappe du bras droit *partie de haut* : c'est ce qui le
-    // distingue d'un direct, sans rien savoir de la main.
+    // Un lancer est une frappe (droite ou gauche) partie d'un armement haut, avec
+    // un mouvement de fouet descendant du poignet.
     const detendD = ici.extensionD > r.extensionTendue && avant.extensionD < r.extensionRepliee;
-    if (detendD && avant.poignetDHaut) return "lancer";
+    const fouetD = avant.poignetDHaut && (ici.poignetDy - avant.poignetDy) > 0.05 * echelle;
+    if (detendD && fouetD) return "lancer";
     if (detendD) return "directD";
 
-    if (ici.extensionG > r.extensionTendue && avant.extensionG < r.extensionRepliee) return "directG";
+    const detendG = ici.extensionG > r.extensionTendue && avant.extensionG < r.extensionRepliee;
+    const fouetG = avant.poignetGHaut && (ici.poignetGy - avant.poignetGy) > 0.05 * echelle;
+    if (detendG && fouetG) return "lancer";
+    if (detendG) return "directG";
 
     if (Math.abs(ici.angleEpaules - avant.angleEpaules) > r.seuilRotation) return "rotation";
 

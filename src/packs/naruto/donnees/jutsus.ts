@@ -60,7 +60,13 @@ export const JUTSUS = [
   { id: "izanagi", type: "Dōjutsu", kanji: "イザナギ", romaji: "Izanagi", signes: ["lievre","sanglier","belier"], effet: "izanagi", source: "anime" },
   { id: "amaterasu", type: "Dōjutsu", kanji: "天照", romaji: "Amaterasu", signes: ["oiseau","serpent","chien"], effet: "amaterasu", source: "appli" },
   { id: "kamui", type: "Dōjutsu", kanji: "神威", romaji: "Kamui", signes: ["singe","rat","oiseau"], effet: "kamui", source: "appli" },
-  { id: "susanoo", type: "Dōjutsu", kanji: "須佐能乎", romaji: "Susanoo", signes: ["tigre","dragon","oiseau","mains"], effet: "susanoo", source: "appli" }
+  { id: "susanoo", type: "Dōjutsu", kanji: "須佐能乎", romaji: "Susanoo", signes: ["tigre","dragon","oiseau","mains"], effet: "susanoo", source: "appli" },
+  { id: "shinratensei", type: "Dōjutsu", kanji: "神羅天征", romaji: "Shinra Tensei", signes: ["belier","dragon","mains"], effet: "shinraTensei", source: "appli" },
+  { id: "banshotenin", type: "Dōjutsu", kanji: "万象天引", romaji: "Banshō Ten'in", signes: ["dragon","mains"], effet: "banshoTenin", source: "appli" },
+  { id: "chibakutensei", type: "Dōjutsu", kanji: "地爆天星", romaji: "Chibaku Tensei", signes: ["mains"], effet: "chibakuTensei", source: "appli", tenir: true },
+  { id: "senjutsu_rasengan", type: "Senjutsu", kanji: "仙術・超大玉螺旋丸", romaji: "Senpō : Chō Ōdama Rasengan", signes: ["mains","belier","tigre"], effet: "senjutsuRasengan", source: "anime" },
+  { id: "makyouhyoushou", type: "Hyōton", kanji: "魔鏡氷晶", romaji: "Makyou Hyōshō", signes: ["mizunoe","serpent","oiseau"], effet: "miroirsGlace", source: "anime" },
+  { id: "kikaichu", type: "Hiden", kanji: "寄壊蟲の術", romaji: "Kikaichū no Jutsu", signes: ["serpent","rat","belier"], effet: "nueeInsectes", source: "anime" }
 ] as const satisfies readonly Technique<SigneNaruto>[];
 
 /**

@@ -13,6 +13,7 @@ import { TERRES } from "./terre";
 import { CHAKRAS } from "./chakra";
 import { NINJUTSUS } from "./ninjutsu";
 import { GENJUTSUS } from "./genjutsu";
+import { ULTIMES } from "./ultimes";
 
 export const EFFETS_NARUTO = {
   ...FEUX,
@@ -22,5 +23,6 @@ export const EFFETS_NARUTO = {
   ...TERRES,
   ...CHAKRAS,
   ...NINJUTSUS,
-  ...GENJUTSUS
+  ...GENJUTSUS,
+  ...ULTIMES
 } as Readonly<Record<EffetNaruto | "kai", Effet>>;

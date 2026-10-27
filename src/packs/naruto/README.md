@@ -7,7 +7,7 @@
 *Un pack pour [**Kagami**](../../../README.md).*
 
 <img src="https://img.shields.io/badge/signes-14-e8963c?style=flat-square" alt="14 signes">
-<img src="https://img.shields.io/badge/jutsus-52-ff8c1a?style=flat-square" alt="52 jutsus">
+<img src="https://img.shields.io/badge/jutsus-58-ff8c1a?style=flat-square" alt="58 jutsus">
 <img src="https://img.shields.io/badge/taijutsu-7-e8440f?style=flat-square" alt="7 taijutsu">
 <img src="https://img.shields.io/badge/armes-3-c0392b?style=flat-square" alt="3 armes">
 <img src="https://img.shields.io/badge/langues-FR%20%C2%B7%20EN-9a7aff?style=flat-square" alt="français et anglais">
@@ -17,7 +17,7 @@
 ---
 
 Tu fais les signes devant ta webcam. Un YOLOX-Nano entraîné sur les 14 sceaux les
-reconnaît, et le bon enchaînement lance l'un des **52 jutsus** : boule de feu, Chidori,
+reconnaît, et le bon enchaînement lance l'un des **58 jutsus** : boule de feu, Chidori,
 Rasengan, clones, invocations, mur de terre, Tsukuyomi, Amaterasu.
 
 <div align="center">
@@ -182,7 +182,7 @@ mesure ta vitesse au **chronomètre du Dojo**.
 
 | | |
 | --- | --- |
-| `donnees/` | les 14 signes, les 52 jutsus, les 7 taijutsu, les 3 armes, les examens canoniques, les familles. Kanji et romaji seulement : les noms traduisibles sont dans `i18n/`. |
+| `donnees/` | les 14 signes, les 58 jutsus, les 7 taijutsu, les 3 armes, les examens canoniques, les familles. Kanji et romaji seulement : les noms traduisibles sont dans `i18n/`. |
 | `entree/` | le reconnaisseur YOLOX, et le prétraitement sorti en fonctions pures |
 | `effets/` | les effets des jutsus, du taijutsu et des armes, et la scène Three.js du Rasengan |
 | `i18n/` | français et anglais, mêmes clés des deux côtés (un test le vérifie) |

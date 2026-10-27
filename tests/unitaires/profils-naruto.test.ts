@@ -45,7 +45,10 @@ test("l'élément suit le type de la technique", () => {
     "Iryō ninjutsu": null,
     Genjutsu: null,
     "Dōjutsu": null,
-    Taijutsu: null
+    Taijutsu: null,
+    Senjutsu: null,
+    "Hyōton": null,
+    Hiden: null
   };
 
   // Une seule exception canon : Amaterasu est un Dōjutsu dont la nature est le Feu

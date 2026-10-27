@@ -28,7 +28,7 @@ ses textes. Ajouter un anime, c'est ajouter un dossier, pas rouvrir le moteur.
 
 | | Pack | Anime | Ce qu'on y fait | État |
 | :---: | --- | --- | --- | :---: |
-| 型 | [**Kata**](src/packs/naruto/) | Naruto | 14 signes, 52 jutsus, 7 taijutsu, 3 armes, 5 missions d'arcade | **disponible** |
+| 型 | [**Kata**](src/packs/naruto/) | Naruto | 14 signes, 58 jutsus, 7 taijutsu, 3 armes, 5 missions d'arcade | **disponible** |
 | 気 | — | Dragon Ball | poses du corps, montée de ki | envisagé |
 | 呪 | — | Jujutsu Kaisen | gestes, extension du territoire | envisagé |
 | 波 | — | JoJo | poses | envisagé |

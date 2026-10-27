@@ -49,5 +49,8 @@ export const FAMILLES = {
   "Fūinjutsu": "Ninjutsu",
   "Kinjutsu": "Ninjutsu",
   "Genjutsu": "Genjutsu",
-  "Dōjutsu": "Sharingan"
+  "Dōjutsu": "Sharingan",
+  "Senjutsu": "Ermite",
+  "Hyōton": "Glace",
+  "Hiden": "Clan"
 } as const satisfies Readonly<Record<string, string>>;

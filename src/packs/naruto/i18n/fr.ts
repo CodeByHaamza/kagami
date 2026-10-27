@@ -304,5 +304,19 @@ export const FR: Dictionnaire = {
   "jutsu.kamui.nom": "Vortex de Kamui",
   "jutsu.kamui.texte": "L'image est aspirée dans un tourbillon.",
   "jutsu.susanoo.nom": "Susanoo",
-  "jutsu.susanoo.texte": "Un géant de chakra violet se dresse autour de toi."
+  "jutsu.susanoo.texte": "Un géant de chakra violet se dresse autour de toi.",
+  "jutsu.shinratensei.nom": "Shinra Tensei",
+  "jutsu.shinratensei.texte": "Le dōjutsu suprême du Rinnegan : une onde de choc gravitationnelle repousse tout.",
+  "jutsu.banshotenin.nom": "Banshō Ten'in",
+  "jutsu.banshotenin.texte": "L'attraction céleste du Rinnegan qui attire l'adversaire vers toi.",
+  "jutsu.chibakuTensei.nom": "Chibaku Tensei",
+  "jutsu.chibakuTensei.texte": "Création d'un noyau noir d'attraction colossal qui arrache le sol pour former une lune funeste.",
+  "jutsu.chibakutensei.nom": "Chibaku Tensei",
+  "jutsu.chibakutensei.texte": "Création d'un noyau noir d'attraction colossal qui arrache le sol pour former une lune funeste.",
+  "jutsu.senjutsu_rasengan.nom": "Rasengan géant du Mode Ermite",
+  "jutsu.senjutsu_rasengan.texte": "La sphère tourbillonnante décuplée par le senjutsu de Fukasaku et Jiraiya.",
+  "jutsu.makyouhyoushou.nom": "Miroirs démoniaques de glace",
+  "jutsu.makyouhyoushou.texte": "Le Kekkei Genkai de Haku : un dôme de miroirs de glace d'où fusent des senbons.",
+  "jutsu.kikaichu.nom": "Nuée d'insectes destructeurs",
+  "jutsu.kikaichu.texte": "La technique secrète du clan Aburame : une nuée de kikaichū draine le chakra ennemi."
 };

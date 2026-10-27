@@ -98,6 +98,12 @@ export const PROFILS = {
   amaterasu: p("S", "feu"),
   kamui: p(null, null),
   susanoo: p(null, null, "defense"),
+  shinratensei: p("S", null, "defense"),
+  banshotenin: p("A", null),
+  chibakutensei: p("S", null),
+  senjutsu_rasengan: p("S", null),
+  makyouhyoushou: p("B", null, "defense"),
+  kikaichu: p("C", null),
 
   // ---- Taijutsu ----
   konohaSenpuu: p("D", null),

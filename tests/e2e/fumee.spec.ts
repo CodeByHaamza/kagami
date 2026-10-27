@@ -32,14 +32,14 @@ test("le dojo démarre, charge le modèle et dessine", async ({ page }) => {
   expect(erreurs).toEqual([]);
 });
 
-test("l'encyclopédie liste les 14 signes et les 52 jutsus", async ({ page }) => {
+test("l'encyclopédie liste les 14 signes et les 58 jutsus", async ({ page }) => {
   await entrerDansKata(page);
   await page.locator("#btnEncycloAccueil").click();
 
   await expect(page.locator("#listeSignes .fiche-signe")).toHaveCount(14);
 
   await page.getByRole("tab", { name: /jutsu/i }).click();
-  await expect(page.locator("#listeJutsus .fiche-jutsu")).toHaveCount(52);
+  await expect(page.locator("#listeJutsus .fiche-jutsu")).toHaveCount(58);
 });
 
 test("la page bascule en anglais", async ({ page }) => {

@@ -21,8 +21,8 @@ const signesConnus = new Set<string>(Object.keys(SIGNES));
 const suites = (j: Technique<SigneNaruto>): readonly (readonly string[])[] =>
   j.variante ? [j.signes, j.variante] : [j.signes];
 
-test("il y a 52 jutsus et 14 signes", () => {
-  expect(JUTSUS).toHaveLength(52);
+test("il y a 58 jutsus et 14 signes", () => {
+  expect(JUTSUS).toHaveLength(58);
   expect(Object.keys(SIGNES)).toHaveLength(14);
 });
 

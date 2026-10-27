@@ -304,5 +304,19 @@ export const EN: Dictionnaire = {
   "jutsu.kamui.nom": "Kamui",
   "jutsu.kamui.texte": "The image is sucked into a vortex.",
   "jutsu.susanoo.nom": "Susanoo",
-  "jutsu.susanoo.texte": "A giant of purple chakra rises around you."
+  "jutsu.susanoo.texte": "A giant of purple chakra rises around you.",
+  "jutsu.shinratensei.nom": "Shinra Tensei",
+  "jutsu.shinratensei.texte": "The supreme Rinnegan dōjutsu: a gravitational shockwave violently repels all.",
+  "jutsu.banshotenin.nom": "Banshō Ten'in",
+  "jutsu.banshotenin.texte": "The universal pull of the Rinnegan drawing the opponent into your strike zone.",
+  "jutsu.chibakuTensei.nom": "Chibaku Tensei",
+  "jutsu.chibakuTensei.texte": "Creates a colossal black gravitational core tearing up the ground into a crushing moon.",
+  "jutsu.chibakutensei.nom": "Chibaku Tensei",
+  "jutsu.chibakutensei.texte": "Creates a colossal black gravitational core tearing up the ground into a crushing moon.",
+  "jutsu.senjutsu_rasengan.nom": "Sage Art: Massive Rasengan",
+  "jutsu.senjutsu_rasengan.texte": "The spiraling sphere amplified three-fold by toad senjutsu.",
+  "jutsu.makyouhyoushou.nom": "Demonic Mirroring Ice Crystals",
+  "jutsu.makyouhyoushou.texte": "Haku's Kekkei Genkai: a dome of ice mirrors unleashing senbon needles.",
+  "jutsu.kikaichu.nom": "Destruction Bug Host Technique",
+  "jutsu.kikaichu.texte": "The Aburame clan secret technique: a swarm of kikaichū bugs draining chakra."
 };

@@ -25,12 +25,21 @@ const ANCIENNES = {
 export type Grade = "academie" | "genin" | "chunin" | "jonin" | "kage";
 export type Village = "konoha" | "suna" | "kiri" | "iwa" | "kumo";
 export type Contrat = "crapauds" | "serpents" | "limaces" | "chiens";
+export type CosmetiqueNinja =
+  | "aucun"
+  | "bandeau_konoha"
+  | "bandeau_suna"
+  | "bandeau_kiri"
+  | "bandeau_iwa"
+  | "bandeau_kumo"
+  | "masque_anbu";
 
 export interface FicheNinja {
   nom: string;
   clan: string;
   village: Village;
   contrat: Contrat;
+  cosmetique?: CosmetiqueNinja;
 }
 
 export interface Progression {

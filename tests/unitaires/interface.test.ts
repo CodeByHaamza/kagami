@@ -80,7 +80,8 @@ test("aucune clé de traduction n'est définie sans être utilisée nulle part",
       "village.",
       "contrat.",
       "academie.recommandation.",
-      "calibration."
+      "calibration.",
+      "cosmetique."
     ]) {
       if (cle.startsWith(prefixe)) return false;
     }

@@ -69,6 +69,16 @@ button.principal { color: #1a0d02; background: var(--orange); border-color: var(
 .barre h1 { flex: 1; margin: 0; font-size: 18px; }
 .barre h1 .kanji { color: var(--orange); }
 .barre button { width: 44px; padding: 0; font-size: 18px; background: rgba(20, 20, 28, 0.7); }
+.barre button#btnRecVideo.actif {
+  background: rgba(220, 38, 38, 0.85);
+  color: #fff;
+  animation: pulsation-rec 1s infinite alternate ease-in-out;
+}
+
+@keyframes pulsation-rec {
+  from { transform: scale(1); box-shadow: 0 0 4px #ef4444; }
+  to { transform: scale(1.1); box-shadow: 0 0 12px #dc2626; }
+}
 
 
 /* ---- le signe vu, les jutsus commencés ---- */

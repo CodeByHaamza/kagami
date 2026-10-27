@@ -4,7 +4,7 @@
 // et son contrat d'invocation (Crapauds, Serpents, Limaces, Chiens),
 // et de consulter son grade et son palmarès.
 
-import type { Contrat, FicheNinja, Grade, Village } from "../moteur/stockage/sauvegarde";
+import type { Contrat, CosmetiqueNinja, FicheNinja, Grade, Village } from "../moteur/stockage/sauvegarde";
 import { t } from "../moteur/ui/i18n";
 
 const el = <T extends HTMLElement>(id: string): T => document.getElementById(id) as T;
@@ -42,11 +42,13 @@ export class EcranFicheNinja {
     const inputClan = el<HTMLInputElement>("inputNinjaClan");
     const selectVillage = el<HTMLSelectElement>("selectNinjaVillage");
     const selectContrat = el<HTMLSelectElement>("selectNinjaContrat");
+    const selectCosmetique = el<HTMLSelectElement>("selectNinjaCosmetique");
 
     inputNom.value = fiche?.nom ?? "";
     inputClan.value = fiche?.clan ?? "";
     selectVillage.value = fiche?.village ?? "konoha";
     selectContrat.value = fiche?.contrat ?? "crapauds";
+    selectCosmetique.value = fiche?.cosmetique ?? "aucun";
 
     el("ficheNinjaVue").hidden = true;
     el("ficheNinjaForm").hidden = false;
@@ -62,6 +64,7 @@ export class EcranFicheNinja {
     el("ficheClan").textContent = fiche.clan;
     el("ficheVillage").textContent = t(`village.${fiche.village}`);
     el("ficheContrat").textContent = t(`contrat.${fiche.contrat}`);
+    el("ficheCosmetique").textContent = t(`cosmetique.${fiche.cosmetique ?? "aucun"}`);
     el("ficheMissions").textContent = String(missions.length);
     el("ficheExamens").textContent = String(examens.length);
 
@@ -88,10 +91,11 @@ export class EcranFicheNinja {
       const clan = el<HTMLInputElement>("inputNinjaClan").value.trim();
       const village = el<HTMLSelectElement>("selectNinjaVillage").value as Village;
       const contrat = el<HTMLSelectElement>("selectNinjaContrat").value as Contrat;
+      const cosmetique = el<HTMLSelectElement>("selectNinjaCosmetique").value as CosmetiqueNinja;
 
       if (!nom || !clan) return;
 
-      const nouvelleFiche: FicheNinja = { nom, clan, village, contrat };
+      const nouvelleFiche: FicheNinja = { nom, clan, village, contrat, cosmetique };
       this.options.onSauvegarder(nouvelleFiche);
       this.montrerVue(nouvelleFiche);
     });

@@ -28,6 +28,8 @@ import { ChronometreDojo } from "../moteur/jeu/chrono";
 import { Sequence } from "../moteur/grammaire/sequence";
 import { BoucleDeRendu, calculerCadre, dessinerCadre, versEcran } from "../moteur/rendu/cadre";
 import { Effets } from "../moteur/rendu/effets";
+import { dessinerCosmetiqueAR } from "../moteur/rendu/cosmetiques";
+import { EnregistreurVideo } from "../moteur/media/enregistreur";
 import { Silhouette } from "../moteur/silhouette/silhouette";
 import { activerSon, couperSon, crier, jouer } from "../moteur/son/son";
 import { afficherJetons, afficherTechniques, listeFamilles } from "../moteur/ui/encyclopedie";
@@ -281,6 +283,13 @@ const rendu = new BoucleDeRendu((dt, temps) => {
   effets.appeler("derriere", ctx, e);
   const remplacee = effets.appeler("personne", ctx, e);
   if (e.personne && !remplacee) dessinerCadre(ctx, cadre, e.personne, camera.deFace);
+  if (sauvegarde.fiche?.cosmetique && sauvegarde.fiche.cosmetique !== "aucun") {
+    dessinerCosmetiqueAR(ctx, postureCourante, {
+      largeur: cadre.l,
+      hauteur: cadre.h,
+      cosmetique: sauvegarde.fiche.cosmetique
+    });
+  }
   effets.appeler("devant", ctx, e);
   effets.dessinerParticules(ctx);
   if ((el<HTMLInputElement>("voirDetection")).checked) dessinerDetection();
@@ -887,6 +896,30 @@ el("btnEncyclo").addEventListener("click", ouvrirEncyclopedie);
 el("btnEncycloAccueil").addEventListener("click", ouvrirEncyclopedie);
 el("btnFermerEncyclo").addEventListener("click", () => (el("encyclo").hidden = true));
 el("btnCamera").addEventListener("click", () => void basculerCamera());
+
+const enregistreurVideo = new EnregistreurVideo();
+const btnRec = el<HTMLButtonElement>("btnRecVideo");
+btnRec.addEventListener("click", async () => {
+  if (enregistreurVideo.enregistre) {
+    await enregistreurVideo.arreter();
+    enregistreurVideo.telecharger(`Kagami_${Date.now()}.webm`);
+    btnRec.classList.remove("actif");
+    btnRec.setAttribute("aria-pressed", "false");
+  } else {
+    const demarre = enregistreurVideo.demarrer(toile, {
+      dureeMaxMs: 7000,
+      onFin: () => {
+        enregistreurVideo.telecharger(`Kagami_${Date.now()}.webm`);
+        btnRec.classList.remove("actif");
+        btnRec.setAttribute("aria-pressed", "false");
+      }
+    });
+    if (demarre) {
+      btnRec.classList.add("actif");
+      btnRec.setAttribute("aria-pressed", "true");
+    }
+  }
+});
 el("btnSon").addEventListener("click", () => {
   const bouton = el("btnSon");
   const muet = bouton.getAttribute("aria-pressed") !== "true";
@@ -973,3 +1006,10 @@ void choisirPack(el("listePacks"), PACKS).then(pack => {
   el("portail").hidden = true;
   el("accueil").hidden = false;
 });
+
+// PWA : enregistrement du service worker pour mise en cache hors-ligne
+if (typeof navigator !== "undefined" && "serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    void navigator.serviceWorker.register("/sw.js").catch(() => {});
+  });
+}

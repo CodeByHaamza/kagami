@@ -121,11 +121,16 @@ KAGAMI ────────┼─ Arcade (Missions canoniques Rangs D à S)
 - Clique sur le bouton **`⏺`** dans la barre supérieure pour lancer l'enregistrement de ton écran.
 - Exécute tes plus beaux enchaînements : l'enregistrement se coupe automatiquement au bout de quelques secondes ou sur un second clic, et télécharge instantanément un clip vidéo **WebM** fluide prêt à être partagé.
 
-### 🎯 5. Contrôles & Gestes (Armes & Signes)
+### 🎯 5. Contrôles & Combos Ninja (Armes & Signes)
 - **Lancer de Shuriken & Armes ninja** :
   - *Au corps* : fouet descendant rapide du bras armé (droit ou gauche) partant du dessus de l'épaule.
   - *Au clic / tap* : clique ou touche directement le widget d'arme en haut à gauche.
   - *Au clavier* : touche **Espace** pour tirer l'arme équipée, touche **A** pour alterner entre Shuriken, Kunai et Parchemin explosif.
+- **⚡ Combos Ninjutsu & Armes (Nouveau)** :
+  - **Kage Shuriken no Jutsu** : lance un shuriken puis enchaîne dans les 2 secondes avec le signe du **Tigre**, la touche **C** ou un double-clic rapide $\rightarrow$ le shuriken se démultiplie en plein vol en une nuée de 24 lames dévastatrices !
+  - **Kibaku Kūnai (Kunai Explosif)** : lance un kunai puis enchaîne avec le signe du **Serpent / Tigre**, la touche **C** ou un double-clic $\rightarrow$ explosion massive à l'impact avec onde de choc et dispersion d'étincelles !
+- **Navigation & Ergonomie** :
+  - Touche **Échap (`Escape`)** ou clic sur le fond extérieur pour fermer instantanément toute fenêtre ouverte (Encyclopédie, Fiche Ninja, Missions, Académie).
 - **Conseils pour réussir les signes de mains délicats** :
   - **Mains jointes (Gasshō / 祈)** : colle tes deux paumes l'une contre l'autre devant la poitrine, doigts serrés vers le haut comme pour une prière. Reste en posture stable devant le torse.
   - **Signe de l'eau (Mizunoe / 壬)** : place tes deux mains bien à plat l'une sur l'autre à l'horizontale devant ton buste (la paume d'une main repose sur le dos de l'autre main, doigts pointés sur le côté).

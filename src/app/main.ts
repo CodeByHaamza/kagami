@@ -422,10 +422,57 @@ function traiterGeste(geste: JetonCorps): void {
   }
 }
 
+let dernierLancerArme: { id: string; temps: number } | null = null;
+
+function declencherCombo(armeId: string, maintenant: number): boolean {
+  if (armeId === "shuriken") {
+    dernierLancerArme = null;
+    effets.lancer("shuriken", contexte(maintenant, 0));
+    arcade.technique(
+      {
+        id: "shurikenkagebunshin",
+        signes: ["tigre"],
+        effet: "shuriken",
+        type: "Ninjutsu",
+        kanji: "手裏剣影分身の術",
+        romaji: "Shuriken Kage Bunshin no jutsu",
+        source: "anime"
+      },
+      maintenant
+    );
+    jouer("vent");
+    jouer("shuriken");
+    navigator.vibrate?.([30, 40, 50, 40, 60]);
+    message(t("combo.kageShuriken"));
+    return true;
+  }
+
+  if (armeId === "kunai") {
+    dernierLancerArme = null;
+    effets.lancer("parcheminExplosif", contexte(maintenant, 0));
+    arcade.arme(ARMES.find(a => a.id === "parcheminExplosif") ?? ARMES[2]!, maintenant);
+    jouer("boum");
+    navigator.vibrate?.([40, 60, 80]);
+    message(t("combo.kibakuKunai"));
+    return true;
+  }
+
+  return false;
+}
+
 /** L'arme selectionnee part. Gratuite : c'est tout l'interet quand le chakra manque. */
 function lancerArme(maintenant: number): void {
   const arme = ARMES[armeChoisie];
   if (!arme) return;
+
+  // Double activation rapide (dans les 800 ms) déclenche le combo
+  if (
+    dernierLancerArme &&
+    (dernierLancerArme.id === "shuriken" || dernierLancerArme.id === "kunai") &&
+    maintenant - dernierLancerArme.temps < 800
+  ) {
+    if (declencherCombo(dernierLancerArme.id, maintenant)) return;
+  }
 
   const reste = stocks.get(arme.id);
   if (reste !== null && reste !== undefined && reste <= 0) {
@@ -433,6 +480,8 @@ function lancerArme(maintenant: number): void {
     return;
   }
   if (reste !== null && reste !== undefined) stocks.set(arme.id, reste - 1);
+
+  dernierLancerArme = { id: arme.id, temps: maintenant };
 
   effets.lancer(arme.effet, contexte(maintenant, 0));
   arcade.arme(arme, maintenant);
@@ -450,7 +499,12 @@ function montrerArme(): void {
   el("armeStock").textContent =
     reste === null || reste === undefined ? t("arme.gratuite") : t("arme.stock", { reste });
   const aide = document.getElementById("armeAide");
-  if (aide) aide.textContent = t("arme.aideLancer");
+  if (aide) {
+    const peutCombo = arme.id === "shuriken" || arme.id === "kunai";
+    aide.textContent = peutCombo
+      ? `${t("arme.aideLancer")} · ${t("combo.indice")}`
+      : t("arme.aideLancer");
+  }
 }
 
 function traiter(vue: Awaited<ReturnType<typeof detecteur.reconnaitre>>): void {
@@ -483,6 +537,18 @@ function traiter(vue: Awaited<ReturnType<typeof detecteur.reconnaitre>>): void {
 function jetonValide(jeton: SigneNaruto): void {
   const maintenant = performance.now();
   dernierJetonValide = jeton;
+
+  // Combo ninja enchaîné après un lancer d'arme (dans les 2,4 s)
+  if (dernierLancerArme && maintenant - dernierLancerArme.temps < 2400) {
+    if (dernierLancerArme.id === "shuriken" && jeton === "tigre") {
+      declencherCombo("shuriken", maintenant);
+      return;
+    }
+    if (dernierLancerArme.id === "kunai" && (jeton === "serpent" || jeton === "tigre")) {
+      declencherCombo("kunai", maintenant);
+      return;
+    }
+  }
 
   // « Kai ! » : le Bélier rompt un genjutsu, comme dans l'anime
   if (jeton === PACK_KATA.jetonKai && (effets.genjutsuActif() || arcade.sousIllusion)) {
@@ -1086,7 +1152,7 @@ for (const ecran of document.querySelectorAll<HTMLElement>(".ecran")) {
   });
 }
 
-// Raccourcis clavier : Échap (fermer modales), 'A' (changer arme), Espace (lancer arme)
+// Raccourcis clavier : Échap (fermer modales), 'A' (changer arme), Espace (lancer arme), 'C' (combo)
 addEventListener("keydown", e => {
   if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
   if (e.key === "Escape" || e.code === "Escape") {
@@ -1096,6 +1162,11 @@ addEventListener("keydown", e => {
   if (e.key === "a" || e.key === "A") {
     armeChoisie = (armeChoisie + 1) % ARMES.length;
     montrerArme();
+  } else if (e.key === "c" || e.key === "C") {
+    if (dernierLancerArme && performance.now() - dernierLancerArme.temps < 2400) {
+      e.preventDefault();
+      declencherCombo(dernierLancerArme.id, performance.now());
+    }
   } else if (e.code === "Space" || e.key === " ") {
     if (e.target instanceof HTMLButtonElement) return;
     e.preventDefault();

@@ -93,10 +93,13 @@ export const NINJUTSUS = {
         }
         const alpha = lisse((e.t - apparition) / 0.25) * (1 - lisse((e.t - 5.8) / 0.3));
         if (alpha <= 0) return;
-        // sans détourage, on dessine des fantômes de toute l'image
+        // aura de chakra et silhouette des clones de l'ombre
+        ctx.save();
+        ctx.shadowColor = "#38bdf8";
+        ctx.shadowBlur = e.personne ? 14 : 6;
         ctx.globalAlpha = e.personne ? alpha : alpha * 0.45;
         e.dessinerCadre(ctx, e.personne || e.video, decalage * e.l, zoom);
-        ctx.globalAlpha = 1;
+        ctx.restore();
       });
     }
   },

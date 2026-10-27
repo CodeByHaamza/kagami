@@ -125,10 +125,10 @@
   - `arreter(temps): { dureeMs: number; estNouveauRecord: boolean }`
   - `reinitialiser()`
 
-- [ ] **Step 1 : tests unitaires du chronomètre**
-- [ ] **Step 2 : implémenter `chrono.ts`**
-- [ ] **Step 3 : vérifier les tests** (`npm test -- chrono`)
-- [ ] **Step 4 : commit** — `Chronomètre du Dojo et suivi des records d'exécution`
+- [x] **Step 1 : tests unitaires du chronomètre**
+- [x] **Step 2 : implémenter `chrono.ts`**
+- [x] **Step 3 : vérifier les tests** (`npm test -- chrono`)
+- [x] **Step 4 : commit** — `Chronomètre du Dojo et suivi des records d'exécution`
 
 ---
 

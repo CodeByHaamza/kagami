@@ -12,14 +12,15 @@
 
 import { FilesetResolver, PoseLandmarker } from "@mediapipe/tasks-vision";
 import type { Image, Posture } from "../types";
+import { actif } from "../../chemin";
 
 /** Les fichiers WebAssembly de MediaPipe, recopiés dans public/ par scripts/preparer.mjs. */
-const WASM = "/mediapipe/wasm";
+const WASM = actif("mediapipe/wasm");
 
 /** Le modèle, suivi par Git LFS. La variante légère suffit et coûte 4 Mo de moins. */
 const MODELES = {
-  lite: "/modeles/pose_landmarker_lite.task",
-  full: "/modeles/pose_landmarker_full.task"
+  lite: actif("modeles/pose_landmarker_lite.task"),
+  full: actif("modeles/pose_landmarker_full.task")
 } as const;
 
 /**

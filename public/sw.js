@@ -2,9 +2,9 @@
 
 const CACHE_NAME = "kagami-v2";
 const ASSETS_A_METTRE_EN_CACHE = [
-  "/",
-  "/index.html",
-  "/manifest.webmanifest"
+  "./",
+  "./index.html",
+  "./manifest.webmanifest"
 ];
 
 self.addEventListener("install", event => {

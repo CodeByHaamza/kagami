@@ -20,6 +20,7 @@ import { BOSS } from "./donnees/boss";
 import { MISSIONS } from "./donnees/missions";
 import { DetecteurDeSignes } from "./entree/detecteurSignes";
 import { enregistrerTextes } from "./i18n";
+import { actif } from "../../chemin";
 
 export { CLASSES, FAMILLES, SIGNES, type SigneNaruto };
 export {
@@ -49,7 +50,7 @@ export const PACK_KATA: Pack<SigneNaruto> = {
   boss: BOSS,
   missions: MISSIONS,
   dessins: DESSINS_ENCRE,
-  modele: "/modeles/yolox_nano_with_post.onnx",
+  modele: actif("modeles/yolox_nano_with_post.onnx"),
   reconnaisseur: () => new DetecteurDeSignes(),
   jetonKai: SIGNE_KAI
 };

@@ -10,12 +10,13 @@
 
 import { FilesetResolver, ImageSegmenter } from "@mediapipe/tasks-vision";
 import { toileHorsEcran } from "../rendu/particules";
+import { actif } from "../../chemin";
 
 /** Les fichiers WebAssembly de MediaPipe, servis depuis public/. */
-const WASM = "/mediapipe/wasm";
+const WASM = actif("mediapipe/wasm");
 
 /** Le modèle de détourage, suivi par Git LFS. */
-const MODELE = "/modeles/selfie_segmenter.tflite";
+const MODELE = actif("modeles/selfie_segmenter.tflite");
 
 export type Delegue = "GPU" | "CPU";
 

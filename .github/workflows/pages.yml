@@ -1,0 +1,61 @@
+name: Demo (GitHub Pages)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Une seule mise en ligne a la fois, et on ne coupe pas celle qui tourne :
+# un deploiement Pages interrompu laisse le site dans un etat incertain.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  construire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # Les modeles (.task, .tflite, .onnx) sont suivis par Git LFS.
+          # Sans ca, le build embarque des pointeurs texte et la demo
+          # tombe en echec au chargement du premier modele.
+          lfs: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Construire pour le sous-chemin du site
+        env:
+          # L'appli est servie sous /kagami/, pas a la racine du domaine.
+          # vite.config lit cette variable ; en local elle n'existe pas et
+          # la base reste "/".
+          BASE_PATH: /${{ github.event.repository.name }}/
+        run: npm run build
+
+      - name: 404 = index, pour que les liens profonds fonctionnent
+        run: cp dist/index.html dist/404.html
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deployer:
+    needs: construire
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploiement.outputs.page_url }}
+    steps:
+      - id: deploiement
+        uses: actions/deploy-pages@v4

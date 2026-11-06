@@ -10,7 +10,11 @@ import ssl from "@vitejs/plugin-basic-ssl";
 // auto-signe, donc le telephone affiche un avertissement a accepter une fois.
 export default defineConfig(({ mode }) => {
   const reseau = mode === "reseau";
+  // Sur GitHub Pages l'appli est servie sous /kagami/ et non a la
+  // racine. Le workflow pose BASE_PATH ; en local la valeur reste "/".
+  const base = process.env.BASE_PATH ?? "/";
   return {
+    base,
     plugins: reseau ? [ssl()] : [],
     server: { port: 5173, host: reseau },
     build: { target: "es2022", sourcemap: true }

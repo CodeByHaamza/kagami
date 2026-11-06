@@ -51,6 +51,7 @@ import { PACK_KATA, SIGNES, FAMILLES, TAIJUTSU, ARMES, enregistrerTextes } from 
 import { IMAGES_SIGNES } from "../packs/naruto/assets/signes";
 import type { SigneNaruto } from "../packs/naruto/manifeste";
 import { Rasengan3D } from "../packs/naruto/effets/rasengan";
+import { actif } from "../chemin";
 
 demarrerJournal();
 enregistrerTextes();
@@ -1193,6 +1194,6 @@ void choisirPack(el("listePacks"), PACKS).then(pack => {
 // PWA : enregistrement du service worker pour mise en cache hors-ligne
 if (typeof navigator !== "undefined" && "serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    void navigator.serviceWorker.register("/sw.js").catch(() => {});
+    void navigator.serviceWorker.register(actif("sw.js")).catch(() => {});
   });
 }
